@@ -1,0 +1,96 @@
+{
+    "CTA": {
+        "name": "CTA",
+        "file": "CTA.jsx",
+        "description": "",
+        "props": [
+            "data",
+            "sectionName"
+        ]
+    },
+    "FAQ": {
+        "name": "FAQ",
+        "file": "FAQ.jsx",
+        "description": "",
+        "props": [
+            "data",
+            "sectionName"
+        ]
+    },
+    "Footer": {
+        "name": "Footer",
+        "file": "Footer.jsx",
+        "description": "",
+        "props": [
+            "data"
+        ]
+    },
+    "GenericSection": {
+        "name": "GenericSection",
+        "file": "GenericSection.jsx",
+        "description": "",
+        "props": [
+            "data",
+            "sectionName",
+            "layout",
+            "features",
+            "style"
+        ]
+    },
+    "Header": {
+        "name": "Header",
+        "file": "Header.jsx",
+        "description": "",
+        "props": [
+            "siteSettings"
+        ]
+    },
+    "Hero": {
+        "name": "Hero",
+        "file": "Hero.jsx",
+        "description": "",
+        "props": [
+            "data",
+            "sectionName",
+            "features",
+            "style"
+        ]
+    },
+    "ProductGrid": {
+        "name": "ProductGrid",
+        "file": "ProductGrid.jsx",
+        "description": "",
+        "props": [
+            "data",
+            "sectionName",
+            "features"
+        ]
+    },
+    "StyleContext": {
+        "name": "StyleContext",
+        "file": "StyleContext.jsx",
+        "description": "StyleProvider for docked track.\n  Reads style_config from data and applies CSS variables to :root.\n  Dock can override these variables via postMessage.",
+        "props": [
+            "children",
+            "data"
+        ]
+    },
+    "Team": {
+        "name": "Team",
+        "file": "Team.jsx",
+        "description": "",
+        "props": [
+            "data",
+            "sectionName"
+        ]
+    },
+    "Testimonials": {
+        "name": "Testimonials",
+        "file": "Testimonials.jsx",
+        "description": "",
+        "props": [
+            "data",
+            "sectionName"
+        ]
+    }
+}

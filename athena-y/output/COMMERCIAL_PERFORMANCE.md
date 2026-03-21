@@ -1,0 +1,70 @@
+# 📈 Athena Factory: Commercial Value & Performance Report
+
+Datum: 3/21/2026, 2:55:26 PM
+
+| Site | Bundle Size | Images | Data Tables | Value Index | Efficiency |
+| :--- | :--- | :--- | :--- | :--- | :--- |
+| fpc-gent-site | 37.54 MB | 263 | 7 | 1385 | 4 |
+| de-schaar-site | 18.08 MB | 26 | 27 | 400 | 2 |
+| jets-archive | 4.35 MB | 56 | 10 | 380 | 9 |
+| karel-webdesign | 3.06 MB | 28 | 16 | 300 | 10 |
+| athena-hub | 8.56 MB | 20 | 19 | 290 | 3 |
+| urban-soles | 1.89 MB | 22 | 14 | 250 | 13 |
+| karel-portfolio-ath | 10.54 MB | 15 | 15 | 225 | 2 |
+| athena-promo | 0.80 MB | 11 | 15 | 205 | 25 |
+| chocolade-shop | 4.09 MB | 11 | 14 | 195 | 5 |
+| athena-pro | 1.75 MB | 6 | 16 | 190 | 11 |
+| portfolio-kbm | 0.74 MB | 2 | 18 | 190 | 25 |
+| demo-bakkerij | 1.05 MB | 6 | 14 | 170 | 16 |
+| demo-consultant | 0.76 MB | 3 | 15 | 165 | 21 |
+| cloud-architects | 0.52 MB | 2 | 15 | 160 | 30 |
+| demo-consultant-bold | 0.71 MB | 2 | 15 | 160 | 22 |
+| demo-consultant-classic | 0.71 MB | 2 | 15 | 160 | 22 |
+| ai-consultant-smartbe | 0.62 MB | 2 | 13 | 140 | 22 |
+| demo-portfolio | 0.70 MB | 2 | 13 | 140 | 20 |
+| demo-portfolio-corporate | 0.69 MB | 2 | 13 | 140 | 20 |
+| demo-portfolio-warm | 0.70 MB | 2 | 13 | 140 | 20 |
+| cloud-architects-bold | 0.71 MB | 2 | 12 | 130 | 18 |
+| cloud-architects-corporate | 0.72 MB | 2 | 12 | 130 | 18 |
+| cloud-architects-cyberpunk | 0.71 MB | 2 | 12 | 130 | 18 |
+| cloud-architects-glassmorphism | 0.72 MB | 2 | 12 | 130 | 18 |
+| code-crafters | 0.71 MB | 2 | 12 | 130 | 18 |
+| code-crafters-modern-dark | 0.71 MB | 2 | 12 | 130 | 18 |
+| code-crafters-plain | 0.72 MB | 2 | 12 | 130 | 18 |
+| nieuwe-tanden | 0.67 MB | 2 | 12 | 130 | 19 |
+| pure-relaxation | 0.68 MB | 2 | 12 | 130 | 19 |
+| pure-relaxation-glassmorphism | 0.72 MB | 2 | 12 | 130 | 18 |
+| pure-relaxation-nature | 0.71 MB | 2 | 12 | 130 | 18 |
+| pure-relaxation-warm | 0.72 MB | 2 | 12 | 130 | 18 |
+| urban-oasis | 0.67 MB | 2 | 12 | 130 | 19 |
+| urban-oasis-classic | 0.71 MB | 2 | 12 | 130 | 18 |
+| urban-oasis-warm | 0.71 MB | 2 | 12 | 130 | 18 |
+| code-crafters-bold | 0.71 MB | 1 | 12 | 125 | 17 |
+| sites-modular-test | 0.00 MB | 1 | 11 | 115 | 0 |
+| sites-mytest | 0.72 MB | 1 | 11 | 115 | 16 |
+| sites-mytest-v3 | 0.71 MB | 1 | 11 | 115 | 16 |
+| sites-test-site | 0.72 MB | 1 | 11 | 115 | 16 |
+| sites-test-site-2 | 0.72 MB | 1 | 11 | 115 | 16 |
+| test-kapper | 0.83 MB | 7 | 7 | 105 | 12 |
+| urban-sneakers-store | 1.25 MB | 7 | 6 | 95 | 7 |
+| test-portfolio | 0.37 MB | 2 | 8 | 90 | 24 |
+| test-store-payment | 0.33 MB | 2 | 8 | 90 | 26 |
+| test-store-fashion | 0.38 MB | 2 | 7 | 80 | 21 |
+| test-medical | 0.43 MB | 2 | 6 | 70 | 16 |
+| test-real-estate | 0.38 MB | 2 | 6 | 70 | 18 |
+| bakkerij-de-graankorrel | 0.78 MB | 3 | 5 | 65 | 8 |
+| dirk-de-witte-kappers | 0.20 MB | 0 | 6 | 60 | 30 |
+| test-dentist | 0.75 MB | 4 | 4 | 60 | 8 |
+| dirk-de-witte-kappers | 0.20 MB | 0 | 6 | 60 | 29 |
+| bakkerij-de-graankorrel | 0.78 MB | 3 | 4 | 55 | 7 |
+| test-restaurant | 1.13 MB | 5 | 3 | 55 | 5 |
+| academy-1 | 0.24 MB | 0 | 5 | 50 | 21 |
+| gentse-dakwerken | 0.00 MB | 0 | 0 | 0 | 0 |
+| lex-justitia | 0.00 MB | 0 | 0 | 0 | 0 |
+| pure-bloom-floral | 0.00 MB | 0 | 0 | 0 | 0 |
+| urban-brew-bite | 0.00 MB | 0 | 0 | 0 | 0 |
+| gentse-dakwerken | 0.20 MB | 0 | 0 | 0 | 0 |
+| kdc-it-advies | 0.20 MB | 0 | 0 | 0 | 0 |
+| lex-justitia | 0.20 MB | 0 | 0 | 0 | 0 |
+| pure-bloom-floral | 0.20 MB | 0 | 0 | 0 | 0 |
+| urban-brew-bite | 0.20 MB | 0 | 0 | 0 | 0 |
