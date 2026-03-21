@@ -15,8 +15,8 @@ on:
     types: [publish_from_sheet]
   push:
     paths:
-      - 'sites/**'
-      - 'sites-external/**'
+      - 'athena-y/sites/**'
+      - 'athena-y/sites-external/**'
     branches:
       - main
       - 'feat/**'
