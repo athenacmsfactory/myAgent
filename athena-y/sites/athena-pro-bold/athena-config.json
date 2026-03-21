@@ -1,0 +1,11 @@
+{
+  "projectName": "athena-pro-bold",
+  "safeName": "athena-pro",
+  "siteType": "professional-service-provider",
+  "layoutName": "standard",
+  "styleName": "bold.css",
+  "siteModel": "SPA",
+  "blueprint": "athena-cms-factory-promo",
+  "generatedAt": "2026-01-30T11:33:00.674Z",
+  "governance_mode": "dev-mode"
+}
