@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://sites/modular-test-v3.netlify.app/sitemap.xml

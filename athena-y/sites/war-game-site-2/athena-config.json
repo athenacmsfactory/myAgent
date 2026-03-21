@@ -1,0 +1,12 @@
+{
+  "projectName": "war-game-site-2",
+  "siteType": "tech-consultancy",
+  "siteModel": "SPA",
+  "inputFile": "quick-input.txt",
+  "autoSheet": true,
+  "blueprintFile": "tech-consultancy/blueprint/tech-consultancy.json",
+  "layoutName": "standard",
+  "styleName": "corporate.css",
+  "safeName": "war-game-site-2",
+  "generatedAt": "2026-03-21T14:53:08.153Z"
+}

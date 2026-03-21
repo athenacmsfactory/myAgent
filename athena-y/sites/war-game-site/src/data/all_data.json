@@ -1,0 +1,125 @@
+{
+  "about": [],
+  "bedrijfsinformatie": [],
+  "display_config": {
+    "site_name": "war-game-site",
+    "tagline": ""
+  },
+  "hero": [],
+  "layout_settings": {
+    "site_name": "war-game-site",
+    "tagline": ""
+  },
+  "schema": {
+    "blueprint_name": "basic-dock-type",
+    "description": "Een minimalistisch sitetype voor het testen van de Athena Dock.",
+    "recommended_layout": "standard",
+    "recommended_style": "modern",
+    "data_structure": [
+      {
+        "table_name": "bedrijfsinformatie",
+        "columns": [
+          "naam",
+          "beschrijving",
+          "telefoon",
+          "email",
+          "adres"
+        ]
+      },
+      {
+        "table_name": "hero",
+        "columns": [
+          "title",
+          "subtitle",
+          "cta_text",
+          "image"
+        ]
+      },
+      {
+        "table_name": "about",
+        "columns": [
+          "content",
+          "image"
+        ]
+      }
+    ],
+    "sections": [
+      {
+        "id": "hero",
+        "title": "Hero Sectie",
+        "fields": {
+          "title": "string",
+          "subtitle": "string",
+          "cta_text": "string",
+          "image": "image"
+        }
+      },
+      {
+        "id": "about",
+        "title": "Over Ons",
+        "fields": {
+          "content": "text",
+          "image": "image"
+        }
+      }
+    ],
+    "version": "2.0",
+    "design_system": {
+      "colors": {
+        "primary": "#0f172a",
+        "secondary": "#64748b",
+        "accent": "#3b82f6",
+        "background": "#ffffff",
+        "surface": "#f8fafc",
+        "text": "#1e293b"
+      },
+      "font_sans": "'Inter', ui-sans-serif, system-ui, sans-serif",
+      "font_serif": "'Playfair Display', ui-serif, Georgia, serif",
+      "radius": "1rem"
+    }
+  },
+  "section_order": [
+    "bedrijfsinformatie",
+    "hero",
+    "about"
+  ],
+  "section_settings": {
+    "site_name": "war-game-site",
+    "tagline": ""
+  },
+  "site_settings": {
+    "site_name": "war-game-site",
+    "tagline": "",
+    "site_logo_image": "site-logo.svg"
+  },
+  "style_bindings": {
+    "site_name": "war-game-site",
+    "tagline": ""
+  },
+  "style_config": {
+    "--color-primary": "#0f172a",
+    "--color-secondary": "#64748b",
+    "--color-accent": "#3b82f6",
+    "--color-button-bg": "#3b82f6",
+    "--color-card-bg": "#ffffff",
+    "--color-header-bg": "#ffffff",
+    "--color-background": "#ffffff",
+    "--color-surface": "#f8fafc",
+    "--color-text": "#1e293b",
+    "--color-heading": "#0f172a",
+    "--color-title": "#0f172a",
+    "--font-sans": "'Inter', ui-sans-serif, system-ui, sans-serif",
+    "--font-serif": "'Playfair Display', ui-serif, Georgia, serif",
+    "--radius-custom": "1rem",
+    "--shadow-main": "0 4px 20px -2px rgba(0, 0, 0, 0.05)",
+    "--color-primary-rgb": "15 23 42",
+    "--color-secondary-rgb": "100 116 139",
+    "--color-accent-rgb": "59 130 246",
+    "--color-background-rgb": "255 255 255",
+    "--color-surface-rgb": "248 250 252",
+    "--color-text-rgb": "30 41 59",
+    "--color-heading-rgb": "15 23 42",
+    "--color-title-rgb": "15 23 42",
+    "--color-button-bg-rgb": "59 130 246"
+  }
+}

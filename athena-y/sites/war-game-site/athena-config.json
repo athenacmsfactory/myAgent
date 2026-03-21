@@ -1,0 +1,12 @@
+{
+  "projectName": "war-game-site",
+  "siteType": "basic-dock-type",
+  "siteModel": "SPA",
+  "inputFile": "quick-input.txt",
+  "autoSheet": true,
+  "blueprintFile": "basic-dock-type/blueprint/basic-dock-type.json",
+  "layoutName": "standard",
+  "styleName": "modern.css",
+  "safeName": "war-game-site",
+  "generatedAt": "2026-03-21T14:52:38.961Z"
+}

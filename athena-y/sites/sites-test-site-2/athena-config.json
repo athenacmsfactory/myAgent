@@ -1,0 +1,11 @@
+{
+  "projectName": "sites/test-site-2",
+  "track": "docked",
+  "siteType": "basic-dock-type",
+  "siteModel": "SPA",
+  "layoutName": "standard",
+  "blueprintFile": "basic-dock-type.json",
+  "styleName": "modern",
+  "safeName": "sites-test-site-2",
+  "generatedAt": "2026-03-21T13:25:57.199Z"
+}

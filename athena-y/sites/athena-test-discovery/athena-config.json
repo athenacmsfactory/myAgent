@@ -1,0 +1,13 @@
+{
+  "projectName": "athena-test-discovery",
+  "clientEmail": "karel.test.special@gmail.com",
+  "siteType": "basic-dock-type",
+  "track": "docked",
+  "siteModel": "SPA",
+  "layoutName": "standard",
+  "styleName": "modern",
+  "blueprintFile": "basic-dock-type.json",
+  "autoSheet": true,
+  "safeName": "athena-test-discovery",
+  "generatedAt": "2026-03-21T14:07:01.964Z"
+}
