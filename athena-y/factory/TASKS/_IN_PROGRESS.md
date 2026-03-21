@@ -8,19 +8,19 @@
   - [x] Enforce `ConfigManager` in core Engine (`factory.js`).
   - [x] **Milestone**: Managed Monorepo Migration (shared node_modules).
   - [x] **Milestone**: Multi-Agent Conductor v2.3 (Governance-First).
-- [x] **Track: Site Portfolio Audit & Visual Polish**
-  - [x] Perform visual audit of all sites in Site Reviewer. (TASK-60)
-  - [x] Optimize Header/Footer components across all templates for dynamic coloring. (TASK-30)
+- [ ] **Track: Site Portfolio Audit & Visual Polish**
+  - [ ] Perform visual audit of all sites in Site Reviewer.
+  - [ ] Optimize Header/Footer components across all templates for dynamic coloring.
   - [ ] Fix functional testing (Shift+Click) in Reviewer iframe context.
   - [x] Define `ONBOARDING_PROTOCOL.md` and technical specifications.
   - [x] Implement `factory/5-engine/onboarding-wizard.js`.
   - [x] Create `skill-athena-onboarding` for Gemini CLI.
   - [x] Integrate with `auto-sheet-provisioner.js` and `athena-scraper.js`.
-- [x] **Track: Operation War Game (Commercial Simulation & Autonomous Ops)**
+- [ ] **Track: Operation War Game (Commercial Simulation & Autonomous Ops)**
   - [x] Implement real-world email connectivity (Gmail/IMAP).
   - [x] Develop "Customer Simulator" utility for persona-based requests.
   - [x] Enhance Gateway with One-Shot and Daemon modes.
-  - [x] Implement Commercial Value Tracking (Performance Reports). (TASK-31)
+  - [ ] Implement Commercial Value Tracking (Performance Reports).
   - [ ] Integrate Antigravity Browser for E2E site auditing.
 
 ## Finalization & Documentation

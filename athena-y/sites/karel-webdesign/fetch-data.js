@@ -18,18 +18,18 @@ const mapper = createMapper(schema);
 
 async function sync() {
     console.log(`🧹 Athena Deep Clean v6.1 | Blueprint: ${schema.blueprint_name}`);
-    
+
     const settingsPath = path.join(process.cwd(), 'project-settings/url-sheet.json');
     if (!fs.existsSync(settingsPath)) {
         console.error("❌ Geen url-sheet.json gevonden.");
         process.exit(1);
     }
-    
+
     let sources;
     try {
         const fileContent = fs.readFileSync(settingsPath, 'utf8');
         if (!fileContent.trim()) {
-             throw new Error("Bestand is leeg");
+            throw new Error("Bestand is leeg");
         }
         sources = JSON.parse(fileContent);
     } catch (e) {
@@ -37,14 +37,6 @@ async function sync() {
         console.error(`   Pad: ${settingsPath}`);
         console.error(`   Fout: ${e.message}`);
         process.exit(1);
-    }
-
-    const isTemp = process.argv.includes('--temp');
-    const outputBase = isTemp ? 'src/data-temp' : 'src/data';
-    const outputDir = path.join(process.cwd(), outputBase);
-
-    if (!fs.existsSync(outputDir)) {
-        fs.mkdirSync(outputDir, { recursive: true });
     }
 
     for (const [name, config] of Object.entries(sources)) {
@@ -60,10 +52,18 @@ async function sync() {
         }
 
         if (!url || !url.startsWith('http')) continue;
-        
+
         try {
             const res = await fetch(url);
             let tsv = await res.text();
+
+            // ROBUUSTHEID: Voorkom dat we HTML (foutpagina's van Google) parsen als TSV
+            if (tsv.trim().toLowerCase().startsWith('<!doctype html') || tsv.includes('<html')) {
+                console.warn(`  ⚠️  OVERSLAGEN: '${name}' ontving HTML in plaats van TSV.`);
+                console.warn(`     Zorg dat de Google Sheet 'Gepubliceerd op internet' is als TSV.`);
+                continue;
+            }
+
             let json = await csv({ delimiter: '\t', checkType: true }).fromString(tsv.replace(/^\uFEFF/, ''));
 
             const cleaned = json.map(row => {
@@ -71,7 +71,7 @@ async function sync() {
                 Object.keys(row).forEach(rawKey => {
                     const techKey = mapper.mapHeader(rawKey);
                     let val = row[rawKey];
-                    
+
                     if (typeof val === 'string') {
                         // Vertaal waarde indien nodig
                         val = mapper.mapValue(val);
@@ -89,28 +89,9 @@ async function sync() {
                 return newRow;
             }).filter(row => Object.values(row).some(v => v !== ""));
 
-            // HERNOEMING LOGICA: _style_config -> style_config.json
-            let filename = `${name.toLowerCase()}.json`;
-            let finalData = cleaned;
+            fs.writeFileSync(path.join(process.cwd(), `src/data/${name.toLowerCase()}.json`), JSON.stringify(cleaned, null, 2));
+            console.log(`  ✅ ${name}.json verwerkt via schema.`);
 
-            if (name === '_style_config') {
-                filename = 'style_config.json';
-            }
-            
-            if (name === '_links_config') {
-                filename = 'links_config.json';
-                // Convert back to object
-                finalData = {};
-                cleaned.forEach(row => {
-                    const k = row.Key || row.key;
-                    const v = row.Value || row.value;
-                    if (k) finalData[k] = v;
-                });
-            }
-
-            fs.writeFileSync(path.join(outputDir, filename), JSON.stringify(finalData, null, 2));
-            console.log(`  ✅ ${name} verwerkt -> ${filename}`);
-            
         } catch (e) {
             console.error(`  ❌ Fout bij verwerken van ${name}:`, e.message);
         }

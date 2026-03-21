@@ -27,3 +27,4 @@ athena-x/athena_publisher_key*
 .env
 *.log
 tmp/
+athena-y/

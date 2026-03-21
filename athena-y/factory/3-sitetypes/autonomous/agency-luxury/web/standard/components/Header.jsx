@@ -1,6 +1,4 @@
 import React from 'react';
-import EditableMedia from './EditableMedia';
-import EditableText from './EditableText';
 import ThemeToggle from './ThemeToggle';
 
 /**
@@ -23,17 +21,7 @@ const Header = ({ data }) => {
     <header className="relative min-h-screen flex items-center bg-slate-900 overflow-hidden px-6">
       <div className="absolute inset-0 z-0">
         <div className="w-full h-full">
-           <EditableMedia 
-             src={bgMedia} 
-             alt="Hero Background" 
-             className="w-full h-full object-cover opacity-40"
-             dataItem={info}
-             cmsBind={{ 
-                 file: infoKey.toLowerCase(), 
-                 index: 0, 
-                 key: (bgMedia && (bgMedia.endsWith('.mp4') || bgMedia.includes('video'))) ? 'video_url' : 'foto_buiten' 
-             }}
-           />
+           <img src={bgMedia} className="w-full h-full object-cover opacity-40" data-dock-type="media" data-dock-bind="infoKey.toLowerCase().0.(bgMedia" />
         </div>
         <div className="absolute inset-0 bg-gradient-to-b from-black/70 via-transparent to-black/70 pointer-events-none"></div>
       </div>
@@ -48,19 +36,9 @@ const Header = ({ data }) => {
              Athena CMS Factory
           </span>
           
-          <EditableText 
-            tagName="h1" 
-            value={title} 
-            className="text-6xl md:text-8xl font-serif font-bold mb-10 leading-[1.1] block"
-            cmsBind={{ file: infoKey.toLowerCase(), index: 0, key: 'naam' }}
-          />
+          <h1 className="text-6xl md:text-8xl font-serif font-bold mb-10 leading-[1.1] block" data-dock-type="text" data-dock-bind={`infoKey.toLowerCase().${0}.${naam}`}>{title}</h1>
 
-          <EditableText 
-            tagName="p" 
-            value={tagline} 
-            className="text-xl md:text-2xl text-white/80 mb-12 leading-relaxed font-light italic block"
-            cmsBind={{ file: infoKey.toLowerCase(), index: 0, key: 'tagline' }}
-          />
+          <p className="text-xl md:text-2xl text-white/80 mb-12 leading-relaxed font-light italic block" data-dock-type="text" data-dock-bind={`infoKey.toLowerCase().${0}.${tagline}`}>{tagline}</p>
           
           <div className="flex flex-wrap gap-8">
              <a href="#cases" className="px-12 py-5 bg-blue-600 text-white rounded-full font-bold text-lg shadow-2xl hover:bg-blue-500 transition-all">

@@ -26,7 +26,7 @@ const Checkout = () => {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          projectName: "athena-hub",
+          projectName: 'athena-hub',
           cart: cart,
           successUrl: window.location.origin + '/checkout?status=success',
           cancelUrl: window.location.origin + '/checkout?status=cancel'
@@ -98,8 +98,8 @@ Opmerkingen: ${formData.opmerkingen}
       <div className="min-h-screen flex flex-col items-center justify-center p-8 text-center bg-green-50">
         <div className="w-20 h-20 bg-green-500 rounded-full flex items-center justify-center text-white text-4xl mb-6">✓</div>
         <h2 className="text-3xl font-serif font-bold mb-4 text-green-800">Betaling Geslaagd!</h2>
-        <p className="text-green-700 mb-8 max-w-md">Bedankt voor je aankoop. We maken je bestelling direct in orde.</p>
-        <Link to="/" onClick={() => clearCart()} className="btn-primary px-8 py-3 rounded-full bg-green-600 border-none text-white">Terug naar winkel</Link>
+        <p className="text-green-700 mb-8 max-w-md">Bedankt voor je aankoop. Je ontvangt binnen enkele minuten een bevestiging per e-mail.</p>
+        <Link to="/" onClick={() => clearCart()} className="btn-primary px-8 py-3 rounded-full bg-green-600 border-none text-white">Terug naar de Hub</Link>
       </div>
     );
   }
@@ -149,7 +149,7 @@ Opmerkingen: ${formData.opmerkingen}
               {isProcessing ? 'Verwerken...' : `Nu Betalen (€${cartTotal.toFixed(2)})`}
             </button>
             <p className="text-center text-xs text-secondary font-medium">
-              Veilig betalen via Bancontact (Payconiq), iDEAL, Creditcard of PayPal.
+              Veilig betalen via Stripe (Bancontact, Payconiq, iDEAL, Creditcard, PayPal)
             </p>
           </div>
 

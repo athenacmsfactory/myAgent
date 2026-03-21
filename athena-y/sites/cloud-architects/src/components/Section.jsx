@@ -1,7 +1,4 @@
 import React, { useEffect } from 'react';
-import EditableMedia from './EditableMedia';
-import EditableText from './EditableText';
-import EditableLink from './EditableLink';
 
 const Section = ({ data }) => {
   const sectionOrder = data.section_order || [];
@@ -53,38 +50,24 @@ const Section = ({ data }) => {
               className="relative w-full h-auto min-h-[85vh] flex items-center justify-center overflow-hidden bg-slate-900 pt-24"
             >
               <div className="absolute inset-0 z-0">
-                <EditableMedia
-                  src={hero[imgKey] || "site-logo.svg"}
-                  cmsBind={{ file: sectionName, index: 0, key: imgKey }}
-                  className="w-full h-full object-cover"
-                />
+                <img src={hero[imgKey] || "site-logo.svg"} className="w-full h-full object-cover" data-dock-type="media" data-dock-bind={`sectionName.0.imgKey`} />
                 <div className="absolute inset-0 z-20 pointer-events-none" style={{
                   backgroundImage: 'linear-gradient(to bottom, rgba(0,0,0,0.35), rgba(0,0,0,0.15))'
                 }}></div>
               </div>
               <div className="relative z-30 text-center px-6 max-w-5xl">
                 <h1 className="text-5xl md:text-7xl font-serif font-bold text-white mb-8 leading-tight drop-shadow-2xl">
-                  <EditableText value={heroTitle} cmsBind={{ file: sectionName, index: 0, key: 'titel' }} />
+                  <span data-dock-type="text" data-dock-bind={`sectionName.0.titel`}>{heroTitle}</span>
                 </h1>
                 <p className="text-xl md:text-2xl text-white/95 max-w-3xl mx-auto mb-12 leading-relaxed drop-shadow-lg font-light italic">
-                  <EditableText value={heroSubtitle} cmsBind={{ file: sectionName, index: 0, key: 'subtitel' }} />
+                  <span data-dock-type="text" data-dock-bind={`sectionName.0.subtitel`}>{heroSubtitle}</span>
                 </p>
                 <div className="flex justify-center">
-                  <EditableLink
-                    as="button"
-                    label={hero.knop_tekst || "Ontdek meer"}
-                    url={hero.knop_link || "#packages"}
-                    className="bg-accent text-white px-12 py-5 text-xl font-bold shadow-2xl hover:scale-105 transition-all"
-                    style={{ borderRadius: 'var(--radius-custom, 2.5rem)' }}
-                    onClick={(e) => {
-                      const url = hero.knop_link || "#packages";
-                      if (url.startsWith('#')) {
-                        e.preventDefault();
-                        const el = document.getElementById(url.substring(1));
-                        if (el) el.scrollIntoView({ behavior: 'smooth' });
-                      }
-                    }}
-                  />
+                  <button onClick={(e) => { 
+                if (e.shiftKey) return; 
+                const target = document.getElementById("contact");
+                if (target) { e.preventDefault(); target.scrollIntoView({ behavior: "smooth" }); }
+            }} data-dock-type="link" data-dock-bind="site_settings.0.titel">{}</button>
                 </div>
               </div>
             </section>
@@ -103,28 +86,22 @@ const Section = ({ data }) => {
               <div className="max-w-7xl mx-auto">
                 <div className="flex flex-col md:flex-row items-center gap-16 md:gap-24">
                   <div className="w-full md:w-1/2 aspect-square md:aspect-[4/5] rounded-[3rem] overflow-hidden shadow-2xl rotate-2 hover:rotate-0 transition-transform duration-700">
-                    <EditableMedia
-                      src={img}
-                      cmsBind={{ file: 'contact', index: 0, key: 'afbeelding' }}
-                      className="w-full h-full object-cover"
-                    />
+                    <img src={img} className="w-full h-full object-cover" data-dock-type="media" data-dock-bind="contact.0.afbeelding" />
                   </div>
                   <div className="flex-1 space-y-8">
                     <div className="inline-block px-4 py-1.5 bg-accent/10 text-accent rounded-full text-xs font-black uppercase tracking-widest">Contact</div>
                     <h2 className="text-4xl md:text-6xl font-serif font-bold text-primary leading-tight">
-                      <EditableText value={title} cmsBind={{ file: 'contact', index: 0, key: 'titel' }} />
+                      <span data-dock-type="text" data-dock-bind="contact.0.titel">{title}</span>
                     </h2>
                     <p className="text-xl md:text-2xl text-slate-600 font-light leading-relaxed">
-                      <EditableText value={text} cmsBind={{ file: 'contact', index: 0, key: 'tekst' }} />
+                      <span data-dock-type="text" data-dock-bind="contact.0.tekst">{text}</span>
                     </p>
                     <div className="pt-4">
-                      <EditableLink
-                        as="button"
-                        label="E-mail ons direct"
-                        url="mailto:hello@cloud-architects.be"
-                        className="bg-primary text-white px-10 py-4 text-lg font-bold shadow-xl hover:bg-accent transition-all"
-                        style={{ borderRadius: 'var(--radius-custom, 2.5rem)' }}
-                      />
+                      <button onClick={(e) => { 
+                if (e.shiftKey) return; 
+                const target = document.getElementById("contact");
+                if (target) { e.preventDefault(); target.scrollIntoView({ behavior: "smooth" }); }
+            }} data-dock-type="link" data-dock-bind="site_settings.0.titel">{}</button>
                     </div>
                   </div>
                 </div>
@@ -154,16 +131,16 @@ const Section = ({ data }) => {
                             <i className={`fa-solid ${item.icon ? (iconMap[item.icon.toLowerCase()] || `fa-${item.icon.toLowerCase()}`) : 'fa-box'}`}></i>
                           </div>
                           <h3 className="text-2xl font-bold text-primary mb-2">
-                            <EditableText value={item.titel || item.package_name} cmsBind={{ file: sectionName, index: index, key: item.titel ? 'titel' : 'package_name' }} />
+                            <span data-dock-type="text" data-dock-bind={`sectionName.${index}.${item.titel}`}>{item.titel || item.package_name}</span>
                           </h3>
                           <p className="text-slate-500 text-sm italic font-light">
-                            <EditableText value={item.subtitel || item.subtitle} cmsBind={{ file: sectionName, index: index, key: item.subtitel ? 'subtitel' : 'subtitle' }} />
+                            <span data-dock-type="text" data-dock-bind={`sectionName.${index}.${item.subtitel}`}>{item.subtitel || item.subtitle}</span>
                           </p>
                         </div>
                         <div className="mb-8 pb-8 border-b border-slate-100 flex items-baseline gap-1">
                           <span className="text-2xl font-bold text-primary">{item.valuta || '€'}</span>
                           <span className="text-5xl font-black text-primary tracking-tight">
-                            <EditableText value={item.prijs || item.price} cmsBind={{ file: sectionName, index: index, key: item.prijs ? 'prijs' : 'price' }} />
+                            <span data-dock-type="text" data-dock-bind={`sectionName.${index}.${item.prijs}`}>{item.prijs || item.price}</span>
                           </span>
                           <span className="text-slate-400 text-sm font-medium">{item.periode}</span>
                         </div>
@@ -206,22 +183,22 @@ const Section = ({ data }) => {
                     <div key={index} className="flex flex-col items-center text-center bg-slate-50 p-10 rounded-[2.5rem] shadow-sm border border-slate-100 hover:shadow-md transition-all duration-300">
                       {img && (
                         <div className="w-full aspect-[4/3] rounded-[2rem] overflow-hidden mb-8 shadow-inner">
-                          <EditableMedia src={img} cmsBind={{ file: sectionName, index: index, key: item.afbeelding ? 'afbeelding' : (item.image_url ? 'image_url' : 'image') }} className="w-full h-full object-cover" />
+                          <img src={img} className="w-full h-full object-cover" data-dock-type="media" data-dock-bind={`sectionName.${index}.${item.afbeelding}`} />
                         </div>
                       )}
                       {title && (
                         <h3 className="text-2xl font-bold text-primary mb-2">
-                          <EditableText value={title} cmsBind={{ file: sectionName, index: index, key: item.titel ? 'titel' : (item.title ? 'title' : 'naam') }} />
+                          <span data-dock-type="text" data-dock-bind={`sectionName.${index}.${item.titel}`}>{title}</span>
                         </h3>
                       )}
                       {subtitle && (
                         <p className="text-accent text-sm font-bold uppercase tracking-widest mb-4">
-                          <EditableText value={subtitle} cmsBind={{ file: sectionName, index: index, key: item.subtitel ? 'subtitel' : 'project_title' }} />
+                          <span data-dock-type="text" data-dock-bind={`sectionName.${index}.${item.subtitel}`}>{subtitle}</span>
                         </p>
                       )}
                       {text && (
                         <div className="text-slate-600 text-lg leading-relaxed">
-                          <EditableText value={text} cmsBind={{ file: sectionName, index: index, key: item.tekst ? 'tekst' : 'description' }} />
+                          <span data-dock-type="text" data-dock-bind={`sectionName.${index}.${item.tekst}`}>{text}</span>
                         </div>
                       )}
                     </div>

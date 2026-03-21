@@ -1,12 +1,11 @@
 import React from 'react';
-import EditableText from './EditableText';
 
 const Header = ({ profile }) => {
   return (
     <header className="fixed top-0 left-0 right-0 z-50 py-10 px-6">
       <div className="max-w-7xl mx-auto flex justify-between items-center bg-black/50 backdrop-blur-2xl border border-white/10 rounded-full px-10 py-4">
         <div className="text-xl font-black uppercase tracking-tighter">
-          <EditableText table="profile" field="full_name" id={0} value={profile.full_name || 'Karel'} />
+          <span data-dock-type="text" data-dock-bind="site_settings.0.titel">...</span>
         </div>
         
         <nav className="hidden md:flex gap-8 items-center">

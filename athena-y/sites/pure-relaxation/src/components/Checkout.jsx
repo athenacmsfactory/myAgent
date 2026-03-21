@@ -26,7 +26,7 @@ const Checkout = () => {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          projectName: "pure-relaxation",
+          projectName: 'pure-relaxation',
           cart: cart,
           successUrl: window.location.origin + '/checkout?status=success',
           cancelUrl: window.location.origin + '/checkout?status=cancel'

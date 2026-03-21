@@ -45,12 +45,13 @@ export default defineConfig(async ({ command }) => {
       }
     ].filter(Boolean),
     server: {
+      cors: true,
       host: true,
-      port: 6110,
+      port: parseInt(process.env.PORT) || 6110,
       allowedHosts: true, 
       hmr: {
-        host: 'localhost',
-        port: 6110
+        host: true,
+        port: parseInt(process.env.PORT) || 6110
       }
     },
     build: {

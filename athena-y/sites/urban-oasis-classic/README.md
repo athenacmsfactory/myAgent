@@ -1,2 +1,1 @@
-https://ath-x.github.io/urban-oasis-classic 
-Batch build Sat Mar 21 06:56:47 PM CET 2026
+https://athena-cms-factory.github.io/urban-oasis-classic 

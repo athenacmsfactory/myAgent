@@ -7,6 +7,16 @@ export default defineConfig({
   server: {
     port: 5002,
     host: true,
-    allowedHosts: true // Cruciaal voor Vite 6 op Chromebooks
+    allowedHosts: true, // Cruciaal voor Vite 6 op Chromebooks
+    proxy: {
+      '/api': {
+        target: 'http://localhost:5000',
+        changeOrigin: true
+      },
+      '/previews': {
+        target: 'http://localhost:5000',
+        changeOrigin: true
+      }
+    }
   }
 })

@@ -1,6 +1,4 @@
 import React, { useEffect } from 'react';
-import EditableMedia from './EditableMedia';
-import EditableText from './EditableText';
 
 const Section = ({ data }) => {
   const sectionOrder = data.section_order || [];
@@ -33,19 +31,19 @@ const Section = ({ data }) => {
           return (
             <section key={idx} id="hero" data-dock-section={sectionName} className="relative h-[90vh] flex items-center justify-center overflow-hidden">
               <div className="absolute inset-0 z-0">
-                <EditableMedia src={heroImg} cmsBind={{file: sectionName, index: 0, key: hero.hero_afbeelding ? 'hero_afbeelding' : (hero.foto_url ? 'foto_url' : 'image')}} className="w-full h-full object-cover" />
+                <img src={heroImg} className="w-full h-full object-cover" data-dock-type="media" data-dock-bind={`sectionName.0.hero.hero_afbeelding`} />
                 <div className="absolute inset-0 z-20 pointer-events-none" style={{ 
                   backgroundImage: 'linear-gradient(to bottom, var(--hero-overlay-start, rgba(0,0,0,0.6)), var(--hero-overlay-end, rgba(0,0,0,0.6)))' 
                 }}></div>
               </div>
               <div className="relative z-10 text-center px-6 max-w-5xl">
                 <h1 className="text-5xl md:text-8xl font-serif font-bold text-white mb-8 leading-tight drop-shadow-2xl">
-                  <EditableText value={heroTitle} cmsBind={{file: sectionName, index: 0, key: hero.titel ? 'titel' : (hero.hero_header ? 'hero_header' : (hero.site_naam ? 'site_naam' : 'title'))}} />
+                  <span data-dock-type="text" data-dock-bind={`sectionName.0.hero.titel`}>{heroTitle}</span>
                 </h1>
                 <div className="h-2 w-32 bg-accent mx-auto mb-10 rounded-full shadow-lg shadow-accent/50"></div>
                 <div className="flex flex-col items-center gap-12">
                     <p className="text-xl md:text-2xl text-white/90 max-w-3xl mx-auto leading-relaxed drop-shadow-lg font-light italic">
-                       <EditableText value={heroSub} cmsBind={{file: sectionName, index: 0, key: hero.ondertitel ? 'ondertitel' : (hero.introductie ? 'introductie' : 'subtitle')}} />
+                       <span data-dock-type="text" data-dock-bind={`sectionName.0.hero.ondertitel`}>{heroSub}</span>
                     </p>
                     <div className="flex flex-wrap justify-center gap-4">
                         <button onClick={scrollToContact} className="bg-[var(--color-button-bg)] text-white px-10 py-5 rounded-full text-xl font-bold shadow-2xl hover:opacity-90 transition-all transform hover:scale-105">
@@ -81,17 +79,17 @@ const Section = ({ data }) => {
                      <div key={index} className="flex flex-col bg-white p-10 rounded-[3rem] shadow-xl hover:shadow-2xl transition-all duration-500 group border border-slate-100">
                        {imgKey && item[imgKey] && (
                          <div className="h-48 rounded-3xl mb-8 overflow-hidden">
-                           <EditableMedia src={item[imgKey]} cmsBind={{file: sectionName, index, key: imgKey}} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" />
+                           <img src={item[imgKey]} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" data-dock-type="media" data-dock-bind={`sectionName.0.imgKey`} />
                          </div>
                        )}
                        
                        <h3 className="text-2xl font-serif font-bold text-primary mb-4 group-hover:text-accent transition-colors">
-                         {titleKey && <EditableText value={item[titleKey]} cmsBind={{file: sectionName, index, key: titleKey}} />}
+                         {titleKey && <span data-dock-type="text" data-dock-bind={`sectionName.0.titleKey`}>{item[titleKey]}</span>}
                        </h3>
                        
                        {textKeys.map(tk => (
                          <p key={tk} className="text-lg text-slate-600 font-light leading-relaxed mb-6">
-                           <EditableText value={item[tk]} cmsBind={{file: sectionName, index, key: tk}} />
+                           <span data-dock-type="text" data-dock-bind={`sectionName.0.tk`}>{item[tk]}</span>
                          </p>
                        ))}
 
@@ -120,7 +118,7 @@ const Section = ({ data }) => {
               <div className="flex flex-col lg:flex-row items-center justify-between gap-16">
                 <div className="max-w-2xl text-center lg:text-left">
                   <h2 className="text-5xl md:text-7xl font-serif font-bold mb-8 leading-tight">
-                    <EditableText value={data.contact[0].titel || 'Laten we praten'} cmsBind={{file: 'contact', index: 0, key: 'titel'}} />
+                    <span data-dock-type="text" data-dock-bind="contact.0.titel">{data.contact[0].titel || 'Laten we praten'}</span>
                   </h2>
                   <p className="text-xl text-white/70 mb-0 font-light">
                     Klaar om uw digitale aanwezigheid naar een hoger niveau te tillen? Laat ons samen iets buitengewoons bouwen.
@@ -139,7 +137,7 @@ const Section = ({ data }) => {
                   <div className="flex flex-wrap justify-center lg:justify-end gap-10 text-white/60">
                     <div className="flex items-center gap-3">
                       <i className="fa-solid fa-location-dot text-accent"></i>
-                      <EditableText value={data.contact[0].locatie} cmsBind={{file: 'contact', index: 0, key: 'locatie'}} />
+                      <span data-dock-type="text" data-dock-bind="contact.0.locatie">{data.contact[0].locatie}</span>
                     </div>
                     {data.contact[0].linkedin_url && (
                       <a href={data.contact[0].linkedin_url} target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors flex items-center gap-3">

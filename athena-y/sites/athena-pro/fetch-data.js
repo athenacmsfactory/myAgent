@@ -39,14 +39,6 @@ async function sync() {
         process.exit(1);
     }
 
-    const isTemp = process.argv.includes('--temp');
-    const outputBase = isTemp ? 'src/data-temp' : 'src/data';
-    const outputDir = path.join(process.cwd(), outputBase);
-
-    if (!fs.existsSync(outputDir)) {
-        fs.mkdirSync(outputDir, { recursive: true });
-    }
-
     for (const [name, config] of Object.entries(sources)) {
         // Support voor zowel string (legacy) als object (hybrid config)
         let url = config;
@@ -91,24 +83,9 @@ async function sync() {
 
             // HERNOEMING LOGICA: _style_config -> style_config.json
             let filename = `${name.toLowerCase()}.json`;
-            let finalData = cleaned;
+            if (name === '_style_config') filename = 'style_config.json';
 
-            if (name === '_style_config') {
-                filename = 'style_config.json';
-            }
-            
-            if (name === '_links_config') {
-                filename = 'links_config.json';
-                // Convert back to object
-                finalData = {};
-                cleaned.forEach(row => {
-                    const k = row.Key || row.key;
-                    const v = row.Value || row.value;
-                    if (k) finalData[k] = v;
-                });
-            }
-
-            fs.writeFileSync(path.join(outputDir, filename), JSON.stringify(finalData, null, 2));
+            fs.writeFileSync(path.join(process.cwd(), `src/data/${filename}`), JSON.stringify(cleaned, null, 2));
             console.log(`  ✅ ${name} verwerkt -> ${filename}`);
             
         } catch (e) {

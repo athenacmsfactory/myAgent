@@ -20,11 +20,12 @@ export class GithubController {
         const GITHUB_USER = (process.env.GITHUB_USER || '').trim();
         const GITHUB_ORG = (process.env.GITHUB_ORG || '').trim();
         const GITHUB_PAT = (process.env.GITHUB_PAT || '').trim();
-        const owners = [GITHUB_ORG, GITHUB_USER].filter(Boolean);
+        const owners = Array.from(new Set([GITHUB_ORG, GITHUB_USER].filter(Boolean)));
         const allRepos = [];
 
         if (owners.length === 0) {
-            throw new Error("Geen GITHUB_USER of GITHUB_ORG geconfigureerd in .env");
+            console.warn("[GITHUB] Geen GITHUB_USER of GITHUB_ORG geconfigureerd.");
+            return [];
         }
 
         for (const owner of owners) {
@@ -33,24 +34,33 @@ export class GithubController {
                 const cmd = `gh repo list ${owner} --limit 300 --json name,owner,isPrivate,url,updatedAt`;
                 const res = this.execService.runSync(cmd, { 
                     label: `GitHub List (${owner})`,
-                    env: { GH_TOKEN: GITHUB_PAT }
+                    env: { GH_TOKEN: GITHUB_PAT },
+                    silent: true
                 });
 
-                if (res.success) {
-                    const repos = JSON.parse(res.output);
-                    repos.forEach(r => {
-                        allRepos.push({
-                            name: r.name,
-                            fullName: `${r.owner.login}/${r.name}`,
-                            owner: r.owner.login,
-                            isPrivate: r.isPrivate,
-                            url: r.url,
-                            updatedAt: r.updatedAt
-                        });
-                    });
+                if (res.success && res.output) {
+                    try {
+                        const repos = JSON.parse(res.output);
+                        if (Array.isArray(repos)) {
+                            repos.forEach(r => {
+                                allRepos.push({
+                                    name: r.name,
+                                    fullName: `${r.owner.login}/${r.name}`,
+                                    owner: r.owner.login,
+                                    isPrivate: r.isPrivate,
+                                    url: r.url,
+                                    updatedAt: r.updatedAt
+                                });
+                            });
+                        }
+                    } catch (parseErr) {
+                        console.error(`[GITHUB] Kon JSON niet parsen voor ${owner}:`, parseErr.message);
+                    }
+                } else {
+                    console.error(`[GITHUB] gh CLI fout voor ${owner}:`, res.error);
                 }
             } catch (e) {
-                console.error(`[GITHUB] Fout bij ophalen repos voor ${owner}:`, e.message);
+                console.error(`[GITHUB] Onverwachte fout voor ${owner}:`, e.message);
             }
         }
 

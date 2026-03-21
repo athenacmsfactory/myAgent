@@ -1,7 +1,7 @@
 import os
 import json
 
-SITES_DIR = "/home/kareltestspecial/2-Fabriek/athena/athena-y/sites"
+SITES_DIR = "/home/kareltestspecial/0-IT/2-Productie/athena/sites"
 
 issues = {}
 

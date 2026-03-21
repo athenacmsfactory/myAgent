@@ -1,43 +1,39 @@
 #!/bin/bash
-# Athena Dashboard Launcher (v8.7 - Decoupled Architecture)
-# Dit script start de Backend (API) op 5000 en de Frontend (Vite) op 5001.
+# Athena Dashboard Launcher (v8.8 - PM2 Orchestrated)
+# Dit script start de Backend (API) op 5000 en de Frontend (Vite) op 5001 via PM2.
 
 # Bepaal de project root (we zitten in factory/athena.sh)
 FACTORY_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 PROJECT_ROOT="$FACTORY_ROOT/.."
 cd "$PROJECT_ROOT"
 
-# Maak log directory aan indien nodig
-mkdir -p output/logs
-TIMESTAMP=$(date +%Y-%m-%d)
-LOG_FILE_API="output/logs/${TIMESTAMP}_athena_api.log"
-LOG_FILE_UI="output/logs/${TIMESTAMP}_athena_ui.log"
-
 # Ports
 API_PORT=5000
 UI_PORT=5001
 
-# Clean up existing processes via pm-cli
-NODE_BIN=$(command -v node)
-if [ -f "$FACTORY_ROOT/cli/pm-cli.js" ]; then
-    $NODE_BIN "$FACTORY_ROOT/cli/pm-cli.js" stop $API_PORT
-    $NODE_BIN "$FACTORY_ROOT/cli/pm-cli.js" stop $UI_PORT
-    sleep 1
-fi
+# Clean up existing processes in PM2
+pm2 stop athena-api athena-ui > /dev/null 2>&1
+pm2 delete athena-api athena-ui > /dev/null 2>&1
 
-echo "🔱 Starting Athena API (Backend) on port $API_PORT..."
+# Extra force cleanup for safety
+fuser -k $API_PORT/tcp $UI_PORT/tcp > /dev/null 2>&1
+sleep 1
+
+echo "🔱 Starting Athena API (Backend) via PM2..."
 cd "$FACTORY_ROOT/athena-api"
-pnpm start > "../../$LOG_FILE_API" 2>&1 &
+# Start API met pm2
+pm2 start server.js --name athena-api --watch --ignore-watch "node_modules logs"
 cd "$PROJECT_ROOT"
 
-echo "🌐 Starting Athena Dashboard UI (Frontend) on port $UI_PORT..."
+echo "🌐 Starting Athena Dashboard UI (Frontend) via PM2..."
 cd "$FACTORY_ROOT/athena-dashboard-ui"
-# In development gebruiken we de Vite server (die proxy't naar 5000)
-pnpm dev --port $UI_PORT > "../../$LOG_FILE_UI" 2>&1 &
+# Start UI (Vite dev) met pm2
+# We moeten de pnpm dev opdracht via sh uitvoeren om de juiste environment te hebben
+pm2 start "pnpm dev --port $UI_PORT" --name athena-ui
 cd "$PROJECT_ROOT"
 
-echo "⏳ Wachten op initialisatie..."
-sleep 3
+echo "⏳ Wachten op initialisatie door PM2..."
+sleep 4
 
 # Open de browser (Absolute Linux Binary)
 echo "🌐 Dashboard openen op http://localhost:$UI_PORT..."
@@ -49,3 +45,7 @@ if [ -f "/opt/google/chrome/google-chrome" ]; then
 else
     xdg-open "http://localhost:$UI_PORT"
 fi
+
+echo "✅ Athena is nu actief en wordt beheerd door PM2."
+echo "   Gebruik 'pm2 list' om de status te checken."
+echo "   Gebruik 'pm2 logs athena-api' voor backend logs."

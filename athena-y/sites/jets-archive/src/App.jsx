@@ -3,8 +3,6 @@ import { HashRouter as Router } from 'react-router-dom';
 import { DisplayConfigProvider } from './components/DisplayConfigContext';
 import { StyleProvider } from './components/StyleContext';
 import JetCard from './components/JetCard';
-import EditableText from './components/EditableText';
-import EditableMedia from './components/EditableMedia';
 import Header from './components/Header';
 import Footer from './components/Footer';
 
@@ -64,10 +62,10 @@ const App = ({ data: initialData }) => {
                 
                 <div className="relative z-10 max-w-5xl mx-auto px-6 text-center">
                   <h1 className="text-4xl md:text-7xl font-black mb-6 tracking-tight">
-                    <EditableText value={basis.hero_header || 'Vliegende Iconen'} cmsBind={{file: 'basis', index: 0, key: 'hero_header'}} />
+                    <span data-dock-type="text" data-dock-bind="basis.0.hero_header">{basis.hero_header || 'Vliegende Iconen'}</span>
                   </h1>
                   <p className="text-xl md:text-2xl text-sky-200 font-light max-w-2xl mx-auto mb-10">
-                    <EditableText value={basis.hero_subtekst || 'Verken de evolutie van straaljagers door de decennia heen.'} cmsBind={{file: 'basis', index: 0, key: 'hero_subtekst'}} />
+                    <span data-dock-type="text" data-dock-bind="basis.0.hero_subtekst">{basis.hero_subtekst || 'Verken de evolutie van straaljagers door de decennia heen.'}</span>
                   </p>
                   <div className="flex flex-wrap justify-center gap-4">
                     <button onClick={() => document.getElementById('collection')?.scrollIntoView({behavior: 'smooth'})} className="bg-sky-500 hover:bg-sky-400 text-white px-8 py-3 rounded-full font-bold transition-all transform hover:scale-105 shadow-xl">

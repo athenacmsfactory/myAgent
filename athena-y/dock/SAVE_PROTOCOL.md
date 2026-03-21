@@ -74,7 +74,7 @@ Er wordt automatisch een backup gemaakt in de site-map.
 
 | Eigenschap | Detail |
 |---|---|
-| **Wat doet het?** | Commit en pusht alle wijzigingen naar de `athena-y` monorepo op GitHub |
+| **Wat doet het?** | Commit en pusht alle wijzigingen naar de `athena-x` monorepo op GitHub |
 | **Commit bericht** | Er verschijnt een prompt waar je een beschrijving kunt invullen |
 | **Automatische subtree** | GitHub Actions detecteert wijzigingen in `sites/` en pusht elke gewijzigde site als subtree naar zijn eigen repo |
 | **Live deployment** | De site-repo heeft een eigen workflow die automatisch de site bouwt en publiceert |
@@ -140,7 +140,7 @@ Volg deze volgorde **altijd** bij het afsluiten van een bewerkingssessie:
 ## Architectuur: Hoe de Monorepo Werkt
 
 ```
-athena-y (monorepo)
+athena-x (monorepo)
 ├── factory/          ← Athena Dashboard (poort 5001)
 ├── dock/             ← Athena Dock (poort 5002)
 ├── sites/
@@ -151,7 +151,7 @@ athena-y (monorepo)
     └── subtree-push.yml  ← Detecteert site-wijzigingen → subtree push
 ```
 
-**Bij `git push` naar `athena-y`:**
+**Bij `git push` naar `athena-x`:**
 1. GitHub Actions workflow start
 2. Controleert of er wijzigingen zijn in `sites/`
 3. Voor elke gewijzigde site-map: subtree push naar eigen repo  

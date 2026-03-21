@@ -1,11 +1,15 @@
 import React, { useEffect } from 'react';
-import EditableMedia from './EditableMedia';
-import EditableText from './EditableText';
 import { useCart } from './CartContext';
 
 const Section = ({ data }) => {
   const { addToCart } = useCart();
   const sectionOrder = data.section_order || [];
+
+  const getImgSrc = (img) => {
+    if (!img) return `${import.meta.env.BASE_URL}images/placeholder.jpg`;
+    if (img.startsWith('http')) return img;
+    return `${import.meta.env.BASE_URL}images/${img}`;
+  };
 
   // Meld aan de Dock welke secties we hebben
   useEffect(() => {
@@ -30,16 +34,12 @@ const Section = ({ data }) => {
               className="relative h-[90vh] flex items-center justify-center overflow-hidden"
             >
               <div className="absolute inset-0 z-0">
-                <EditableMedia 
-                  src={hero.hero_afbeelding} 
-                  cmsBind={{file: 'basisgegevens', index: 0, key: 'hero_afbeelding'}}
-                  className="w-full h-full object-cover" 
-                />
+                <img src={getImgSrc(hero.hero_afbeelding)} className="w-full h-full object-cover" data-dock-type="media" data-dock-bind="basisgegevens.0.hero_afbeelding" />
                 <div className="absolute inset-0 bg-black/40 backdrop-blur-[2px]"></div>
               </div>
               <div className="relative z-10 text-center px-6 max-w-4xl">
                 <h1 className="text-5xl md:text-7xl font-serif font-bold text-white mb-8 drop-shadow-xl">
-                  <EditableText value={hero.hero_header} cmsBind={{file: 'basisgegevens', index: 0, key: 'hero_header'}} />
+                  <span data-dock-type="text" data-dock-bind="basisgegevens.0.hero_header">{hero.hero_header}</span>
                 </h1>
                 <div className="h-1.5 w-24 bg-accent mx-auto mb-8"></div>
                 <button 
@@ -68,7 +68,9 @@ const Section = ({ data }) => {
                 
                 <div className="flex flex-wrap justify-center items-stretch gap-12">
                   {items.map((item, index) => {
-                    const priceValue = parseFloat(String(item.prijs).replace(',', '.'));
+                    const priceValue = parseFloat(String(item.prijs || 0).replace(',', '.'));
+                    const imgSrc = getImgSrc(item.product_foto_url || item.afbeelding || item.foto);
+                    
                     return (
                       <article 
                         key={index} 
@@ -76,29 +78,25 @@ const Section = ({ data }) => {
                         style={{ borderRadius: 'var(--radius-custom)', boxShadow: 'var(--shadow-main)' }}
                       >
                         <div className="relative aspect-square overflow-hidden mb-8 shadow-inner flex-shrink-0" style={{ borderRadius: 'calc(var(--radius-custom) * 0.8)' }}>
-                          <EditableMedia 
-                            src={item.product_foto_url} 
-                            cmsBind={{file: 'producten', index, key: 'product_foto_url'}}
-                            className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" 
-                          />
+                          <img src={imgSrc} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" data-dock-type="media" data-dock-bind={`producten.${index}.product_foto_url`} />
                           <div className="absolute top-6 right-6 bg-accent text-white px-5 py-2 rounded-full font-bold text-lg shadow-lg">
                             €{priceValue.toFixed(2)}
                           </div>
                         </div>
-                        <div className="flex-grow text-left flex flex-col">
+                        <div className="flex-grow text-left flex flex-col px-4 pb-6">
                           <h3 className="text-2xl font-bold mb-3 text-[var(--color-heading)] min-h-[4rem] flex items-center">
-                            <EditableText value={item.naam} cmsBind={{file: 'producten', index, key: 'naam'}} />
+                            <span data-dock-type="text" data-dock-bind={`producten.${index}.naam`}>{item.naam}</span>
                           </h3>
                           <p className="text-sm opacity-60 line-clamp-3 mb-6 leading-relaxed flex-grow">
-                            <EditableText value={item.korte_beschrijving} cmsBind={{file: 'producten', index, key: 'korte_beschrijving'}} />
+                            <span data-dock-type="text" data-dock-bind={`producten.${index}.korte_beschrijving`}>{item.korte_beschrijving}</span>
                           </p>
+                          <button 
+                            onClick={() => addToCart({ id: item.product_id || index, title: item.naam, price: priceValue, image: imgSrc })}
+                            className="bg-[var(--color-button-bg, #4a3728)] text-white w-full py-4 rounded-xl flex items-center justify-center gap-3 mt-auto hover:opacity-90 transition-all font-bold"
+                          >
+                            <i className="fa-solid fa-cart-shopping"></i> In winkelwagen
+                          </button>
                         </div>
-                        <button 
-                          onClick={() => addToCart({ id: item.product_id || index, title: item.naam, price: priceValue, image: item.product_foto_url })}
-                          className="btn-primary w-full py-5 flex items-center justify-center gap-3 mt-auto"
-                        >
-                          <i className="fa-solid fa-cart-shopping"></i> In winkelwagen
-                        </button>
                       </article>
                     );
                   })}
@@ -123,7 +121,7 @@ const Section = ({ data }) => {
                        <i className={`fa-solid ${item.icoon_naam || 'fa-star'} text-3xl`}></i>
                     </div>
                     <h4 className="text-xl font-bold mb-2">
-                      <EditableText value={item.titel} cmsBind={{file: 'sterke_punten', index, key: 'titel'}} />
+                      <span data-dock-type="text" data-dock-bind={`sterke_punten.${index}.titel`}>{item.titel}</span>
                     </h4>
                   </div>
                 ))}

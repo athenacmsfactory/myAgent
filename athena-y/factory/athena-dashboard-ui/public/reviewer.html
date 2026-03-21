@@ -111,7 +111,7 @@
     <script>
         let sites = [];
         let currentIndex = -1;
-        const API_BASE = window.location.origin;
+        const API_BASE = window.location.origin.replace('5001', '5000');
 
         // Elements
         const sidebar = document.getElementById('sidebar');
@@ -197,7 +197,10 @@
             const list = document.getElementById('site-list');
             list.innerHTML = sites.map((site, index) => `
                 <div class="site-item ${index === currentIndex ? 'active' : ''}" onclick="selectSite(${index})">
-                    <div class="font-medium">${site.name}</div>
+                    <div class="flex justify-between items-center">
+                        <div class="font-medium">${site.name}</div>
+                        ${site.isExternal ? '<span class="text-[10px] bg-slate-600 px-1.5 py-0.5 rounded uppercase font-bold tracking-wider">Ext</span>' : ''}
+                    </div>
                     <div class="text-xs opacity-60">${site.siteType || 'Unknown Type'}</div>
                     <div id="badge-${index}" class="status-badge hidden"></div>
                 </div>
@@ -224,19 +227,33 @@
             document.getElementById('current-site-name').innerText = site.name;
             document.getElementById('placeholder').classList.add('hidden');
             document.getElementById('site-frame').classList.add('hidden');
+            
+            document.getElementById('open-dock-btn').classList.add('hidden');
+            document.getElementById('external-btn').classList.add('hidden');
+
+            // 🔱 v8.8 Intelligent Loading (via API Proxy on 5000)
+            if (site.isExternal) {
+                // Voor externe sites gebruiken we de API proxy route
+                const proxyUrl = `${API_BASE}/previews/${site.id}/`;
+                console.log("📂 Loading external static site via proxy:", proxyUrl);
+                document.getElementById('site-status-container').classList.add('hidden');
+                showReady(proxyUrl);
+                return;
+            }
+
+            // Voor native sites starten we de ontwikkelserver op
             document.getElementById('site-status-container').classList.remove('hidden');
             document.getElementById('site-status-spinner').classList.remove('hidden');
             document.getElementById('site-status-text').innerText = "Opstarten...";
             document.getElementById('site-status-text').className = "text-sm";
-            
-            document.getElementById('open-dock-btn').classList.add('hidden');
-            document.getElementById('external-btn').classList.add('hidden');
 
             try {
                 const response = await fetch(`${API_BASE}/api/sites/${site.name}/preview`, { method: 'POST' });
                 const result = await response.json();
 
                 if (result.success) {
+                    // 🚀 v8.8 Direct Loading: We gebruiken de directe URL (bijv. :5017) 
+                    // in plaats van de proxy (:5000/previews/...)
                     checkHealth(result.url);
                 } else {
                     showError("Start mislukt: " + (result.error || "Onbekende fout"));

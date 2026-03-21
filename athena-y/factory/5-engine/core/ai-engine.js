@@ -48,45 +48,19 @@ async function delay(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
 }
 
-async function tryMock({ prompt, isJson }) {
-    await delay(500); // Simulate network
-    if (!isJson) return "Dit is een gesimuleerd AI antwoord in Mock Mode.";
-    
-    // Probeer een slimme mock te geven op basis van de prompt context
-    if (prompt.toLowerCase().includes('site_settings')) {
-        return {
-            bedrijfsnaam: "Mock Bedrijf",
-            titel: "Welkom bij Mock Mode",
-            beschrijving: "Dit is een gesimuleerde beschrijving voor testdoeleinden."
-        };
-    }
-    
-    if (prompt.toLowerCase().includes('schema') || prompt.toLowerCase().includes('order')) {
-        return ["hero", "about", "services", "contact"];
-    }
-
-    return { 
-        status: "success", 
-        message: "Mock response", 
-        timestamp: new Date().toISOString(),
-        prompt_received: prompt.substring(0, 50) + "..."
-    };
-}
-
 export async function generateWithAI(prompt, { isJson = true, modelStack = null, temp = config.settings.temperature } = {}) {
     const logPrefix = `[AI-ENGINE]`;
-
-    // ⚡ MOCK MODE (Bypass APIs)
-    if (process.env.MOCK_AI === 'true' || process.env.MOCK_AI === '1') {
-        console.log(`${logPrefix} 🤖 MOCK MODE ACTIVE. Simulating response...`);
-        return tryMock({ prompt, isJson });
-    }
 
     let sequence = [];
     if (modelStack) {
         sequence = typeof modelStack === 'string' ? modelStack.split(',').map(m => m.trim()) : modelStack;
     } else {
+        // Gebruik eerst het primaire model uit .env indien ingesteld
+        const primaryModel = process.env.AI_MODEL_DEFAULT || process.env.AI_MODEL;
+        if (primaryModel) sequence.push(primaryModel);
+
         sequence = [
+            ...sequence,
             ...config.groq,
             ...config["google-1"],
             ...config["openrouter-1"],

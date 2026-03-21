@@ -59,17 +59,28 @@ export class SystemController {
     }
 
     /**
-     * Get disk usage status
+     * Get disk usage status (with 30s cache to prevent CPU spikes)
      */
     getSystemStatus() {
-        const res = this.execService.runSync('df -h /', { label: 'Disk Usage' });
-        if (!res.success) throw new Error(`Kon systeemstatus niet ophalen: ${res.error}`);
-        
-        const lines = res.output.split('\n');
-        const stats = lines[1].split(/\s+/);
-        return { size: stats[1], used: stats[2], avail: stats[3], percent: stats[4] };
-    }
+        const now = Date.now();
+        if (this._statusCache && (now - this._lastStatusCheck < 30000)) {
+            return this._statusCache;
+        }
 
+        try {
+            const res = this.execService.runSync('df -h /', { label: 'Disk Usage', silent: true });
+            if (!res.success) throw new Error(`Kon systeemstatus niet ophalen: ${res.error}`);
+
+            const lines = res.output.split('\n');
+            const stats = lines[1].split(/\s+/);
+            this._statusCache = { size: stats[1], used: stats[2], avail: stats[3], percent: stats[4] };
+            this._lastStatusCheck = now;
+            return this._statusCache;
+        } catch (error) {
+            console.error("❌ Error in getSystemStatus:", error.message);
+            return { size: '0', used: '0', avail: '0', percent: '0%' };
+        }
+    }
     /**
      * Get service account config
      */

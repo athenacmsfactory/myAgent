@@ -26,7 +26,7 @@ const Checkout = () => {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          projectName: "urban-oasis-classic",
+          projectName: 'urban-oasis',
           cart: cart,
           successUrl: window.location.origin + '/checkout?status=success',
           cancelUrl: window.location.origin + '/checkout?status=cancel'

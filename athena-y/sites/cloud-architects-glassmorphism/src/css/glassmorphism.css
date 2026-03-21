@@ -80,24 +80,49 @@
     }
 }
 
-@layer components {
-    .glass-panel {
-        @apply backdrop-blur-[12px] border border-white/20 shadow-main;
-        background-color: var(--color-card-bg);
-    }
+/* Tailwind v4 Custom Utilities */
+@utility glass-panel {
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    box-shadow: var(--shadow-main);
+    background-color: var(--color-card-bg);
+}
 
-    .btn-primary {
-        @apply px-8 py-3 text-white rounded-full transition-all hover:scale-105 active:scale-95 shadow-lg backdrop-blur-md border border-white/20;
-        background-color: var(--color-button-bg);
-        background-image: linear-gradient(135deg, rgba(255,255,255,0.2) 0%, transparent 100%);
+@utility btn-primary {
+    padding: 0.75rem 2rem;
+    color: white;
+    border-radius: 9999px;
+    transition: all 0.3s;
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+    backdrop-filter: blur(8px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    background-color: var(--color-button-bg);
+    background-image: linear-gradient(135deg, rgba(255,255,255,0.2) 0%, transparent 100%);
+    
+    &:hover {
+        transform: scale(1.05);
     }
+    
+    &:active {
+        transform: scale(0.95);
+    }
+}
 
-    .card {
-        @apply backdrop-blur-[12px] border border-white/20 shadow-main p-8 rounded-[2rem] transition-all hover:scale-[1.02] hover:shadow-2xl hover:border-white/40;
+@utility card {
+    @apply glass-panel;
+    padding: 2rem;
+    border-radius: 2rem;
+    transition: all 0.3s;
+    
+    &:hover {
+        transform: scale(1.02);
+        box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+        border-color: rgba(255, 255, 255, 0.4);
     }
+}
 
-    header {
-        @apply backdrop-blur-[20px] border-b border-white/10;
-        background-color: var(--color-header-bg);
-    }
+@utility glass-header {
+    backdrop-filter: blur(20px);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    background-color: var(--color-header-bg);
 }

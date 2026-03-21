@@ -1,6 +1,4 @@
 import React from 'react';
-import EditableMedia from './EditableMedia';
-import EditableText from './EditableText';
 import RepeaterControls from './RepeaterControls';
 
 /**
@@ -138,10 +136,10 @@ const Section = ({ data }) => {
                         <RepeaterControls file={config.table} index={index} isHidden={isHidden} />
                         <div className="flex justify-between items-end">
                           <div className="flex-1">
-                            <EditableText tagName="span" value={item.pakket_naam} className="text-lg font-medium block" style={{ color: 'var(--text-color)' }} cmsBind={{ file: config.table.toLowerCase(), index, key: 'pakket_naam' }} />
+                            <span className="text-lg font-medium block" data-dock-type="text" data-dock-bind={`config.table.toLowerCase().${0}.${pakket_naam}`}>{item.pakket_naam}</span>
                             <div className="border-b border-dotted border-slate-300 dark:border-white/20 flex-1 mx-4 relative top-[-5px]"></div>
                           </div>
-                          <EditableText tagName="span" value={item.prijs} className="font-serif font-bold text-lg" style={{ color: 'var(--text-color)' }} cmsBind={{ file: config.table.toLowerCase(), index, key: 'prijs' }} />
+                          <span className="font-serif font-bold text-lg" data-dock-type="text" data-dock-bind={`config.table.toLowerCase().${0}.${prijs}`}>{item.prijs}</span>
                         </div>
                       </div>
                     );
@@ -151,10 +149,10 @@ const Section = ({ data }) => {
                     return (
                       <article key={index} className={`p-12 bg-white/50 dark:bg-white/5 backdrop-blur-sm border border-slate-100 dark:border-white/10 shadow-2xl rounded-[3rem] ${itemClass} w-full md:w-[calc(50%-2rem)] lg:w-[calc(33.33%-2rem)] max-w-md`}>
                         <RepeaterControls file={config.table} index={index} isHidden={isHidden} />
-                        <EditableText tagName="p" value={item.ervaring || item.tekst} className="text-lg italic leading-relaxed mb-10 block opacity-80" style={{ color: 'var(--text-color)' }} cmsBind={{ file: config.table.toLowerCase(), index, key: item.ervaring ? 'ervaring' : 'tekst' }} />
+                        <p className="text-lg italic leading-relaxed mb-10 block opacity-80" data-dock-type="text" data-dock-bind={`config.table.toLowerCase().${0}.${item.ervaring}`}>{item.ervaring || item.tekst}</p>
                         <div className="flex items-center gap-4 pt-8 border-t border-slate-50 dark:border-white/5">
                            <div className="w-12 h-12 rounded-full bg-blue-500/10 flex items-center justify-center text-blue-500 font-bold">{(item.naam || "K").charAt(0)}</div>
-                           <EditableText tagName="h4" value={item.naam} className="font-bold" style={{ color: 'var(--text-color)' }} cmsBind={{ file: config.table.toLowerCase(), index, key: 'naam' }} />
+                           <h4 className="font-bold" data-dock-type="text" data-dock-bind={`config.table.toLowerCase().${0}.${naam}`}>{item.naam}</h4>
                         </div>
                       </article>
                     );
@@ -166,11 +164,11 @@ const Section = ({ data }) => {
                       <article key={index} className={`${itemClass} flex flex-col ${isEven ? 'md:flex-row' : 'md:flex-row-reverse'} items-center gap-16 md:gap-24`}>
                         <RepeaterControls file={config.table} index={index} isHidden={isHidden} />
                         <div className="w-full md:w-1/2 aspect-square md:aspect-video rounded-[3rem] overflow-hidden shadow-2xl">
-                           <EditableMedia src={item[imgKey]} dataItem={item} cmsBind={{ file: config.table.toLowerCase(), index, key: imgKey }} className="w-full h-full object-cover" />
+                           <img src={item[imgKey]} className="w-full h-full object-cover" data-dock-type="media" data-dock-bind="config.table.toLowerCase().0.imgKey" />
                         </div>
                         <div className="w-full md:w-1/2 text-center md:text-left">
-                           <EditableText tagName="h3" value={item[titleKey]} className="text-4xl font-serif font-bold mb-6 block" style={{ color: 'var(--primary-color)' }} cmsBind={{ file: config.table.toLowerCase(), index, key: titleKey }} />
-                           <EditableText tagName="p" value={item[descKey]} className="text-xl leading-relaxed font-light block opacity-70" style={{ color: 'var(--text-color)' }} cmsBind={{ file: config.table.toLowerCase(), index, key: descKey }} />
+                           <h3 className="text-4xl font-serif font-bold mb-6 block" data-dock-type="text" data-dock-bind={`config.table.toLowerCase().${0}.${titleKey}`}>{item[titleKey]}</h3>
+                           <p className="text-xl leading-relaxed font-light block opacity-70" data-dock-type="text" data-dock-bind={`config.table.toLowerCase().${0}.${descKey}`}>{item[descKey]}</p>
                         </div>
                       </article>
                     );
@@ -181,11 +179,11 @@ const Section = ({ data }) => {
                       <article key={index} className={`${itemClass} flex flex-col md:flex-row items-start gap-12 border-b border-slate-100 dark:border-white/5 pb-24 last:border-0`}>
                         <RepeaterControls file={config.table} index={index} isHidden={isHidden} />
                         <div className="w-32 h-32 rounded-full overflow-hidden flex-shrink-0 shadow-lg">
-                           <EditableMedia src={item[imgKey]} dataItem={item} cmsBind={{ file: config.table.toLowerCase(), index, key: imgKey }} className="w-full h-full object-cover" />
+                           <img src={item[imgKey]} className="w-full h-full object-cover" data-dock-type="media" data-dock-bind="config.table.toLowerCase().0.imgKey" />
                         </div>
                         <div>
-                           <EditableText tagName="h3" value={item[titleKey]} className="text-3xl font-serif font-bold mb-4 block" style={{ color: 'var(--primary-color)' }} cmsBind={{ file: config.table.toLowerCase(), index, key: titleKey }} />
-                           <EditableText tagName="p" value={item[descKey]} className="text-lg leading-relaxed font-light block opacity-70" style={{ color: 'var(--text-color)' }} cmsBind={{ file: config.table.toLowerCase(), index, key: descKey }} />
+                           <h3 className="text-3xl font-serif font-bold mb-4 block" data-dock-type="text" data-dock-bind={`config.table.toLowerCase().${0}.${titleKey}`}>{item[titleKey]}</h3>
+                           <p className="text-lg leading-relaxed font-light block opacity-70" data-dock-type="text" data-dock-bind={`config.table.toLowerCase().${0}.${descKey}`}>{item[descKey]}</p>
                         </div>
                       </article>
                     );
@@ -196,10 +194,10 @@ const Section = ({ data }) => {
                     <article key={index} className={`${itemClass} ${currentLayout === 'focus' && index === 0 ? 'md:col-span-3' : 'w-full md:w-[calc(45%)] lg:w-[calc(30%)] min-w-[300px]'}`}>
                       <RepeaterControls file={config.table} index={index} isHidden={isHidden} />
                       <div className={`relative overflow-hidden mb-10 ${isTeam ? 'aspect-[4/5] rounded-[4rem]' : (currentLayout === 'focus' && index === 0 ? 'aspect-video rounded-[4rem]' : 'aspect-square rounded-[3rem]')} shadow-2xl`}>
-                        <EditableMedia src={item[imgKey]} alt={item[titleKey]} className="w-full h-full object-cover" dataItem={item} cmsBind={{ file: config.table.toLowerCase(), index, key: imgKey }} />
+                        <img src={item[imgKey]} className="w-full h-full object-cover" data-dock-type="media" data-dock-bind="config.table.toLowerCase().0.imgKey" />
                       </div>
-                       <EditableText tagName="h3" value={item[titleKey]} className={`${currentLayout === 'focus' && index === 0 ? 'text-4xl' : 'text-2xl'} font-serif font-bold mb-4 block`} style={{ color: 'var(--primary-color)' }} cmsBind={{ file: config.table.toLowerCase(), index, key: titleKey }} />
-                       <EditableText tagName="p" value={item[descKey]} className={`leading-relaxed font-light block opacity-70 ${currentLayout === 'focus' && index === 0 ? 'text-xl' : 'line-clamp-4'}`} style={{ color: 'var(--text-color)' }} cmsBind={{ file: config.table.toLowerCase(), index, key: descKey }} />
+                       <h3 className="`${currentLayout === 'focus' && index === 0 ? 'text-4xl' : 'text-2xl'" data-dock-type="text" data-dock-bind={`config.table.toLowerCase().${0}.${titleKey}`}>{item[titleKey]}</h3>
+                       <p className="`leading-relaxed font-light block opacity-70 ${currentLayout === 'focus' && index === 0 ? 'text-xl' : 'line-clamp-4'" data-dock-type="text" data-dock-bind={`config.table.toLowerCase().${0}.${descKey}`}>{item[descKey]}</p>
                     </article>
                   );
                 })}

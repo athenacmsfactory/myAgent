@@ -80,7 +80,7 @@ walk(fs.existsSync(srcPath) ? srcPath : absoluteTargetDir);
 
 // TSV Generation
 const projectName = path.basename(targetDir);
-const tsvDir = path.join(rootDir, '2-Fabriek/athena/athena-y/input', projectName, 'tsv-data');
+const tsvDir = path.join(rootDir, '2-Productie/athena/input', projectName, 'tsv-data');
 fs.mkdirSync(tsvDir, { recursive: true });
 
 // 1. basisgegevens.tsv
@@ -97,5 +97,5 @@ if (extractedData.projects.length > 0) {
 
 console.log("\n==================================================");
 console.log("✨ SUCCES: Athena TSV Bridge Created!");
-console.log(`📂 TSV files saved to: 2-Fabriek/athena/athena-y/input/${projectName}/tsv-data/`);
+console.log(`📂 TSV files saved to: 2-Productie/athena/input/${projectName}/tsv-data/`);
 console.log("==================================================");

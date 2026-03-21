@@ -6,6 +6,8 @@ import HelpModal from './HelpModal';
 import SaveEverythingModal from './SaveEverythingModal';
 import SourceConflictModal from './SourceConflictModal';
 
+import SectionManagerPanel from './SectionManagerPanel';
+
 const DockFrame = () => {
   const [selectedSite, setSelectedSite] = useState('');
   const [siteStructure, setSiteStructure] = useState(null);
@@ -13,45 +15,19 @@ const DockFrame = () => {
   const [currentPath, setCurrentPath] = useState('/');
   const [isConnected, setIsConnected] = useState(false);
   const [editingItem, setEditingItem] = useState(null);
+  const [showSectionManager, setShowSectionManager] = useState(false);
   const [showSaveEverythingModal, setShowSaveEverythingModal] = useState(false);
   const [showConflictModal, setShowConflictModal] = useState(false);
   const [conflictReport, setConflictReport] = useState(null);
   const [showHelpModal, setShowHelpModal] = useState(false);
-  const [lastSyncTime, setLastSyncTime] = useState(localStorage.getItem('athena_last_sync') || null);
   const [refreshKey, setRefreshKey] = useState(0);
   const iframeRef = useRef(null);
-  const debounceTimer = useRef(null);
 
   // Sidebar Resizing State
   const [leftWidth, setLeftWidth] = useState(260);
-  const [rightWidth, setRightWidth] = useState(260);
+  const [middleWidth, setMiddleWidth] = useState(390); // 1.5x van 260
   const isResizingLeft = useRef(false);
-  const isResizingRight = useRef(false);
-
-  useEffect(() => {
-    if (selectedSite) {
-      checkForConflicts();
-    }
-  }, [selectedSite]);
-
-  const checkForConflicts = async () => {
-    try {
-      const siteId = typeof selectedSite === 'string' ? selectedSite : (selectedSite.id || selectedSite.name);
-      if (!siteId) return;
-
-      const dashboardPort = import.meta.env.VITE_DASHBOARD_PORT || '5001';
-      const hostname = window.location.hostname;
-      const res = await fetch(`http://${hostname}:${dashboardPort}/api/sites/${siteId}/compare-sources`);
-      const data = await res.json();
-
-      if (data.hasRepo && data.hasDrift) {
-        setConflictReport(data);
-        setShowConflictModal(true);
-      }
-    } catch (err) {
-      console.error("Conflict check failed:", err);
-    }
-  };
+  const isResizingMiddle = useRef(false);
 
   useEffect(() => {
     const handleMouseMove = (e) => {
@@ -59,16 +35,17 @@ const DockFrame = () => {
         const newWidth = Math.min(Math.max(180, e.clientX), 450);
         setLeftWidth(newWidth);
       }
-      if (isResizingRight.current) {
-        const newWidth = Math.min(Math.max(180, window.innerWidth - e.clientX), 450);
-        setRightWidth(newWidth);
+      if (isResizingMiddle.current) {
+        // Directe berekening vanaf de linker rand van het scherm
+        const newWidth = Math.min(Math.max(250, e.clientX), 850);
+        setMiddleWidth(newWidth);
       }
     };
 
     const handleMouseUp = () => {
       isResizingLeft.current = false;
-      isResizingRight.current = false;
-      document.body.classList.remove('select-none');
+      isResizingMiddle.current = false;
+      document.body.classList.remove('select-none', 'is-dragging');
     };
 
     window.addEventListener('mousemove', handleMouseMove);
@@ -77,7 +54,9 @@ const DockFrame = () => {
       window.removeEventListener('mousemove', handleMouseMove);
       window.removeEventListener('mouseup', handleMouseUp);
     };
-  }, []);
+  }, [leftWidth]); // Afhankelijkheid van leftWidth is nodig voor correcte relatieve berekening
+
+  const isDragging = isResizingLeft.current || isResizingMiddle.current;
 
   // Undo/Redo State
   const [history, setHistory] = useState([]);
@@ -142,6 +121,24 @@ const DockFrame = () => {
 
     const cleanBase = baseUrl.replace(/\/$/, '');
     return `${cleanBase}/__athena/update-json`;
+  };
+
+  // 🔱 v8.8 Robust Section Settings Helper
+  const getSectionSetting = (sectionId, property, defaultValue = null) => {
+    const settings = siteStructure?.data?.section_settings;
+    if (!settings) return defaultValue;
+
+    if (Array.isArray(settings)) {
+      const found = settings.find(s => s.id === sectionId);
+      return (found && found[property] !== undefined) ? found[property] : defaultValue;
+    }
+
+    if (typeof settings === 'object') {
+      const found = settings[sectionId];
+      return (found && found[property] !== undefined) ? found[property] : defaultValue;
+    }
+
+    return defaultValue;
   };
 
   // Laden van MPA manifest indien beschikbaar
@@ -248,24 +245,21 @@ const DockFrame = () => {
   const updateColor = (key, value, shouldSave = true) => {
     if (iframeRef.current) {
       // 1. Determine target file
-      let file = 'site_settings';
-      if (key.startsWith('header_') || key === 'content_top_offset' || key.startsWith('toon_') || key === 'header_hoogte' || key === 'header_transparantie') {
-        file = 'header_settings';
-      } else if (key.startsWith('hero_') || key === 'title' || key === 'titel' || key === 'hero_overlay_transparantie') {
-        file = 'hero';
-      } else if (key.includes('global_')) {
-        file = 'style_config';
-      } else {
-        // Auto-detect if possible
-        const possibleFiles = ['style_config', 'site_settings', 'header_settings'];
-        for (const f of possibleFiles) {
-          const table = siteStructure?.data?.[f];
-          const row = Array.isArray(table) ? table[0] : table;
-          if (row && key in row) { file = f; break; }
-        }
+      let file = 'style_config';
+
+      // Auto-detect based on current data
+      const possibleFiles = ['site_settings', 'header_settings', 'hero', 'style_config'];
+      for (const f of possibleFiles) {
+        const table = siteStructure?.data?.[f];
+        const row = Array.isArray(table) ? table[0] : table;
+        if (row && key in row) { file = f; break; }
       }
 
-      // 2. Live preview via postMessage (Crucial: send 'file'!)
+      // Overrides
+      if (key.startsWith('header_') && file === 'style_config') file = 'site_settings';
+      if (key.startsWith('hero_') && file === 'style_config') file = 'hero';
+
+      // 2. Live preview
       iframeRef.current.contentWindow.postMessage({
         type: 'DOCK_UPDATE_COLOR',
         file,
@@ -276,16 +270,17 @@ const DockFrame = () => {
 
       if (shouldSave) {
         const currentTable = siteStructure?.data?.[file];
-        const row = Array.isArray(currentTable) ? currentTable[0] : currentTable;
+        const isArray = Array.isArray(currentTable);
+        const row = isArray ? currentTable[0] : currentTable;
         const oldValue = row ? row[key] : null;
 
-        pushToHistory(file, 0, key, oldValue, value);
+        pushToHistory(file, isArray ? 0 : null, key, oldValue, value);
 
         if (typeof oldValue === 'object' && oldValue !== null) {
           const newValue = { ...oldValue, color: value };
-          saveData(file, 0, key, newValue, null, true);
+          saveData(file, isArray ? 0 : null, key, newValue, null, true);
         } else {
-          saveData(file, 0, key, value, null, true);
+          saveData(file, isArray ? 0 : null, key, value, null, true);
         }
       }
     }
@@ -302,7 +297,7 @@ const DockFrame = () => {
         body: JSON.stringify({ file, index, key, value, formatting, action })
       });
       if (!res.ok) throw new Error(`Server returned ${res.status}`);
-      
+
       // CRUCIAL: Update local state immediately so modals see the change!
       setSiteStructure(prev => {
         const newData = { ...prev.data };
@@ -310,7 +305,18 @@ const DockFrame = () => {
           newData[file] = [...newData[file]];
           newData[file][index] = { ...newData[file][index], [key]: value };
         } else if (newData[file]) {
-          newData[file] = { ...newData[file], [key]: value };
+          // Support dot-notation in local state (e.g. "hero.visible")
+          if (key.includes('.')) {
+            const [section, subkey] = key.split('.');
+            if (newData[file][section]) {
+               newData[file] = { 
+                 ...newData[file], 
+                 [section]: { ...newData[file][section], [subkey]: value } 
+               };
+            }
+          } else {
+            newData[file] = { ...newData[file], [key]: value };
+          }
         }
         return { ...prev, data: newData };
       });
@@ -376,15 +382,20 @@ const DockFrame = () => {
 
   const toggleSectionVisibility = (sectionId) => {
     console.log(`👁️ Toggling visibility for: ${sectionId}`);
-    const sectionIndex = siteStructure?.data?.section_settings?.findIndex(s => s.id === sectionId);
-    if (sectionIndex === -1 || sectionIndex === undefined) {
-      console.warn(`⚠️ Cannot find section index for ${sectionId} in section_settings`);
-      return;
-    }
-    const currentVisible = siteStructure.data.section_settings[sectionIndex].visible !== false;
-    const nextVisible = !currentVisible;
+    const settings = siteStructure?.data?.section_settings;
+    if (!settings) return;
 
-    // Direct feedback via postMessage
+    let nextVisible = true;
+    if (Array.isArray(settings)) {
+      const idx = settings.findIndex(s => s.id === sectionId);
+      if (idx === -1) return;
+      nextVisible = settings[idx].visible === false;
+      saveData('section_settings', idx, 'visible', nextVisible);
+    } else {
+      nextVisible = settings[sectionId]?.visible === false;
+      saveData('section_settings', null, `${sectionId}.visible`, nextVisible);
+    }
+
     if (iframeRef.current) {
       iframeRef.current.contentWindow.postMessage({
         type: 'DOCK_UPDATE_SECTION_VISIBILITY',
@@ -392,19 +403,6 @@ const DockFrame = () => {
         value: nextVisible
       }, '*');
     }
-
-    setSiteStructure(prev => {
-      if (!prev) return prev;
-      const newData = { ...prev.data };
-      const settings = [...(newData.section_settings || [])];
-      if (settings[sectionIndex]) {
-        settings[sectionIndex] = { ...settings[sectionIndex], visible: nextVisible };
-        newData.section_settings = settings;
-      }
-      return { ...prev, data: newData };
-    });
-
-    saveData('section_settings', sectionIndex, 'visible', nextVisible);
   };
 
   const saveSectionMove = async (key, direction) => {
@@ -447,12 +445,12 @@ const DockFrame = () => {
 
         // Update local state to keep Sidebar in sync
         setSiteStructure(prev => {
-           if (!prev) return prev;
-           return {
-               ...prev,
-               data: { ...prev.data, section_order: newOrder },
-               sections: newOrder // Keep sections list in sync
-           };
+          if (!prev) return prev;
+          return {
+            ...prev,
+            data: { ...prev.data, section_order: newOrder },
+            sections: newOrder // Keep sections list in sync
+          };
         });
       } else {
         console.error('❌ Move failed on server:', response.status);
@@ -513,7 +511,7 @@ const DockFrame = () => {
     } catch (err) { console.error(err); }
   };
 
-  const syncToSheets = async () => {
+  const pushToSheets = async () => {
     if (!selectedSite) return;
 
     // GOVERNANCE CHECK
@@ -545,9 +543,6 @@ const DockFrame = () => {
       });
       const data = await res.json();
       if (data.success) {
-        const now = new Date().toLocaleString();
-        setLastSyncTime(now);
-        localStorage.setItem('athena_last_sync', now);
         alert("✅ Succesvol gesynchroniseerd naar Google Sheets!\n\nVergeet niet de site te verversen om de wijzigingen te zien.");
       } else {
         alert("❌ Sync mislukt: " + data.error + "\n\nTip: Controleer of de Sheet is 'Gepubliceerd op internet'.");
@@ -605,7 +600,7 @@ const DockFrame = () => {
   };
 
   const deleteItem = async (tableName, index) => {
-    if (!window.confirm("Are you sure you want to delete this item?")) return;
+    if (!window.confirm(`Weet je zeker dat je dit item (${index + 1}) definitief wilt verwijderen uit de sectie '${tableName}'?`)) return;
     try {
       const url = getSiteApiUrl();
       if (!url) return;
@@ -637,28 +632,28 @@ const DockFrame = () => {
         })
       });
       if (res.ok) {
-         // Direct feedback via postMessage
-         if (iframeRef.current) {
-           iframeRef.current.contentWindow.postMessage({
-             type: 'DOCK_UPDATE_SECTION_CONFIG',
-             file: tableName,
-             config: config
-           }, '*');
-         }
+        // Direct feedback via postMessage
+        if (iframeRef.current) {
+          iframeRef.current.contentWindow.postMessage({
+            type: 'DOCK_UPDATE_SECTION_CONFIG',
+            file: tableName,
+            config: config
+          }, '*');
+        }
 
-         // Update local state
-         setSiteStructure(prev => {
-           if (!prev) return prev;
-           const newData = { ...prev.data };
-           newData.display_config = {
-             ...newData.display_config,
-             sections: {
-               ...(newData.display_config?.sections || {}),
-               [tableName]: config
-             }
-           };
-           return { ...prev, data: newData };
-         });
+        // Update local state
+        setSiteStructure(prev => {
+          if (!prev) return prev;
+          const newData = { ...prev.data };
+          newData.display_config = {
+            ...newData.display_config,
+            sections: {
+              ...(newData.display_config?.sections || {}),
+              [tableName]: config
+            }
+          };
+          return { ...prev, data: newData };
+        });
       }
     } catch (err) { console.error(err); }
   };
@@ -705,10 +700,10 @@ const DockFrame = () => {
     if (hidden.includes(field)) {
       // It is currently hidden, so unhide it
       hidden = hidden.filter(f => f !== field);
-      
+
       // If visible array has elements and NOT this one, we should add it so it renders
       if (visible.length > 0 && !visible.includes(field)) {
-         visible.push(field);
+        visible.push(field);
       }
     } else {
       // It is currently visible, so hide it
@@ -779,13 +774,13 @@ const DockFrame = () => {
 
   const handlePullFromGitHub = async () => {
     // Geen confirm meer nodig hier, want de Modal vraagt het al.
-    
+
     setIsConnected(false);
     try {
       const siteId = typeof selectedSite === 'string' ? selectedSite : (selectedSite.id || selectedSite.name);
       const dashboardPort = import.meta.env.VITE_DASHBOARD_PORT || '5001';
       const hostname = window.location.hostname;
-      
+
       const res = await fetch(`http://${hostname}:${dashboardPort}/api/sites/${siteId}/safe-pull`, {
         method: 'POST'
       });
@@ -817,11 +812,11 @@ const DockFrame = () => {
         console.log("💾 Step: Disk Save (already handled by live updates)");
         await new Promise(r => setTimeout(r, 500));
         break;
-      
+
       case 'sheet':
         console.log("📊 Step: Safe Pull (Backup sheet data to temp before sync)...");
         await fetch(`http://${hostname}:${dashboardPort}/api/sites/${siteId}/pull-to-temp`, { method: 'POST' });
-        
+
         console.log("📊 Step: Sync to Google Sheets...");
         const sheetRes = await fetch(`http://${hostname}:${dashboardPort}/api/sites/${siteId}/sync-to-sheet`, { method: 'POST' });
         const sheetData = await sheetRes.json();
@@ -847,9 +842,9 @@ const DockFrame = () => {
   return (
     <div className="dock-container h-screen flex flex-col bg-slate-100">
       {/* ... header remains same ... */}
-      <header className="bg-slate-900 text-white p-4 flex items-center justify-between shadow-lg z-50">
+      <header className="bg-slate-900 text-white px-4 py-2 flex items-center justify-between shadow-lg z-50">
         <div className="flex items-center gap-4">
-          <h1 className="text-2xl font-bold">⚓ Athena Dock</h1>
+          <h1 className="text-2xl font-bold">Dock</h1>
           <SiteSelector
             selectedSite={selectedSite}
             onSelectSite={setSelectedSite}
@@ -975,26 +970,67 @@ const DockFrame = () => {
 
       {/* Main Dock Area */}
       <div className="flex flex-1 overflow-hidden">
-        {/* Left Sidebar - Design Controls */}
-        <aside 
-          style={{ width: `${leftWidth}px` }}
-          className="bg-white border-r border-slate-200 overflow-y-auto relative flex-shrink-0"
+        {/* Left Sidebar - Shared container for Design Controls & Section Manager */}
+        <aside
+          style={{ width: `${showSectionManager ? middleWidth : leftWidth}px` }}
+          className={`bg-slate-50 border-r border-slate-300 overflow-y-auto relative flex-shrink-0 shadow-inner z-40 ${isDragging ? '' : 'transition-[width] duration-300 ease-in-out'}`}
         >
-          <DesignControls
-            onColorChange={updateColor}
-            siteStructure={siteStructure}
-          />
-          {/* Left Resizer */}
-          <div 
-            onMouseDown={() => { isResizingLeft.current = true; document.body.classList.add('select-none'); }}
-            className="absolute right-0 top-0 w-1 h-full cursor-col-resize hover:bg-blue-400 transition-colors z-50"
+          {showSectionManager ? (
+            <SectionManagerPanel
+              width={middleWidth}
+              siteStructure={siteStructure}
+              onClose={() => setShowSectionManager(false)}
+              onMoveSection={moveSection}
+              onToggleSection={toggleSectionVisibility}
+              onUpdateLayout={updateLayout}
+              onUpdatePadding={(section, val) => {
+                const settings = siteStructure?.data?.section_settings;
+                if (!settings) return;
+
+                if (iframeRef.current) {
+                  iframeRef.current.contentWindow.postMessage({ type: 'DOCK_UPDATE_SECTION_PADDING', section, value: val }, '*');
+                }
+
+                if (Array.isArray(settings)) {
+                  const idx = settings.findIndex(s => s.id === section);
+                  if (idx !== -1) saveData('section_settings', idx, 'padding', val);
+                } else {
+                  saveData('section_settings', null, `${section}.padding`, val);
+                }
+              }}
+              onAddItem={addItem}
+              onDeleteItem={deleteItem}
+              onMoveField={moveField}
+              onToggleField={toggleFieldVisibility}
+              onToggleInline={toggleFieldInline}
+            />
+          ) : (
+            <DesignControls
+              onColorChange={updateColor}
+              siteStructure={siteStructure}
+              onOpenSectionManager={() => setShowSectionManager(true)}
+              currentPath={currentPath}
+              pages={pages}
+              onNavigate={handleNavigate}
+              isSectionManagerOpen={false}
+            />
+          )}
+
+          {/* Context-aware Resizer */}
+          <div
+            onMouseDown={() => {
+              if (showSectionManager) isResizingMiddle.current = true;
+              else isResizingLeft.current = true;
+              document.body.classList.add('select-none');
+            }}
+            className="absolute right-0 top-0 w-1.5 h-full cursor-col-resize hover:bg-blue-500 transition-colors z-50 border-r border-slate-300"
             title="Sleep naar links of rechts om het zijpaneel groter of kleiner te maken."
           />
         </aside>
 
         {/* Center - Site Preview in Iframe */}
-        <main className="flex-1 bg-slate-200 p-4 lg:p-8 flex items-center justify-center relative min-w-0">
-          <div className="h-full w-full bg-white rounded-lg shadow-2xl overflow-hidden relative" title="Interactieve weergave van je website. Klik op tekst of afbeeldingen om ze aan te passen.">
+        <main className="flex-1 bg-slate-300 p-4 lg:p-6 flex items-center justify-center relative min-w-0">
+          <div className="h-full w-full bg-white rounded shadow-2xl overflow-hidden relative border border-slate-400" title="Interactieve weergave van je website. Klik op tekst of afbeeldingen om ze aan te passen.">
             <iframe
               key={refreshKey}
               ref={iframeRef}
@@ -1009,351 +1045,14 @@ const DockFrame = () => {
             <VisualEditor
               key={`${editingItem.binding?.file || 'file'}-${editingItem.binding?.key || 'key'}-${editingItem.binding?.index || 0}`}
               item={editingItem}
+              siteStructure={siteStructure}
               selectedSite={selectedSite}
               onSave={handleEditorSave}
               onCancel={() => setEditingItem(null)}
               onUpload={(filename) => handleEditorSave(filename)}
             />
           )}
-
-
-
-          {showSaveEverythingModal && (
-            <SaveEverythingModal 
-                isOpen={showSaveEverythingModal}
-                onClose={() => setShowSaveEverythingModal(false)}
-                onConfirm={executeSaveStep}
-                siteName={selectedSite?.name || selectedSite}
-            />
-          )}
-
-          {showConflictModal && (
-            <SourceConflictModal 
-                isOpen={showConflictModal}
-                report={conflictReport}
-                onClose={() => setShowConflictModal(false)}
-                onResolveGitHub={async () => {
-                  setShowConflictModal(false);
-                  await handlePullFromGitHub();
-                }}
-            />
-          )}
-
-
         </main>
-
-        {/* Right Sidebar - Section Tools */}
-        <aside 
-          style={{ width: `${rightWidth}px` }}
-          className="bg-white border-l border-slate-200 overflow-y-auto relative flex-shrink-0"
-        >
-          {/* Right Resizer */}
-          <div 
-            onMouseDown={() => { isResizingRight.current = true; document.body.classList.add('select-none'); }}
-            className="absolute left-0 top-0 w-1 h-full cursor-col-resize hover:bg-blue-400 transition-colors z-50"
-            title="Sleep naar links of rechts om het zijpaneel groter of kleiner te maken."
-          />
-          
-          <div className="p-4">
-            {/* Sync Status & Button (NEW) */}
-            {selectedSite && (
-              <div className="mb-6 p-4 bg-slate-900 text-white rounded-2xl shadow-xl border border-slate-800">
-                <div className="flex items-center justify-between mb-3">
-                  <h3 className="text-[10px] font-black uppercase tracking-widest text-slate-400">Sheet Sync</h3>
-                  {lastSyncTime && (
-                    <span className="text-[8px] font-bold text-green-400 uppercase">Live</span>
-                  )}
-                </div>
-                
-                <button
-                  id="cloud-sync-btn"
-                  onClick={syncToSheets}
-                  className="w-full py-2.5 bg-green-600 hover:bg-green-500 text-white text-[10px] font-black rounded-xl transition-all shadow-lg shadow-green-900/20 flex items-center justify-center gap-2 uppercase tracking-tighter"
-                >
-                  <i className="fa-solid fa-file-export"></i>
-                  Sync to Sheets
-                </button>
-
-                {lastSyncTime && (
-                  <p className="text-[8px] text-slate-500 mt-3 text-center font-bold uppercase tracking-tighter">
-                    Last sync: {lastSyncTime}
-                  </p>
-                )}
-              </div>
-            )}
-
-            {/* Page Switcher (v6.6 MPA) */}
-          {pages.length > 0 && (
-            <div className="mb-8 pb-6 border-b border-slate-100">
-              <h3 className="font-bold text-lg text-slate-800 mb-4 flex items-center gap-2" title="Lijst van alle beschikbare pagina's op deze website. Klik op een pagina om deze te bekijken en te bewerken.">
-                <i className="fa-solid fa-file-lines text-blue-500"></i> Pages
-              </h3>
-              <div className="space-y-1 max-h-60 overflow-y-auto pr-2 custom-scrollbar">
-                {pages.map(page => {
-                  const path = page.path === '/home' ? '/' : page.path;
-                  const isActive = currentPath === path;
-                  return (
-                    <button
-                      key={page.path}
-                      onClick={() => handleNavigate(path)}
-                      className={`w-full text-left px-3 py-2 rounded-lg text-xs transition-all flex items-center justify-between group ${isActive
-                          ? 'bg-blue-600 text-white font-bold shadow-md'
-                          : 'hover:bg-slate-50 text-slate-600'
-                        }`}
-                      title={`Navigeer naar de ${page.title} pagina.`}
-                    >
-                      <span className="truncate capitalize">{page.title}</span>
-                      {isActive && <span className="w-1.5 h-1.5 bg-white rounded-full"></span>}
-                      {!isActive && <span className="text-[9px] text-slate-300 group-hover:text-blue-400 opacity-0 group-hover:opacity-100 transition-opacity italic">view</span>}
-                    </button>
-                  );
-                })}
-              </div>
-            </div>
-          )}
-
-          <div className="flex items-center justify-between mb-4">
-            <h3 className="font-bold text-lg text-slate-800">Section Tools</h3>
-            <button
-              onClick={() => forceRefresh()}
-              className="text-[10px] bg-slate-100 hover:bg-slate-200 p-1 rounded uppercase font-bold text-slate-500"
-              title="Scan de website opnieuw om nieuwe of gewijzigde secties te detecteren."
-            >
-              Scan
-            </button>
-          </div>
-          {siteStructure?.sections?.length > 0 ? (
-            siteStructure.sections.map(section => (
-              <div key={section} className="mb-6 p-4 bg-slate-50 border border-slate-200 rounded-xl shadow-sm" title={`Beheersectie voor de '${section}' op je pagina.`}>
-                <div className="flex items-center justify-between mb-3">
-                  <span className="text-sm font-bold text-slate-800 capitalize truncate" title={`Sectie: ${section}`}>
-                    {section === 'hero' ? 'Hero Settings' : 
-                     section === 'header_settings' ? 'Header Settings' : 
-                     section === 'site_settings' ? 'Site Settings' : section}
-                  </span>
-                  <div className="flex gap-1 items-center">
-                    <button
-                      onClick={() => toggleSectionVisibility(section)}
-                      className={`p-1 rounded mr-1 ${siteStructure?.data?.section_settings?.find(s => s.id === section)?.visible === false ? 'text-slate-300 bg-slate-100 hover:bg-slate-200' : 'text-blue-500 bg-blue-50 hover:bg-blue-100'}`}
-                      title={siteStructure?.data?.section_settings?.find(s => s.id === section)?.visible === false ? "Sectie is verborgen op de site. Klik om te tonen." : "Sectie is zichtbaar op de site. Klik om te verbergen."}
-                    >
-                      {siteStructure?.data?.section_settings?.find(s => s.id === section)?.visible === false ? (
-                        <i className="fa-solid fa-eye-slash text-[10px]"></i>
-                      ) : (
-                        <i className="fa-solid fa-eye text-[10px]"></i>
-                      )}
-                    </button>
-                    <div className="flex gap-1">
-                    <button
-                      onClick={() => moveSection(section, 'up')}
-                      className="p-1 hover:bg-slate-200 text-slate-500 rounded"
-                      title="Verplaats deze sectie één plek omhoog op de pagina."
-                    >
-                      ↑
-                    </button>
-                    <button
-                      onClick={() => moveSection(section, 'down')}
-                      className="p-1 hover:bg-slate-200 text-slate-500 rounded"
-                      title="Verplaats deze sectie één plek omlaag op de pagina."
-                    >
-                      ↓
-                    </button>
-                  </div>
-                </div>
-              </div>
-
-                <div className="space-y-4">
-                  {/* Layout Selector */}
-                  <div className="flex gap-4">
-                    <div className="flex-1">
-                      <label className="text-[9px] uppercase font-black text-slate-400 block mb-1">Layout</label>
-                      <select
-                        className="w-full text-xs p-2 bg-white border border-slate-200 rounded-lg text-slate-600 focus:outline-none focus:border-blue-400"
-                        onChange={(e) => updateLayout(section, e.target.value)}
-                        value={siteStructure?.layouts?.[section] || 'grid'}
-                        title="Kies de visuele indeling voor deze sectie (bijv. Raster, Lijst of Z-Patroon)."
-                      >
-                        <option value="grid">Grid (Raster)</option>
-                        <option value="list">List (Lijst)</option>
-                        <option value="z-pattern">Z-Pattern (Z-Vorm)</option>
-                        <option value="focus">Focus (Eén groot item)</option>
-                      </select>
-                    </div>
-                    <div className="w-24">
-                      <label className="text-[9px] uppercase font-black text-slate-400 block mb-1">Padding (y)</label>
-                      <input 
-                        type="range" 
-                        min="0" 
-                        max="80" 
-                        step="4"
-                        className="w-full accent-blue-500"
-                        value={siteStructure?.data?.section_settings?.find(s => s.id === section)?.padding || 32}
-                        onInput={(e) => {
-                          const val = parseInt(e.target.value);
-                          // Direct feedback via postMessage (DEBOUNCED for performance)
-                          if (debounceTimer.current) clearTimeout(debounceTimer.current);
-                          debounceTimer.current = setTimeout(() => {
-                            if (iframeRef.current) {
-                              iframeRef.current.contentWindow.postMessage({
-                                type: 'DOCK_UPDATE_SECTION_PADDING',
-                                section: section,
-                                value: val
-                              }, '*');
-                            }
-                          }, 16); // ~60fps target
-
-                          // Update local state for immediate UI feedback (No debounce needed here for slider position)
-                          setSiteStructure(prev => {
-                            if (!prev) return prev;
-                            const newData = { ...prev.data };
-                            const settings = [...(newData.section_settings || [])];
-                            const idx = settings.findIndex(s => s.id === section);
-                            if (idx !== -1) {
-                              settings[idx] = { ...settings[idx], padding: val };
-                              newData.section_settings = settings;
-                            }
-                            return { ...prev, data: newData };
-                          });
-                        }}
-                        onChange={(e) => {
-                          const val = parseInt(e.target.value);
-                          const idx = siteStructure?.data?.section_settings?.findIndex(s => s.id === section);
-                          if (idx !== -1) {
-                            saveData('section_settings', idx, 'padding', val);
-                          }
-                        }}
-                      />
-                    </div>
-                  </div>
-
-                  {/* Field Management (NEW) */}
-                  <div>
-                    <label className="text-[9px] uppercase font-black text-slate-400 block mb-1">Field Management</label>
-                    <div className="space-y-1 bg-white p-2 rounded-lg border border-slate-100 max-h-40 overflow-y-auto">
-                      {(siteStructure?.data?.[section]?.[0] ? Object.keys(siteStructure.data[section][0]) : [])
-                        .filter(k => !['absoluteIndex', '_hidden', 'id', 'pk', 'uuid'].some(tf => k.toLowerCase().includes(tf)))
-                        .filter(k => !k.toLowerCase().includes('foto') && !k.toLowerCase().includes('image'))
-                        .sort((a, b) => {
-                          const order = siteStructure?.data?.display_config?.sections?.[section]?.visible_fields || [];
-                          const idxA = order.indexOf(a);
-                          const idxB = order.indexOf(b);
-                          if (idxA === -1 && idxB === -1) return 0;
-                          if (idxA === -1) return 1;
-                          if (idxB === -1) return -1;
-                          return idxA - idxB;
-                        })
-                        .map(field => {
-                          const displayConfig = siteStructure?.data?.display_config || { sections: {} };
-                          const config = displayConfig.sections?.[section] || { visible_fields: [], hidden_fields: [] };
-
-                          const isHidden = Array.isArray(config.hidden_fields) && config.hidden_fields.includes(field);
-                          const isVisible = !isHidden;
-
-                          return (
-                            <div key={field} className="flex items-center justify-between text-[10px] p-1.5 bg-white mb-1 rounded border border-slate-100 shadow-sm" title={`Veld: ${field}`}>
-                              <span className={`truncate flex-1 ${isVisible ? 'text-slate-700 font-bold' : 'text-slate-300 italic line-through'}`}>{field}</span>
-                              <div className="flex gap-1">
-                                <button
-                                  onClick={() => { console.log('↑ Clicked', field); moveField(section, field, 'up'); }}
-                                  className="p-1.5 text-slate-300 hover:text-blue-600 hover:bg-blue-50 rounded transition-all cursor-pointer"
-                                  title="Verplaats dit veld omhoog in de weergave."
-                                >
-                                  <i className="fa-solid fa-chevron-up text-[8px]"></i>
-                                </button>
-                                <button
-                                  onClick={() => { console.log('↓ Clicked', field); moveField(section, field, 'down'); }}
-                                  className="p-1.5 text-slate-300 hover:text-blue-600 hover:bg-blue-50 rounded transition-all cursor-pointer"
-                                  title="Verplaats dit veld omlaag in de weergave."
-                                >
-                                  <i className="fa-solid fa-chevron-down text-[8px]"></i>
-                                </button>
-                                <button
-                                  onClick={() => { console.log('👁 Clicked', field); toggleFieldVisibility(section, field); }}
-                                  className={`p-1.5 rounded transition-all cursor-pointer ${isVisible ? 'text-green-500 hover:bg-green-50' : 'text-slate-300 hover:bg-slate-100'}`}
-                                  title={isVisible ? 'Verberg dit veld op de website' : 'Toon dit veld op de website'}
-                                >
-                                  <i className={`fa-solid ${isVisible ? 'fa-eye' : 'fa-eye-slash'}`}></i>
-                                </button>
-                                {isVisible && (
-                                  <button
-                                    onClick={() => { console.log('↔️ Clicked inline toggle', field); toggleFieldInline(section, field); }}
-                                    className={`p-1.5 rounded transition-all cursor-pointer ${Array.isArray(config.inline_fields) && config.inline_fields.includes(field) ? 'text-purple-500 hover:bg-purple-50' : 'text-slate-300 hover:bg-slate-100'}`}
-                                    title={Array.isArray(config.inline_fields) && config.inline_fields.includes(field) ? 'Dit veld staat NAAST het vorige veld. Klik om weer op een nieuwe regel te plaatsen.' : 'Dit veld staat op een NIEUWE REGEL. Klik om naast het vorige veld te plaatsen.'}
-                                  >
-                                    <i className={`fa-solid ${Array.isArray(config.inline_fields) && config.inline_fields.includes(field) ? 'fa-arrow-right-long' : 'fa-level-down-alt'}`}></i>
-                                  </button>
-                                )}
-                              </div>
-                            </div>
-                          );
-                        })
-                      }
-                    </div>
-                  </div>
-
-                  {/* Item Management */}
-                  <div>
-                    <label className="text-[9px] uppercase font-black text-slate-400 block mb-1">Items ({siteStructure?.data?.[section]?.length || 0})</label>
-                    <div className="max-h-32 overflow-y-auto mb-2 space-y-1 border-y border-slate-100 py-2">
-                      {siteStructure?.data?.[section]?.map((item, index) => {
-                        // Helper to extract text from potential Athena style-objects
-                        const extractItemText = (val) => {
-                          if (!val) return null;
-                          if (typeof val === 'string') return val;
-                          if (typeof val === 'object') return val.text || val.title || val.label || val.name || val.value;
-                          return null;
-                        };
-
-                        // Slimmere titel bepaling
-                        let title = extractItemText(item.naam) || 
-                                    extractItemText(item.titel) || 
-                                    extractItemText(item.header) || 
-                                    extractItemText(item.kop);
-
-                        if (!title) {
-                          // Zoek eerste beste string of style-object veld
-                          const validKey = Object.keys(item).find(k => {
-                            const val = item[k];
-                            const text = extractItemText(val);
-                            return text && text.length < 50 && !k.includes('foto') && !k.includes('image') && !k.includes('url');
-                          });
-                          if (validKey) title = extractItemText(item[validKey]);
-                        }
-                        if (!title) title = `Item ${index + 1}`;
-
-                        return (
-                          <div key={index} className="flex items-center justify-between bg-white p-1.5 rounded border border-slate-100 text-[10px]" title={`Beheer item: ${typeof title === 'string' ? title : 'Item'}`}>
-                            <span className="truncate flex-1 pr-2 text-slate-600">{title}</span>
-                            <button
-                              onClick={() => deleteItem(section, index)}
-                              className="p-2 -mr-1 text-slate-300 hover:text-red-600 hover:bg-red-50 rounded transition-all"
-                              title="Verwijder dit item definitief uit de lijst."
-                            >
-                              <i className="fa-solid fa-trash-can"></i>
-                            </button>
-                          </div>
-                        );
-                      })}
-                      {(!siteStructure?.data?.[section] || siteStructure.data[section].length === 0) && (
-                        <p className="text-[10px] text-slate-400 italic text-center py-2">Geen items aanwezig.</p>
-                      )}
-                    </div>
-                    <button
-                      onClick={() => addItem(section)}
-                      className="w-full py-1.5 bg-blue-50 hover:bg-blue-100 text-blue-600 text-[10px] font-bold rounded-lg transition-colors border border-blue-200"
-                      title="Voeg een nieuw, leeg item toe aan deze lijst om daarna in te vullen."
-                    >
-                      <i className="fa-solid fa-plus mr-1"></i> Add Item
-                    </button>
-                  </div>
-                </div>
-              </div>
-            ))
-          ) : (
-            <p className="text-sm text-slate-400 italic">Nog geen secties gedetecteerd. Klik op 'Scan' om te zoeken.</p>
-          )}
-          </div>
-        </aside>
       </div>
     </div>
   );

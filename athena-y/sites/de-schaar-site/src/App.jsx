@@ -141,6 +141,7 @@ const App = ({ data: initialData }) => {
           primaryTable={data['footer']} 
           socialData={data['social_media']}
           openingData={data['openingsuren']}
+          locationData={data['locatie']}
         />
       </div>
     </DisplayConfigProvider>

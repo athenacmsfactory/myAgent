@@ -1,100 +1,53 @@
 import React from 'react';
-import EditableText from './EditableText';
-import EditableLink from './EditableLink';
 
-export default function Footer({ data }) {
-  const settingsSource = data?.site_settings || {};
-  const settings = Array.isArray(settingsSource) ? (settingsSource[0] || {}) : settingsSource;
-  const contactInfo = data?.contact?.[0] || {};
+/**
+ * ⚓ Athena Pro Footer v7
+ * Volledig bewerkbaar via de Dock en gekoppeld aan 'basisgegevens'.
+ */
+export default function Footer({ primaryTable }) {
+  const info = primaryTable?.[0] || {};
+  
+  // Velden zoeken met aliassen (voor robuustheid)
+  const findValue = (keys) => {
+    const key = keys.find(k => info[k] !== undefined);
+    return { value: info[key] || '', key: key || keys[0] };
+  };
 
-  const naam = settings.site_name || "nieuwe-tanden";
-  const email = contactInfo.email || settings.email || '';
-  const locatie = contactInfo.location || '';
-  const btw = contactInfo.btw_nummer || contactInfo.btw || '';
-  const linkedin = contactInfo.linkedin_url || contactInfo.linkedin || '';
+  const naam = findValue(['bedrijfsnaam', 'naam_bedrijf', 'naam', 'titel', 'site_naam']);
+  const adres = findValue(['adres', 'address', 'locatie']);
+  const telefoon = findValue(['telefoonnummer', 'telefoon', 'phone']);
+  const email = findValue(['email_algemeen', 'email_publiek', 'email']);
+  const kvk = findValue(['kvk_nummer', 'kvk', 'chamber_of_commerce']);
+  const btw = findValue(['btw_nummer', 'btw', 'vat_number']);
 
   return (
-    <footer
-      className="py-24 text-slate-400 border-t border-slate-800 relative overflow-hidden"
-      style={{ backgroundColor: 'var(--color-footer-bg, #0f172a)' }}
-    >
-      <div className="absolute bottom-0 left-0 w-64 h-64 bg-accent/5 rounded-full blur-[80px] -ml-32 -mb-32"></div>
-
-      <div className="container mx-auto px-6 relative z-10">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-20 mb-20">
-
-          {/* Brand Identity */}
+    <footer className="py-20 bg-slate-950 text-slate-400 border-t border-white/5" data-dock-section="footer">
+      <div className="container mx-auto px-6">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-16 mb-16">
+          
+          {/* Kolom 1: Branding & Missie */}
           <div className="space-y-6">
-            <h3 className="text-3xl font-serif font-bold text-white">
-              <EditableText value={naam} cmsBind={{ file: 'site_settings', index: 0, key: 'site_name' }} />
+            <h3 className="text-2xl font-serif font-bold text-white tracking-tight">
+              <span data-dock-type="text" data-dock-bind="basisgegevens.0.naam.key">{naam.value || 'Athena Project'}</span>
             </h3>
-            {settings.tagline && (
-              <p className="text-lg leading-relaxed font-light">
-                <EditableText value={settings.tagline} cmsBind={{ file: 'site_settings', index: 0, key: 'tagline' }} />
-              </p>
-            )}
+            <div className="h-1 w-12 bg-accent rounded-full"></div>
+            <p className="text-sm leading-relaxed max-w-xs">
+              Gerealiseerd met Athena CMS Factory. Wetenschappelijk onderbouwde innovatie in tandheelkunde.
+            </p>
           </div>
 
-          {/* Contact Details */}
+          {/* Kolom 2: Direct Contact */}
           <div className="space-y-6">
-            <h4 className="text-sm font-bold uppercase tracking-[0.2em] text-accent">
-              <EditableText value={settings.footer_contact_title || 'Contact'} cmsBind={{ file: 'site_settings', index: 0, key: 'footer_contact_title' }} />
-            </h4>
+            <h4 className="text-sm uppercase font-black tracking-[0.2em] text-accent">Contact</h4>
             <ul className="space-y-4">
-              {email && (
-                <li className="flex items-center gap-4">
-                  <i className="fa-solid fa-envelope text-accent w-5"></i>
-                  <EditableText value={email} cmsBind={{ file: 'contact', index: 0, key: 'email' }} />
-                </li>
-              )}
-              {locatie && (
-                <li className="flex items-center gap-4">
-                  <i className="fa-solid fa-location-dot text-accent w-5"></i>
-                  <EditableText value={locatie} cmsBind={{ file: 'contact', index: 0, key: 'location' }} />
-                </li>
-              )}
-              {linkedin && (
-                <li className="flex items-center gap-4">
-                  <i className="fa-brands fa-linkedin text-accent w-5"></i>
-                  <EditableLink
-                    label={contactInfo.linkedin_label || "LinkedIn Profile"}
-                    url={contactInfo.linkedin_url_url || linkedin}
-                    table="contact"
-                    field="linkedin_url"
-                    id={0}
-                    className="hover:text-white transition-colors"
-                  />
-                </li>
-              )}
-            </ul>
-          </div>
-
-          {/* Legal / Company Info */}
-          <div className="space-y-6">
-            <h4 className="text-sm font-bold uppercase tracking-[0.2em] text-accent">
-              <EditableText value={settings.footer_legal_title || 'Bedrijfsgegevens'} cmsBind={{ file: 'site_settings', index: 0, key: 'footer_legal_title' }} />
-            </h4>
-            <div className="space-y-4">
-              {btw && (
-                <p className="flex items-center gap-2">
-                  <span className="text-slate-500">BTW:</span>
-                  <EditableText value={btw} cmsBind={{ file: 'contact', index: 0, key: 'btw_nummer' }} />
-                </p>
-              )}
-              <p className="text-sm font-light leading-relaxed">
-                <EditableText value={settings.footer_text || 'Professionele website geleverd door Athena CMS Factory.'} cmsBind={{ file: 'site_settings', index: 0, key: 'footer_text' }} />
-              </p>
-            </div>
-          </div>
-
-        </div>
-
-        {/* Copyright Bar */}
-        <div className="pt-12 border-t border-slate-800 flex flex-col md:flex-row justify-between items-center gap-6 text-sm">
-          <p>&copy; {new Date().getFullYear()} {naam}. Alle rechten voorbehouden.</p>
-          <div className="flex items-center gap-2 opacity-50">
-            <img src="./athena-icon.svg" alt="Athena Logo" className="w-5 h-5" />
-            <EditableText value={settings.footer_credit_text || 'Gemaakt met Athena CMS Factory'} cmsBind={{ file: 'site_settings', index: 0, key: 'footer_credit_text' }} />
+              {adres.value && (
+                <li className="flex items-start gap-3 group">
+                  <div className="w-8 h-8 rounded-lg bg-white/5 flex items-center justify-center shrink-0 group-hover:bg-accent/20 transition-colors">
+                    <i className="fa-solid fa-location-dot text-accent text-xs"></i>
+                  </div>
+                  <span className="text-sm group-hover:text-white transition-colors cursor-pointer" data-dock-type="text" data-dock-bind="basisgegevens.0.adres.key">{...}</span>
+            </svg>
+            <span className="text-[11px] font-serif font-bold italic tracking-tight text-white">Athena CMS</span>
           </div>
         </div>
       </div>

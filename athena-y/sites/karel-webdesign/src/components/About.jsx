@@ -1,6 +1,5 @@
 import React from 'react';
 import { Quote } from 'lucide-react';
-import EditableText from './EditableText';
 import EditableImage from './EditableImage';
 
 const About = ({ data }) => {
@@ -16,17 +15,10 @@ const About = ({ data }) => {
         <div className="lg:grid lg:grid-cols-2 lg:gap-16 items-center">
           <div>
             <h2 className="text-3xl font-extrabold text-slate-900 sm:text-4xl">
-              <EditableText table="about" field="title" id={0} value={aboutData.title} />
+              <span data-dock-type="text" data-dock-bind="site_settings.0.titel">...</span>
             </h2>
             <div className="mt-4 text-lg text-slate-500 space-y-4">
-              <EditableText 
-                tagName="div" 
-                table="about" 
-                field="content" 
-                id={0} 
-                value={aboutData.content} 
-                className="whitespace-pre-wrap"
-              />
+              <span data-dock-type="text" data-dock-bind="site_settings.0.titel">...</span>
             </div>
             
             <div className="mt-8 border-l-4 border-blue-600 pl-4 bg-slate-50 p-4 italic text-slate-600 rounded-r-lg">

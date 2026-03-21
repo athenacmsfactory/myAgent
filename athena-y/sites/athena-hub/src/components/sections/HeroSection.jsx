@@ -1,52 +1,88 @@
 import React from 'react';
-import EditableMedia from '../EditableMedia';
-import EditableText from '../EditableText';
-import EditableLink from '../EditableLink';
 
-const HeroSection = ({ sectionName, items, sectionStyle }) => {
-  const hero = items[0];
-  const heroTitle = hero.title || hero.titel || hero.hero_header || hero.site_naam;
-  const heroSubtitle = hero.subtitle || hero.ondertitel || hero.introductie;
-  const imgKey = Object.keys(hero).find(k => /foto|afbeelding|url|image|img/i.test(k)) || 'image';
+const HeroSection = ({ items: data, sectionName, siteSettings }) => {
+  if (!data || data.length === 0) return null;
+  const hero = data[0];
+  const settings = siteSettings || {};
+
+  // v8.8 Hub-specifieke herstelactie - respecteer lege strings
+  const heroTitle = (hero.title !== undefined && hero.title !== null) ? hero.title : (hero.titel || '');
+  const heroSubtitle = (hero.subtitle !== undefined && hero.subtitle !== null) ? hero.subtitle : (hero.ondertitel || '');
+  const rawImg = hero.image || 'hero-athenahub-1-1770366162431.webp';
+  const imgSrc = (rawImg || "").startsWith('http') ? rawImg : `${import.meta.env.BASE_URL}images/${rawImg}`;
+
+  const handleScroll = (e) => {
+    if (e.shiftKey) return;
+    const url = (hero.cta && hero.cta.url) ? hero.cta.url : "#showcase";
+    if ((url || "").startsWith('#')) {
+      e.preventDefault();
+      const target = document.getElementById(url.substring(1));
+      if (target) target.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
+
+  // Stijl mapping voor uitlijning
+  const alignmentClass = {
+    'left': 'text-left items-start',
+    'right': 'text-right items-end',
+    'center': 'text-center items-center'
+  }[hero.hero_alignment || 'center'] || 'text-center items-center';
 
   return (
-    <section
-      id="hero"
+    <section 
+      id="hero" 
+      className="relative w-full flex items-center justify-center overflow-hidden bg-primary" 
       data-dock-section={sectionName}
-      className="relative w-full h-auto min-h-[var(--hero-height,85vh)] max-h-[var(--hero-max-height,150vh)] aspect-[var(--hero-aspect-ratio,16/9)] flex items-center justify-center overflow-hidden bg-[var(--color-hero-bg)] pt-24"
-      style={sectionStyle}
+      style={{ 
+        minHeight: `var(--hero-height, ${hero.hero_full_height ? '100vh' : '85vh'})`
+      }}
     >
       <div className="absolute inset-0 z-0">
-        <EditableMedia
-          src={hero[imgKey]}
-          cmsBind={{ file: sectionName, index: 0, key: imgKey }}
-          className="w-full h-full object-cover object-top"
-          priority={true}
+        <img 
+          src={imgSrc} 
+          className="w-full h-full object-cover object-top" 
+          data-dock-type="media" 
+          data-dock-bind={`${sectionName}.0.image`} 
         />
-        <div className="absolute inset-0 z-20 pointer-events-none" style={{
-          backgroundImage: 'linear-gradient(to bottom, var(--hero-overlay-start, rgba(0,0,0,0.6)), var(--hero-overlay-end, rgba(0,0,0,0.6)))'
-        }}></div>
+        <div 
+            className="absolute inset-0 bg-black z-10 pointer-events-none transition-opacity duration-300" 
+            style={{ opacity: `var(--hero-overlay-opacity, ${hero.hero_overlay_transparantie ?? 0.6})` }}
+        ></div>
+
       </div>
-      <div className="relative z-10 text-center px-6 max-w-5xl">
-        {!hero[imgKey] && <div className="h-2 w-32 bg-accent mx-auto mb-10 rounded-full shadow-lg shadow-accent/50"></div>}
-        <h1 className="text-5xl md:text-8xl font-serif font-bold text-white mb-8 leading-tight drop-shadow-2xl">
-          <EditableText value={heroTitle} cmsBind={{ file: sectionName, index: 0, key: Object.keys(hero).find(k => k === 'title' || k === 'titel' || k === 'hero_header' || k === 'site_naam') || 'title' }} />
+
+      <div className={`relative z-20 px-6 max-w-6xl w-full flex flex-col transition-all duration-500 ${alignmentClass}`}>
+        <h1 className="text-6xl md:text-9xl font-serif font-black text-white mb-8 leading-tight drop-shadow-2xl animate-reveal">
+          <span data-dock-type="text" data-dock-bind={`${sectionName}.0.title`}>{heroTitle}</span>
         </h1>
-        <div className="flex flex-col items-center gap-12">
-          <p className="text-xl md:text-2xl text-white/90 max-w-3xl mx-auto leading-relaxed drop-shadow-lg font-light italic">
-            <EditableText value={heroSubtitle} cmsBind={{ file: sectionName, index: 0, key: Object.keys(hero).find(k => k === 'subtitle' || k === 'ondertitel' || k === 'introductie') || 'subtitle' }} />
-          </p>
-          <div className="flex flex-wrap justify-center gap-4">
-            <EditableLink
-              as="button"
-              url={hero.cta || hero.cta_url || "#showcase"}
-              label={hero.cta?.label || hero.cta_text || hero.cta_label || "Bekijk de Demo's"}
-              cmsBind={{ file: sectionName, index: 0, key: 'cta' }}
-              className="bg-[var(--color-button-bg)] text-white px-10 py-4 rounded-full text-xl font-bold shadow-2xl hover:opacity-90 transition-all transform hover:scale-105"
-            />
-          </div>
+        
+        <p className="text-xl md:text-3xl text-white/90 max-w-3xl leading-relaxed drop-shadow-lg font-light italic mb-12 animate-reveal" style={{ animationDelay: '0.2s' }}>
+          <span data-dock-type="text" data-dock-bind={`${sectionName}.0.subtitle`}>{heroSubtitle}</span>
+        </p>
+
+        <div className={`flex flex-wrap gap-6 animate-reveal ${alignmentClass}`} style={{ animationDelay: '0.4s' }}>
+          <button 
+            onClick={handleScroll} 
+            className={`px-10 py-4 font-black rounded-full transition-all active:scale-95 shadow-2xl ${
+                hero.hero_cta_style === 'outline' 
+                ? 'border-2 border-white text-white hover:bg-white hover:text-slate-900' 
+                : hero.hero_cta_style === 'glass'
+                ? 'bg-white/10 backdrop-blur-md border border-white/20 text-white hover:bg-white/20'
+                : 'bg-accent text-white hover:bg-accent/90'
+            }`}
+            data-dock-type="link" 
+            data-dock-bind={`${sectionName}.0.cta`}
+          >
+            {hero.cta?.label || hero.cta_text || "Ontdek Meer"}
+          </button>
         </div>
       </div>
+
+      {hero.hero_show_arrow !== false && (
+        <div className="absolute bottom-10 left-1/2 -translate-x-1/2 z-20 animate-bounce text-white/30 text-4xl cursor-pointer">
+            <i className="fa-solid fa-chevron-down"></i>
+        </div>
+      )}
     </section>
   );
 };

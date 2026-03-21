@@ -39,14 +39,6 @@ async function sync() {
         process.exit(1);
     }
 
-    const isTemp = process.argv.includes('--temp');
-    const outputBase = isTemp ? 'src/data-temp' : 'src/data';
-    const outputDir = path.join(process.cwd(), outputBase);
-
-    if (!fs.existsSync(outputDir)) {
-        fs.mkdirSync(outputDir, { recursive: true });
-    }
-
     for (const [name, config] of Object.entries(sources)) {
         // Support voor zowel string (legacy) als object (hybrid config)
         let url = config;
@@ -108,13 +100,26 @@ async function sync() {
                 });
             }
 
-            fs.writeFileSync(path.join(outputDir, filename), JSON.stringify(finalData, null, 2));
+            fs.writeFileSync(path.join(process.cwd(), `src/data/${filename}`), JSON.stringify(finalData, null, 2));
             console.log(`  ✅ ${name} verwerkt -> ${filename}`);
             
         } catch (e) {
             console.error(`  ❌ Fout bij verwerken van ${name}:`, e.message);
         }
     }
+
+    // Phase 8: Data Aggregation (v8 Standard)
+    console.log(`📦 Aggregating all data for runtime optimization...`);
+    const allData = {};
+    const dataFiles = fs.readdirSync(path.join(process.cwd(), 'src/data')).filter(f => f.endsWith('.json') && f !== 'all_data.json');
+    
+    for (const file of dataFiles) {
+        const key = file.replace('.json', '');
+        allData[key] = JSON.parse(fs.readFileSync(path.join(process.cwd(), 'src/data', file), 'utf8'));
+    }
+    
+    fs.writeFileSync(path.join(process.cwd(), 'src/data/all_data.json'), JSON.stringify(allData, null, 2));
+    console.log(`  ✨ all_data.json generated.`);
 }
 
 if (process.argv[1] === fileURLToPath(import.meta.url)) {

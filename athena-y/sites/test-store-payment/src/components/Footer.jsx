@@ -1,101 +1,89 @@
 import React from 'react';
-import EditableText from './EditableText';
-import EditableLink from './EditableLink';
 
+/**
+ * Footer Component - Store Sitetype
+ * Upgraded for React 19 & Tailwind CSS v4
+ */
 export default function Footer({ data }) {
-  const settingsSource = data?.site_settings || {};
-  const settings = Array.isArray(settingsSource) ? (settingsSource[0] || {}) : settingsSource;
-  const contactInfo = data?.contact?.[0] || {};
-
-  const naam = settings.site_name || "test-store-payment";
-  const email = contactInfo.email || settings.email || '';
-  const locatie = contactInfo.location || '';
-  const btw = contactInfo.btw_nummer || contactInfo.btw || '';
-  const linkedin = contactInfo.linkedin_url || contactInfo.linkedin || '';
+  const info = data.Winkel_Instellingen?.[0] || {};
+  const title = info.winkelnaam || "Athena Store";
 
   return (
-    <footer
-      className="py-24 text-slate-400 border-t border-slate-800 relative overflow-hidden"
-      style={{ backgroundColor: 'var(--color-footer-bg, #0f172a)' }}
-    >
-      <div className="absolute bottom-0 left-0 w-64 h-64 bg-accent/5 rounded-full blur-[80px] -ml-32 -mb-32"></div>
-
-      <div className="container mx-auto px-6 relative z-10">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-20 mb-20">
-
-          {/* Brand Identity */}
-          <div className="space-y-6">
-            <h3 className="text-3xl font-serif font-bold text-white">
-              <EditableText value={naam} cmsBind={{ file: 'site_settings', index: 0, key: 'site_name' }} />
-            </h3>
-            {settings.tagline && (
-              <p className="text-lg leading-relaxed font-light">
-                <EditableText value={settings.tagline} cmsBind={{ file: 'site_settings', index: 0, key: 'tagline' }} />
-              </p>
-            )}
+    <footer className="py-24 bg-surface border-t border-primary/5">
+      <div className="max-w-7xl mx-auto px-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-16">
+        
+        {/* Brand Column */}
+        <div className="flex flex-col gap-6">
+          <h3 className="text-2xl font-black uppercase tracking-tighter italic text-primary">{title}</h3>
+          <p className="text-sm text-secondary font-medium leading-relaxed opacity-80 italic">
+            {info.slogan || "Kwaliteit en stijl voor iedereen."}
+          </p>
+          <div className="flex gap-4 mt-2">
+            {/* Social icons placeholders */}
+            {['Instagram', 'Facebook', 'Twitter'].map(social => (
+              <a key={social} href="#" className="w-8 h-8 rounded-full bg-primary/5 flex items-center justify-center text-[10px] font-bold text-primary hover:bg-accent hover:text-white transition-all shadow-soft">
+                {social.charAt(0)}
+              </a>
+            ))}
           </div>
-
-          {/* Contact Details */}
-          <div className="space-y-6">
-            <h4 className="text-sm font-bold uppercase tracking-[0.2em] text-accent">
-              <EditableText value={settings.footer_contact_title || 'Contact'} cmsBind={{ file: 'site_settings', index: 0, key: 'footer_contact_title' }} />
-            </h4>
-            <ul className="space-y-4">
-              {email && (
-                <li className="flex items-center gap-4">
-                  <i className="fa-solid fa-envelope text-accent w-5"></i>
-                  <EditableText value={email} cmsBind={{ file: 'contact', index: 0, key: 'email' }} />
-                </li>
-              )}
-              {locatie && (
-                <li className="flex items-center gap-4">
-                  <i className="fa-solid fa-location-dot text-accent w-5"></i>
-                  <EditableText value={locatie} cmsBind={{ file: 'contact', index: 0, key: 'location' }} />
-                </li>
-              )}
-              {linkedin && (
-                <li className="flex items-center gap-4">
-                  <i className="fa-brands fa-linkedin text-accent w-5"></i>
-                  <EditableLink
-                    label={contactInfo.linkedin_label || "LinkedIn Profile"}
-                    url={contactInfo.linkedin_url_url || linkedin}
-                    table="contact"
-                    field="linkedin_url"
-                    id={0}
-                    className="hover:text-white transition-colors"
-                  />
-                </li>
-              )}
-            </ul>
-          </div>
-
-          {/* Legal / Company Info */}
-          <div className="space-y-6">
-            <h4 className="text-sm font-bold uppercase tracking-[0.2em] text-accent">
-              <EditableText value={settings.footer_legal_title || 'Bedrijfsgegevens'} cmsBind={{ file: 'site_settings', index: 0, key: 'footer_legal_title' }} />
-            </h4>
-            <div className="space-y-4">
-              {btw && (
-                <p className="flex items-center gap-2">
-                  <span className="text-slate-500">BTW:</span>
-                  <EditableText value={btw} cmsBind={{ file: 'contact', index: 0, key: 'btw_nummer' }} />
-                </p>
-              )}
-              <p className="text-sm font-light leading-relaxed">
-                <EditableText value={settings.footer_text || 'Professionele website geleverd door Athena CMS Factory.'} cmsBind={{ file: 'site_settings', index: 0, key: 'footer_text' }} />
-              </p>
-            </div>
-          </div>
-
         </div>
 
-        {/* Copyright Bar */}
-        <div className="pt-12 border-t border-slate-800 flex flex-col md:flex-row justify-between items-center gap-6 text-sm">
-          <p>&copy; {new Date().getFullYear()} {naam}. Alle rechten voorbehouden.</p>
-          <div className="flex items-center gap-2 opacity-50">
-            <img src="./athena-icon.svg" alt="Athena Logo" className="w-5 h-5" />
-            <EditableText value={settings.footer_credit_text || 'Gemaakt met Athena CMS Factory'} cmsBind={{ file: 'site_settings', index: 0, key: 'footer_credit_text' }} />
-          </div>
+        {/* Links Column 1 */}
+        <div>
+          <h4 className="text-[10px] font-bold uppercase tracking-[0.3em] text-accent mb-8">Shoppen</h4>
+          <ul className="space-y-4">
+            {['Alle Producten', 'Nieuwe Collectie', 'Aanbiedingen', 'Populaire Items'].map(link => (
+              <li key={link}>
+                <a href="#" className="text-sm font-bold text-primary hover:text-accent transition-colors flex items-center gap-2 group">
+                  <span className="w-1 h-1 rounded-full bg-accent opacity-0 group-hover:opacity-100 transition-opacity"></span>
+                  {link}
+                </a>
+              </li>
+            ))}
+          </ul>
+        </div>
+
+        {/* Links Column 2 */}
+        <div>
+          <h4 className="text-[10px] font-bold uppercase tracking-[0.3em] text-accent mb-8">Klantenservice</h4>
+          <ul className="space-y-4">
+            {['Contact', 'Verzenden & Retour', 'Veelgestelde Vragen', 'Privacy Beleid'].map(link => (
+              <li key={link}>
+                <a href="#" className="text-sm font-bold text-primary hover:text-accent transition-colors flex items-center gap-2 group">
+                  <span className="w-1 h-1 rounded-full bg-accent opacity-0 group-hover:opacity-100 transition-opacity"></span>
+                  {link}
+                </a>
+              </li>
+            ))}
+          </ul>
+        </div>
+
+        {/* Newsletter Column */}
+        <div>
+          <h4 className="text-[10px] font-bold uppercase tracking-[0.3em] text-accent mb-8">Blijf op de hoogte</h4>
+          <p className="text-xs text-secondary mb-6 leading-relaxed font-medium">
+            Schrijf je in voor onze nieuwsbrief en ontvang updates over nieuwe collecties.
+          </p>
+          <form className="flex flex-col gap-3" onSubmit={(e) => e.preventDefault()}>
+            <input 
+              type="email" 
+              placeholder="Email adres" 
+              className="bg-primary/5 border border-primary/5 text-sm w-full p-4 rounded-2xl outline-none focus:border-accent transition-all" 
+            />
+            <button className="bg-primary text-white text-xs font-black uppercase tracking-widest py-4 rounded-2xl hover:bg-accent transition-all shadow-lg shadow-primary/10">
+              Inschrijven
+            </button>
+          </form>
+        </div>
+      </div>
+
+      <div className="max-w-7xl mx-auto px-6 mt-24 pt-10 border-t border-primary/5 flex flex-col md:flex-row justify-between items-center gap-6">
+        <p className="text-[10px] text-secondary font-bold uppercase tracking-[0.2em] opacity-50">
+          &copy; {new Date().getFullYear()} {title}. All Rights Reserved.
+        </p>
+        <div className="flex gap-6 grayscale opacity-30 hover:grayscale-0 hover:opacity-100 transition-all duration-700">
+           {/* Payment icons placeholder */}
+           {['Visa', 'MasterCard', 'iDEAL', 'PayPal'].map(p => <span key={p} className="text-[10px] font-black italic">{p}</span>)}
         </div>
       </div>
     </footer>

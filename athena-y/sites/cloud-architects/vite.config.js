@@ -34,8 +34,10 @@ export default defineConfig(async ({ command }) => {
       athenaEditorPlugin ? athenaEditorPlugin() : null
     ].filter(Boolean),
     server: {
+      cors: true,
       host: true,
-      port: 5591,
+      port: parseInt(process.env.PORT) || 5591,
+      allowedHosts: true,
       watch: {
         // src/data wordt niet genegeerd voor HMR
       }

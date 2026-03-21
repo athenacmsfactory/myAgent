@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 
-const DisplayConfigContext = createContext();
+export const DisplayConfigContext = createContext();
 
 export const useDisplayConfig = () => useContext(DisplayConfigContext);
 

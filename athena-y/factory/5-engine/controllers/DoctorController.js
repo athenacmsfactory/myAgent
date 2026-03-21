@@ -164,14 +164,24 @@ export class DoctorController {
     }
 
     /**
-     * Calculate storage usage in MB
+     * Calculate storage usage in MB (with 60s cache per site)
      */
     _calculateStorageUsage(siteName) {
+        if (!this._storageCache) this._storageCache = new Map();
+        const now = Date.now();
+        const cached = this._storageCache.get(siteName);
+
+        if (cached && (now - cached.timestamp < 60000)) {
+            return cached.value;
+        }
+
         const siteDir = path.join(this.sitesDir, siteName);
         try {
             // Fast way to get directory size on Linux
             const output = execSync(`du -sm "${siteDir}"`).toString();
-            return parseInt(output.split('\t')[0]);
+            const value = parseInt(output.split('\t')[0]);
+            this._storageCache.set(siteName, { value, timestamp: now });
+            return value;
         } catch (e) {
             return 0;
         }

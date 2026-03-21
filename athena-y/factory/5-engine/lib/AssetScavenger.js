@@ -20,101 +20,128 @@ export class AssetScavenger {
         this.missingAssets = new Set();
         this.restoredAssets = [];
         
-    // Indexes
-    this.exactMatchIndex = new Map(); // filename -> fullPath
-    this.fuzzyMatchIndex = new Map(); // basename -> [fullPath]
-  }
-
-  // Static cache to avoid re-indexing common directories (like inputsites) multiple times in a monorepo build
-  static registryCache = new Map();
-
-  scavenge() {
-    console.log(`🔍  Starting Asset Scavenger for ${this.projectName}...`);
-
-    if (!fs.existsSync(this.dataDir)) {
-      console.warn(`⚠️  Data directory not found: ${this.dataDir}`);
-      return;
+        // Indexes
+        this.exactMatchIndex = new Map(); // filename -> fullPath
+        this.fuzzyMatchIndex = new Map(); // basename -> [fullPath]
     }
 
-    // 1. Find all asset references in JSON files
-    this.findAssetsInJson();
+    scavenge() {
+        console.log(`🔍  Starting Asset Scavenger for ${this.projectName}...`);
 
-    if (this.neededAssets.size === 0) {
-      console.log(`ℹ️  No asset references found in JSON data.`);
-      return;
-    }
-
-    console.log(`🔍  Found ${this.neededAssets.size} unique asset references in JSON.`);
-
-    // 2. Index available files in source directories
-    this.buildSourceIndex();
-
-    // 3. Search and copy assets
-    this.neededAssets.forEach(assetName => {
-      this.findAndCopyAsset(assetName);
-    });
-
-    // 4. Log results
-    this.logResults();
-  }
-
-  buildSourceIndex() {
-    this.sourceDirs.forEach(dir => {
-      if (fs.existsSync(dir)) {
-        if (AssetScavenger.registryCache.has(dir)) {
-          const cached = AssetScavenger.registryCache.get(dir);
-          cached.exact.forEach((v, k) => this.exactMatchIndex.set(k, v));
-          cached.fuzzy.forEach((v, k) => {
-            if (!this.fuzzyMatchIndex.has(k)) this.fuzzyMatchIndex.set(k, []);
-            this.fuzzyMatchIndex.get(k).push(...v);
-          });
-        } else {
-          const localExact = new Map();
-          const localFuzzy = new Map();
-          this.indexDirectory(dir, localExact, localFuzzy);
-          
-          AssetScavenger.registryCache.set(dir, { exact: localExact, fuzzy: localFuzzy });
-          
-          localExact.forEach((v, k) => this.exactMatchIndex.set(k, v));
-          localFuzzy.forEach((v, k) => {
-            if (!this.fuzzyMatchIndex.has(k)) this.fuzzyMatchIndex.set(k, []);
-            this.fuzzyMatchIndex.get(k).push(...v);
-          });
+        if (!fs.existsSync(this.dataDir)) {
+            console.warn(`⚠️  Data directory not found: ${this.dataDir}`);
+            return;
         }
-      }
-    });
-    console.log(`📂  Indexed ${this.exactMatchIndex.size} source files.`);
-  }
 
-  indexDirectory(dir, exactMap, fuzzyMap) {
-    try {
-      const entries = fs.readdirSync(dir, { withFileTypes: true });
-      for (const entry of entries) {
-        // Performance: Skip heavy technical directories
-        if (entry.isDirectory()) {
-          if (['node_modules', '.git', 'dist', '.next', '.athena-temp'].includes(entry.name)) continue;
-          this.indexDirectory(path.join(dir, entry.name), exactMap, fuzzyMap);
-        } else if (entry.isFile()) {
-          // Only index likely media files to save memory/time
-          if (entry.name.match(/\.(jpg|jpeg|png|gif|webp|svg|mp4|webm)$/i)) {
-            // Exact match index
-            if (!exactMap.has(entry.name)) {
-              exactMap.set(entry.name, path.join(dir, entry.name));
+        // 1. Find all asset references in JSON files
+        this.findAssetsInJson();
+
+        if (this.neededAssets.size === 0) {
+            console.log(`ℹ️  No asset references found in JSON data.`);
+            return;
+        }
+
+        console.log(`🔍  Found ${this.neededAssets.size} unique asset references in JSON.`);
+
+        // 2. Index available files in source directories
+        this.buildSourceIndex();
+
+        // 3. Search and copy assets
+        this.neededAssets.forEach(assetName => {
+            this.findAndCopyAsset(assetName);
+        });
+
+        // 4. Log results
+        this.logResults();
+    }
+
+    findAssetsInJson() {
+        try {
+            const files = fs.readdirSync(this.dataDir).filter(f => f.endsWith('.json'));
+            
+            for (const file of files) {
+                const filePath = path.join(this.dataDir, file);
+                try {
+                    const content = JSON.parse(fs.readFileSync(filePath, 'utf8'));
+                    this.traverse(content);
+                } catch (err) {
+                    console.error(`❌  Error parsing JSON file ${file}:`, err.message);
+                }
+            }
+        } catch (err) {
+            console.error(`❌  Error reading data directory:`, err.message);
+        }
+    }
+
+    traverse(obj) {
+        if (!obj) return;
+
+        if (Array.isArray(obj)) {
+            obj.forEach(item => this.traverse(item));
+        } else if (typeof obj === 'object') {
+            for (const key in obj) {
+                if (Object.prototype.hasOwnProperty.call(obj, key)) {
+                    this.traverse(obj[key]);
+                }
+            }
+        } else if (typeof obj === 'string') {
+            this.checkString(obj);
+        }
+    }
+
+    checkString(str) {
+        // Basic check for extensions
+        // Supported: jpg, jpeg, png, gif, webp, svg, mp4, webm
+        if (str.match(/\.(jpg|jpeg|png|gif|webp|svg|mp4|webm)$/i)) {
+            // Ignore external URLs
+            if (str.startsWith('http://') || str.startsWith('https://') || str.startsWith('//')) {
+                return;
             }
 
-            // Fuzzy match index (basename)
-            const baseName = path.parse(entry.name).name.toLowerCase();
-            if (!fuzzyMap.has(baseName)) {
-              fuzzyMap.set(baseName, []);
-            }
-            fuzzyMap.get(baseName).push(path.join(dir, entry.name));
-          }
+            // Extract filename (ignore paths like /images/hero.jpg -> hero.jpg)
+            // We assume assets are flattened in public/images
+            const filename = path.basename(str);
+            this.neededAssets.add(filename);
         }
-      }
-    } catch (e) {
-      console.warn(`⚠️  Could not read directory ${dir}: ${e.message}`);
     }
-  }
+
+    buildSourceIndex() {
+        this.sourceDirs.forEach(dir => {
+            if (fs.existsSync(dir)) {
+                this.indexDirectory(dir);
+            }
+        });
+        console.log(`📂  Indexed ${this.exactMatchIndex.size} source files.`);
+    }
+
+    indexDirectory(dir) {
+        try {
+            const entries = fs.readdirSync(dir, { withFileTypes: true });
+            for (const entry of entries) {
+                const fullPath = path.join(dir, entry.name);
+                if (entry.isDirectory()) {
+                    this.indexDirectory(fullPath);
+                } else if (entry.isFile()) {
+                    // Only index likely media files to save memory/time
+                    if (entry.name.match(/\.(jpg|jpeg|png|gif|webp|svg|mp4|webm)$/i)) {
+                        // Exact match index
+                        if (!this.exactMatchIndex.has(entry.name)) {
+                             this.exactMatchIndex.set(entry.name, fullPath);
+                        }
+                        
+                        // Fuzzy match index (basename)
+                        const baseName = path.parse(entry.name).name.toLowerCase();
+                        if (!this.fuzzyMatchIndex.has(baseName)) {
+                            this.fuzzyMatchIndex.set(baseName, []);
+                        }
+                        this.fuzzyMatchIndex.get(baseName).push(fullPath);
+                    }
+                }
+            }
+        } catch (e) {
+            console.warn(`⚠️  Could not read directory ${dir}: ${e.message}`);
+        }
+    }
 
     findAndCopyAsset(assetName) {
         // Ensure destination directory exists

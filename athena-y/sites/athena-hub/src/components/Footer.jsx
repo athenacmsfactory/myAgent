@@ -1,103 +1,109 @@
 import React from 'react';
-import EditableText from './EditableText';
-import EditableLink from './EditableLink';
 
-export default function Footer({ data }) {
-  const settingsSource = data?.site_settings || {};
-  const settings = Array.isArray(settingsSource) ? (settingsSource[0] || {}) : settingsSource;
-  const contactInfo = data?.contact?.[0] || {};
-
-  const naam = settings.site_name || "athena-hub";
-  const email = contactInfo.email || settings.email || '';
-  const locatie = contactInfo.location || '';
-  const btw = contactInfo.btw_nummer || contactInfo.btw || '';
-  const linkedin = contactInfo.linkedin_url || contactInfo.linkedin || '';
+const Footer = ({ siteSettings = {}, footerData = {}, data }) => {
+  const settings = Array.isArray(siteSettings) ? (siteSettings[0] || {}) : (siteSettings || {});
+  const footer = Array.isArray(footerData) ? (footerData[0] || {}) : (footerData || {});
+  const siteName = settings.site_name || 'Athena Hub';
 
   return (
-    <footer
-      className="py-24 text-slate-400 border-t border-slate-800 relative overflow-hidden"
-      style={{ backgroundColor: 'var(--color-footer-bg, #0f172a)' }}
-    >
-      <div className="absolute bottom-0 left-0 w-64 h-64 bg-accent/5 rounded-full blur-[80px] -ml-32 -mb-32"></div>
-
-      <div className="container mx-auto px-6 relative z-10">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-20 mb-20">
-
-          {/* Brand Identity */}
-          <div className="space-y-6">
-            <h3 className="text-3xl font-serif font-bold text-white">
-              <EditableText value={naam} cmsBind={{ file: 'site_settings', index: 0, key: 'site_name' }} />
-            </h3>
-            {settings.tagline && (
-              <p className="text-lg leading-relaxed font-light">
-                <EditableText value={settings.tagline} cmsBind={{ file: 'site_settings', index: 0, key: 'tagline' }} />
-              </p>
-            )}
+    <footer className="bg-primary text-white pt-24 pb-12 px-6 overflow-hidden relative" data-dock-section="footer">
+      {/* Decorative elements */}
+      <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-accent to-transparent opacity-30"></div>
+      
+      <div className="max-w-7xl mx-auto">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-16 mb-20">
+          
+          {/* Brand Column */}
+          <div className="space-y-8">
+            <h2 className="text-3xl font-black tracking-tighter" data-dock-type="text" data-dock-bind="site_settings.0.site_name">
+              {siteName}
+            </h2>
+            <p className="text-slate-400 leading-relaxed font-light" data-dock-type="text" data-dock-bind="footer.0.tagline">
+              {footer.tagline || settings.tagline}
+            </p>
+            <div className="flex gap-4">
+              {[
+                { icon: 'fa-facebook-f', url: footer.facebook_url },
+                { icon: 'fa-linkedin-in', url: footer.linkedin_url },
+                { icon: 'fa-instagram', url: footer.instagram_url }
+              ].map((social, i) => (
+                <a key={i} href={social.url || "#"} className="w-10 h-10 rounded-full border border-white/10 flex items-center justify-center hover:bg-accent hover:border-accent transition-all duration-300">
+                  <i className={`fa-brands ${social.icon} text-sm`}></i>
+                </a>
+              ))}
+            </div>
           </div>
 
-          {/* Contact Details */}
-          <div className="space-y-6">
-            <h4 className="text-sm font-bold uppercase tracking-[0.2em] text-accent">
-              <EditableText value={settings.footer_contact_title || 'Contact'} cmsBind={{ file: 'site_settings', index: 0, key: 'footer_contact_title' }} />
-            </h4>
-            <ul className="space-y-4">
-              {email && (
-                <li className="flex items-center gap-4">
-                  <i className="fa-solid fa-envelope text-accent w-5"></i>
-                  <EditableText value={email} cmsBind={{ file: 'contact', index: 0, key: 'email' }} />
+          {/* Quick Links */}
+          <div>
+            <h4 className="text-xs font-black uppercase tracking-widest text-accent mb-8">Navigation</h4>
+            <ul className="space-y-4 text-sm font-medium">
+              {['Home', 'Showcase', 'Proces', 'Contact'].map((item) => (
+                <li key={item}>
+                  <a href={`#${item.toLowerCase()}`} className="text-slate-300 hover:text-white transition-colors flex items-center gap-2 group">
+                    <span className="w-1 h-1 bg-accent rounded-full opacity-0 group-hover:opacity-100 transition-opacity"></span>
+                    {item}
+                  </a>
                 </li>
-              )}
-              {locatie && (
-                <li className="flex items-center gap-4">
-                  <i className="fa-solid fa-location-dot text-accent w-5"></i>
-                  <EditableText value={locatie} cmsBind={{ file: 'contact', index: 0, key: 'location' }} />
-                </li>
-              )}
-              {linkedin && (
-                <li className="flex items-center gap-4">
-                  <i className="fa-brands fa-linkedin text-accent w-5"></i>
-                  <EditableLink
-                    label={contactInfo.linkedin_label || "LinkedIn Profile"}
-                    url={contactInfo.linkedin_url_url || linkedin}
-                    table="contact"
-                    field="linkedin_url"
-                    id={0}
-                    className="hover:text-white transition-colors"
-                  />
-                </li>
-              )}
+              ))}
             </ul>
           </div>
 
-          {/* Legal / Company Info */}
-          <div className="space-y-6">
-            <h4 className="text-sm font-bold uppercase tracking-[0.2em] text-accent">
-              <EditableText value={settings.footer_legal_title || 'Bedrijfsgegevens'} cmsBind={{ file: 'site_settings', index: 0, key: 'footer_legal_title' }} />
-            </h4>
+          {/* Contact Info */}
+          <div>
+            <h4 className="text-xs font-black uppercase tracking-widest text-accent mb-8">Get in Touch</h4>
+            <ul className="space-y-6 text-sm">
+              <li className="flex items-start gap-4">
+                <i className="fa-solid fa-envelope text-accent mt-1"></i>
+                <div>
+                  <p className="text-[10px] uppercase font-black text-slate-500 mb-1">Email us</p>
+                  <a href={`mailto:${footer.email}`} className="text-slate-200 hover:text-accent transition-colors" data-dock-type="text" data-dock-bind="footer.0.email">
+                    {footer.email || "info@athena-cms.be"}
+                  </a>
+                </div>
+              </li>
+              <li className="flex items-start gap-4">
+                <i className="fa-solid fa-phone text-accent mt-1"></i>
+                <div>
+                  <p className="text-[10px] uppercase font-black text-slate-500 mb-1">Call us</p>
+                  <a href={`tel:${footer.telefoon}`} className="text-slate-200 hover:text-accent transition-colors" data-dock-type="text" data-dock-bind="footer.0.telefoon">
+                    {footer.telefoon || "+32 470 00 00 00"}
+                  </a>
+                </div>
+              </li>
+            </ul>
+          </div>
+
+          {/* Location */}
+          <div>
+            <h4 className="text-xs font-black uppercase tracking-widest text-accent mb-8">Location</h4>
             <div className="space-y-4">
-              {btw && (
-                <p className="flex items-center gap-2">
-                  <span className="text-slate-500">BTW:</span>
-                  <EditableText value={btw} cmsBind={{ file: 'contact', index: 0, key: 'btw_nummer' }} />
-                </p>
-              )}
-              <p className="text-sm font-light leading-relaxed">
-                <EditableText value={settings.footer_text || 'Professionele website geleverd door Athena CMS Factory.'} cmsBind={{ file: 'site_settings', index: 0, key: 'footer_text' }} />
-              </p>
+               <p className="text-slate-300 text-sm leading-relaxed" data-dock-type="text" data-dock-bind="footer.0.adres">
+                 {footer.adres || "Gent, België"}
+               </p>
+               <div className="pt-4">
+                  <div className="bg-white/5 rounded-2xl p-4 border border-white/5 italic text-[11px] text-slate-400">
+                    "Innovation distinguishes between a leader and a follower."
+                  </div>
+               </div>
             </div>
           </div>
 
         </div>
 
-        {/* Copyright Bar */}
-        <div className="pt-12 border-t border-slate-800 flex flex-col md:flex-row justify-between items-center gap-6 text-sm">
-          <p>&copy; {new Date().getFullYear()} {naam}. Alle rechten voorbehouden.</p>
-          <div className="flex items-center gap-2 opacity-50">
-            <img src="./athena-icon.svg" alt="Athena Logo" className="w-5 h-5" />
-            <EditableText value={settings.footer_credit_text || 'Gemaakt met Athena CMS Factory'} cmsBind={{ file: 'site_settings', index: 0, key: 'footer_credit_text' }} />
+        {/* Bottom Bar */}
+        <div className="pt-12 border-t border-white/5 flex flex-col md:flex-row justify-between items-center gap-8">
+          <p className="text-[10px] font-bold uppercase tracking-widest text-slate-500" data-dock-type="text" data-dock-bind="footer.0.footer_text">
+            {footer.footer_text || `© ${new Date().getFullYear()} ${siteName}. All Rights Reserved.`}
+          </p>
+          <div className="flex items-center gap-6">
+            <img src={`${import.meta.env.BASE_URL}athena-icon.svg`} className="h-6 opacity-30 grayscale hover:grayscale-0 transition-all cursor-pointer" alt="Athena" />
+            <span className="text-[9px] font-black uppercase tracking-tighter text-slate-600">Built with Athena CMS v8.6</span>
           </div>
         </div>
       </div>
     </footer>
   );
-}
+};
+
+export default Footer;

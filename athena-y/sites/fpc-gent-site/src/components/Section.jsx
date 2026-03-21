@@ -1,7 +1,5 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import EditableText from './EditableText';
-import EditableMedia from './EditableMedia';
 
 export default function Section({ data, pageFile, sectionIndex }) {
     const { type, content: rawContent } = data;
@@ -46,7 +44,7 @@ export default function Section({ data, pageFile, sectionIndex }) {
                     <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center gap-16">
                         <div className="w-full md:w-1/2 relative z-10">
                             <h1 className="text-5xl md:text-7xl font-black mb-8 leading-tight tracking-tight text-slate-900">
-                                <EditableText value={content.titel} cmsBind={bind('titel')} style={getStyles('titel')} />
+                                <span data-dock-type="text" data-dock-bind="site_settings.0.titel">...</span>
                             </h1>
                             <div className="text-xl md:text-2xl text-slate-600 mb-12 leading-relaxed max-w-2xl">
                                 {parseContentWithLinks(content.tagline)}
@@ -57,19 +55,19 @@ export default function Section({ data, pageFile, sectionIndex }) {
                                         isExternal(content.cta_link) ? (
                                             <a href={content.cta_link} target="_blank" rel="noreferrer" className="cursor-pointer">
                                                 <button className="bg-blue-600 text-white px-10 py-5 rounded-2xl font-bold text-lg hover:shadow-2xl hover:bg-blue-700 transition-all active:scale-95 shadow-lg shadow-blue-200 cursor-pointer">
-                                                    <EditableText value={content.cta_text} cmsBind={bind('cta_text')} style={getStyles('cta_text')} />
+                                                    <span data-dock-type="text" data-dock-bind="site_settings.0.titel">...</span>
                                                 </button>
                                             </a>
                                         ) : (
                                             <Link to={content.cta_link} className="cursor-pointer">
                                                 <button className="bg-blue-600 text-white px-10 py-5 rounded-2xl font-bold text-lg hover:shadow-2xl hover:bg-blue-700 transition-all active:scale-95 shadow-lg shadow-blue-200 cursor-pointer">
-                                                    <EditableText value={content.cta_text} cmsBind={bind('cta_text')} style={getStyles('cta_text')} />
+                                                    <span data-dock-type="text" data-dock-bind="site_settings.0.titel">...</span>
                                                 </button>
                                             </Link>
                                         )
                                     ) : (
                                         <button className="bg-blue-600 text-white px-10 py-5 rounded-2xl font-bold text-lg hover:shadow-2xl hover:bg-blue-700 transition-all active:scale-95 shadow-lg shadow-blue-200">
-                                            <EditableText value={content.cta_text} cmsBind={bind('cta_text')} style={getStyles('cta_text')} />
+                                            <span data-dock-type="text" data-dock-bind="site_settings.0.titel">...</span>
                                         </button>
                                     )}
                                 </div>
@@ -77,11 +75,7 @@ export default function Section({ data, pageFile, sectionIndex }) {
                         </div>
                         <div className="w-full md:w-1/2">
                             <div className="aspect-[4/3] rounded-[3rem] overflow-hidden shadow-2xl rotate-2 hover:rotate-0 transition-transform duration-700">
-                                <EditableMedia 
-                                    src={content.afbeelding} 
-                                    cmsBind={bind('afbeelding')} 
-                                    className="w-full h-full object-cover" 
-                                />
+                                <img src={} data-dock-type="media" data-dock-bind="site_settings.0.titel" />
                             </div>
                         </div>
                     </div>
@@ -96,7 +90,7 @@ export default function Section({ data, pageFile, sectionIndex }) {
                 >
                     <div className="max-w-7xl mx-auto">
                         <h2 className="text-4xl font-black text-slate-900 mb-16 text-center tracking-tight">
-                            <EditableText value={content.titel} cmsBind={bind('titel')} style={getStyles('titel')} />
+                            <span data-dock-type="text" data-dock-bind="site_settings.0.titel">...</span>
                         </h2>
                         <div className="grid grid-cols-1 md:grid-cols-3 gap-12">
                             {content.items?.map((item, i) => {
@@ -128,11 +122,7 @@ export default function Section({ data, pageFile, sectionIndex }) {
                                     <CardWrapper key={i} className="bg-white p-2 rounded-[2.5rem] shadow-sm hover:shadow-2xl transition-all group border border-slate-100 flex flex-col relative">
                                         {itemImg ? (
                                             <div className="aspect-video rounded-[2rem] overflow-hidden mb-6">
-                                                <EditableMedia 
-                                                    src={itemImg} 
-                                                    cmsBind={bind(`items.${i}.${item.afbeelding ? 'afbeelding' : 'image'}`)} 
-                                                    className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" 
-                                                />
+                                                <img src={} data-dock-type="media" data-dock-bind="site_settings.0.titel" />
                                             </div>
                                         ) : (
                                             /* Spacer for text-only cards */
@@ -140,22 +130,14 @@ export default function Section({ data, pageFile, sectionIndex }) {
                                         )}
                                         <div className={`px-6 pb-8 ${itemImg ? 'pt-2' : 'pt-4'}`}>
                                             <h3 className="text-xl font-bold mb-4 text-slate-900 flex items-center justify-between">
-                                                <EditableText 
-                                                    value={itemTitle} 
-                                                    cmsBind={bind(isString ? `items.${i}` : `items.${i}.titel`)} 
-                                                    style={getStyles(isString ? `items.${i}` : `items.${i}.titel`)} 
-                                                />
+                                                <span data-dock-type="text" data-dock-bind="site_settings.0.titel">...</span>
                                                 {itemLink && (
                                                     <i className="fa-solid fa-arrow-up-right-from-square text-[10px] text-blue-500 opacity-0 group-hover:opacity-100 transition-opacity"></i>
                                                 )}
                                             </h3>
                                             {(itemText || !isString) && (
                                                 <p className="text-slate-500 leading-relaxed text-sm">
-                                                    <EditableText 
-                                                        value={itemText} 
-                                                        cmsBind={bind(`items.${i}.${item.beschrijving ? 'beschrijving' : 'tekst'}`)} 
-                                                        style={getStyles(`items.${i}.${item.beschrijving ? 'beschrijving' : 'tekst'}`)} 
-                                                    />
+                                                    <span data-dock-type="text" data-dock-bind="site_settings.0.titel">...</span>
                                                 </p>
                                             )}
                                             {itemLink && (
@@ -181,26 +163,26 @@ export default function Section({ data, pageFile, sectionIndex }) {
                 >
                     <div className="max-w-4xl mx-auto text-center">
                         <h2 className="text-4xl font-black mb-12 tracking-tight">
-                            <EditableText value={content.titel || 'Contact'} cmsBind={bind('titel')} style={getStyles('titel')} />
+                            <span data-dock-type="text" data-dock-bind="site_settings.0.titel">...</span>
                         </h2>
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-12 text-left bg-white/5 p-12 rounded-[3rem] border border-white/10 backdrop-blur-sm">
                             <div>
                                 <h3 className="text-blue-400 font-bold uppercase tracking-widest text-[10px] mb-6">Onze Locatie</h3>
                                 <p className="text-xl text-slate-300 leading-relaxed font-light">
-                                    <EditableText value={content.adres} cmsBind={bind('adres')} style={getStyles('adres')} />
+                                    <span data-dock-type="text" data-dock-bind="site_settings.0.titel">...</span>
                                 </p>
                             </div>
                             <div className="space-y-8">
                                 <div>
                                     <h3 className="text-blue-400 font-bold uppercase tracking-widest text-[10px] mb-3">Telefoon</h3>
                                     <p className="text-2xl font-black tracking-tight">
-                                        <EditableText value={content.telefoon} cmsBind={bind('telefoon')} style={getStyles('telefoon')} />
+                                        <span data-dock-type="text" data-dock-bind="site_settings.0.titel">...</span>
                                     </p>
                                 </div>
                                 <div>
                                     <h3 className="text-blue-400 font-bold uppercase tracking-widest text-[10px] mb-3">Direct Mail</h3>
                                     <p className="text-xl font-medium underline decoration-blue-500 underline-offset-8">
-                                        <EditableText value={content.email} cmsBind={bind('email')} style={getStyles('email')} />
+                                        <span data-dock-type="text" data-dock-bind="site_settings.0.titel">...</span>
                                     </p>
                                 </div>
                             </div>
@@ -220,7 +202,7 @@ export default function Section({ data, pageFile, sectionIndex }) {
                     <div className={`max-w-7xl mx-auto flex flex-col ${hasImage ? 'md:flex-row' : ''} gap-16 items-center`}>
                         <div className={hasImage ? 'md:w-3/5' : 'max-w-3xl mx-auto w-full'}>
                             <h2 className="text-4xl font-black text-slate-900 mb-8 tracking-tight">
-                                <EditableText value={content.titel} cmsBind={bind('titel')} style={getStyles('titel')} />
+                                <span data-dock-type="text" data-dock-bind="site_settings.0.titel">...</span>
                             </h2>
                             <div className="prose prose-lg prose-slate max-w-none text-slate-600 leading-relaxed whitespace-pre-wrap">
                                 {parseContentWithLinks(content.tekst)}
@@ -229,11 +211,7 @@ export default function Section({ data, pageFile, sectionIndex }) {
                         {hasImage && (
                             <div className="md:w-2/5 w-full">
                                 <div className="aspect-square rounded-[3rem] overflow-hidden shadow-xl border-8 border-slate-50">
-                                    <EditableMedia 
-                                        src={content.afbeelding} 
-                                        cmsBind={bind('afbeelding')} 
-                                        className="w-full h-full object-cover" 
-                                    />
+                                    <img src={} data-dock-type="media" data-dock-bind="site_settings.0.titel" />
                                 </div>
                             </div>
                         )}

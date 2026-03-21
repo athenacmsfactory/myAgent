@@ -5,5 +5,5 @@
 3. **Probleem:** Automatische publisher faalde op 403/401 errors (token issues).
 4. **Actie:** Alle oude PAT's en Secrets verwijderd voor een schone start.
 5. **Actie:** Nieuwe Master PAT gegenereerd: [VERWIJDERD].
-6. **Actie:** Secret ATHENA_DEPLOY_TOKEN bijgewerkt in athena-y.
+6. **Actie:** Secret ATHENA_DEPLOY_TOKEN bijgewerkt in athena-x.
 7. **Actie:** Lokale .env bestanden bijgewerkt met de nieuwe token.

@@ -1,6 +1,4 @@
 import React from 'react';
-import EditableText from './EditableText';
-import EditableMedia from './EditableMedia';
 
 const Hero = ({ profile }) => {
   return (
@@ -8,17 +6,17 @@ const Hero = ({ profile }) => {
       <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center gap-12">
         <div className="flex-1 text-center md:text-left z-10">
           <h2 className="text-blue-500 font-black uppercase tracking-[0.3em] mb-4 text-sm">
-            <EditableText table="profile" field="professional_title" id={0} value={profile.professional_title} />
+            <span data-dock-type="text" data-dock-bind="site_settings.0.titel">...</span>
           </h2>
           <h1 className="text-5xl md:text-8xl font-black mb-8 leading-[0.9] tracking-tighter uppercase">
-            <EditableText table="profile" field="full_name" id={0} value={profile.full_name} />
+            <span data-dock-type="text" data-dock-bind="site_settings.0.titel">...</span>
           </h1>
           <p className="text-xl text-zinc-400 mb-10 max-w-xl leading-relaxed">
-            <EditableText table="profile" field="bio_short" id={0} value={profile.bio_short} />
+            <span data-dock-type="text" data-dock-bind="site_settings.0.titel">...</span>
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center md:justify-start">
             <a href="#contact" className="bg-white text-black px-10 py-5 rounded-full font-black uppercase text-sm hover:bg-blue-500 hover:text-white transition-all duration-500 flex items-center justify-center">
-              <EditableText table="profile" field="cta_text" id={0} value={profile.cta_text || 'Hire Me'} />
+              <span data-dock-type="text" data-dock-bind="site_settings.0.titel">...</span>
             </a>
             <a href="#projects" className="border border-white/10 px-10 py-5 rounded-full font-black uppercase text-sm hover:bg-white/5 transition-all flex items-center justify-center">
               View Work
@@ -30,12 +28,7 @@ const Hero = ({ profile }) => {
           <div className="relative w-72 h-72 md:w-[500px] md:h-[500px] mx-auto">
             <div className="absolute inset-0 bg-blue-600 blur-[120px] opacity-20 rounded-full animate-pulse"></div>
             <div className="relative h-full w-full rounded-full overflow-hidden border border-white/10 group">
-              <EditableMedia 
-                src={profile.avatar_url} 
-                alt={profile.full_name}
-                className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-700"
-                cmsBind={{ file: 'profile', index: 0, key: 'avatar_url' }}
-              />
+              <img src={profile.avatar_url} className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-700" data-dock-type="media" data-dock-bind="profile.0.avatar_url" />
             </div>
           </div>
         </div>

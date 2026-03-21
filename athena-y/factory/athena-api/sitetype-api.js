@@ -5,7 +5,7 @@ import { generateWithAI } from '../5-engine/core/ai-engine.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
-const root = path.resolve(__dirname, '..');
+const root = path.resolve(__dirname, '../..');
 
 // --- AI FUNCTIE VOOR DATASTRUCTUUR GENERATIE ---
 async function generateDataStructure(businessDescription) {
@@ -198,9 +198,9 @@ async function generateFiles(config, root) {
     console.log("   🧩 Alle parser-instructies zijn klaar.");
 
     // Pad naar de nieuwe sitetype map (gerespecteerde Two-Track mappenstructuur)
-    const sitetypePath = path.join(root, '3-sitetypes', config.track, config.name);
+    const sitetypePath = path.join(root, 'factory', '3-sitetypes', config.track, config.name);
     if (fs.existsSync(sitetypePath)) {
-        throw new Error(`Map "${config.name}" bestaat al in 3-sitetypes/${config.track}.`);
+        throw new Error(`Map "${config.name}" bestaat al in factory/3-sitetypes/${config.track}.`);
     }
 
     // Stap 3: Genereer blueprint
@@ -234,7 +234,7 @@ async function generateFiles(config, root) {
     console.log("   ✅ Blueprint opgeslagen.");
 
     // Stap 4: Kopieer basis bestanden van agency-luxury template (bevindt zich in autonomous track)
-    const templatePath = path.join(root, '3-sitetypes', 'autonomous', 'agency-luxury');
+    const templatePath = path.join(root, 'factory', '3-sitetypes', 'autonomous', 'agency-luxury');
     if (fs.existsSync(templatePath)) {
         console.log(`📁 Basisbestanden kopiëren van agency-luxury template...`);
         copyRecursiveSync(templatePath, sitetypePath, [
@@ -310,7 +310,7 @@ export function getExistingSiteTypes() {
     const results = [];
 
     tracks.forEach(track => {
-        const dir = path.join(root, '3-sitetypes', track);
+        const dir = path.join(root, 'factory', '3-sitetypes', track);
         if (fs.existsSync(dir)) {
             const types = fs.readdirSync(dir).filter(f => fs.statSync(path.join(dir, f)).isDirectory() && !f.startsWith('.'));
             

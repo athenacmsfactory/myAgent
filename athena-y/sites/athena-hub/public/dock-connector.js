@@ -1,9 +1,9 @@
 /**
- * ⚓ Athena Dock Connector v6 (Universal - Docked Track)
+ * ⚓ Athena Dock Connector v7 (Universal - Docked Track)
  * Handles communication between the generated site (iframe) and the Athena Dock (parent).
  */
-(function() {
-    console.log("⚓ Athena Dock Connector v6 Active");
+(function () {
+    console.log("⚓ Athena Dock Connector v7 Active");
 
     // --- 1. CONFIGURATION & STATE ---
     let lastKnownData = null;
@@ -11,6 +11,30 @@
     const getApiUrl = (path) => {
         const base = import.meta.env.BASE_URL || '/';
         return (base + '/' + path).replace(new RegExp('/+', 'g'), '/');
+    };
+
+    // 🔱 v8.8 Universal Binding Parser
+    // Converteert 'hero.0.titel' naar {file: 'hero', index: 0, key: 'titel'}
+    const parseBinding = (bindStr) => {
+        if (!bindStr) return {};
+        try {
+            // Check if it's already JSON
+            if (bindStr.startsWith('{')) return JSON.parse(bindStr);
+            
+            // Handle dot notation (e.g., "hero.0.titel")
+            const parts = bindStr.split('.');
+            if (parts.length >= 3) {
+                return {
+                    file: parts[0],
+                    index: parseInt(parts[1], 10),
+                    key: parts.slice(2).join('.')
+                };
+            }
+            return { key: bindStr }; // Fallback
+        } catch(e) {
+            console.warn("Athena: Kon binding niet parsen", bindStr);
+            return {};
+        }
     };
 
     // --- 2. THEME MAPPINGS ---
@@ -25,8 +49,8 @@
             'light_header_color': ['--color-header-bg', '--nav-bg'],
             'light_bg_color': ['--color-background', '--bg-site'],
             'light_text_color': ['--color-text'],
-            'global_radius': ['--radius-custom', '--radius-main'], // GLOBALE VARS
-            'global_shadow': ['--shadow-main']                    // GLOBALE VARS
+            'global_radius': ['--radius-custom', '--radius-main'],
+            'global_shadow': ['--shadow-main']
         },
         dark: {
             'dark_primary_color': ['--color-primary'],
@@ -56,7 +80,7 @@
     // --- 4. COMMUNICATION (OUTBOUND) ---
     function notifyDock(fullData = null) {
         if (fullData) lastKnownData = fullData;
-        
+
         const structure = {
             sections: scanSections(),
             layouts: lastKnownData?.layout_settings?.[0] || lastKnownData?.layout_settings || {},
@@ -79,7 +103,7 @@
         if (type === 'DOCK_UPDATE_COLOR') {
             const isDark = document.documentElement.classList.contains('dark');
             const currentTheme = isDark ? 'dark' : 'light';
-            
+
             if (key === 'theme') {
                 if (value === 'dark') {
                     document.documentElement.classList.add('dark');
@@ -88,6 +112,59 @@
                     document.documentElement.classList.remove('dark');
                     document.documentElement.style.colorScheme = 'light';
                 }
+                return;
+            }
+
+            // Specific Layout Handlers
+            if (key === 'content_top_offset') {
+                document.documentElement.style.setProperty('--content-top-offset', value + 'px');
+                return;
+            }
+
+            if (key === 'header_height') {
+                document.documentElement.style.setProperty('--header-height', value + 'px');
+                return;
+            }
+
+            if (key === 'header_transparent') {
+                if (value === true) {
+                    document.documentElement.style.setProperty('--header-bg', 'transparent');
+                    document.documentElement.style.setProperty('--header-blur', 'none');
+                    document.documentElement.style.setProperty('--header-border', 'none');
+                } else {
+                    document.documentElement.style.removeProperty('--header-bg');
+                    document.documentElement.style.removeProperty('--header-blur');
+                    document.documentElement.style.removeProperty('--header-border');
+                }
+                return;
+            }
+
+            if (key === 'header_visible') {
+                const nav = document.querySelector('nav.fixed.top-0');
+                if (nav) nav.style.display = value ? 'flex' : 'none';
+                return;
+            }
+
+            if (key.startsWith('header_show_')) {
+                const elementMap = {
+                    'header_show_logo': '.relative.w-12.h-12',
+                    'header_show_title': 'span.text-2xl.font-serif',
+                    'header_show_tagline': 'span.text-[10px]',
+                    'header_show_button': 'button, .bg-primary'
+                };
+                const selector = elementMap[key];
+                if (selector) {
+                    const els = document.querySelectorAll(selector);
+                    els.forEach(el => el.style.display = value ? '' : 'none');
+                }
+                return;
+            }
+
+            if (key === 'hero_overlay_opacity') {
+                let opacity = parseFloat(value);
+                if (isNaN(opacity)) opacity = 0.8;
+                document.documentElement.style.setProperty('--hero-overlay-start', `rgba(0, 0, 0, ${opacity})`);
+                document.documentElement.style.setProperty('--hero-overlay-end', `rgba(0, 0, 0, ${opacity * 0.4})`);
                 return;
             }
 
@@ -102,14 +179,6 @@
             const targetTheme = key.startsWith('dark') ? 'dark' : 'light';
             const isGlobal = key.startsWith('global_');
 
-            if (key === 'hero_overlay_opacity') {
-                let opacity = parseFloat(value);
-                if (isNaN(opacity)) opacity = 0.8;
-                document.documentElement.style.setProperty('--hero-overlay-start', `rgba(0, 0, 0, ${opacity})`);
-                document.documentElement.style.setProperty('--hero-overlay-end', `rgba(0, 0, 0, ${opacity * 0.4})`);
-                return;
-            }
-
             if (isGlobal || targetTheme === currentTheme) {
                 const vars = themeMappings[currentTheme][key];
                 if (vars) {
@@ -118,31 +187,37 @@
             }
         }
 
-        // Style Swap (Requires full reload to apply new CSS imports)
+        // Section Style Update
+        if (type === 'DOCK_UPDATE_SECTION_STYLE') {
+            const el = document.querySelector(`[data-dock-section="${section}"]`);
+            if (el) {
+                el.style[key] = value;
+            }
+        }
+
+        // Style Swap
         if (type === 'DOCK_SWAP_STYLE') {
             console.log("🎨 Swapping global style to:", value);
-            // We doen een kleine delay zodat de API call van de Dock eerst klaar kan zijn
             setTimeout(() => window.location.reload(), 500);
         }
 
-        // Text/Link Update (Live Preview)
+        // Text/Link Update
         if (type === 'DOCK_UPDATE_TEXT') {
             const bindStr = JSON.stringify({ file, index, key });
-            // We search for elements that match the binding, but we also check for types
             const elements = document.querySelectorAll(`[data-dock-bind]`);
             const baseUrl = import.meta.env.BASE_URL || '/';
 
             elements.forEach(el => {
-                const elBind = JSON.parse(el.getAttribute('data-dock-bind'));
+                const elBind = parseBinding(el.getAttribute('data-dock-bind'));
                 if (elBind.file !== file || elBind.index !== index || elBind.key !== key) return;
 
                 const dockType = el.getAttribute('data-dock-type') || (el.tagName === 'IMG' || el.tagName === 'VIDEO' ? 'media' : 'text');
-                
+
                 if (dockType === 'media') {
                     const src = (value && !value.startsWith('http') && !value.startsWith('/') && !value.startsWith('data:'))
                         ? `${baseUrl}images/${value}`.replace(/\/+/g, '/')
                         : (value || "");
-                    
+
                     const mediaEl = (el.tagName === 'IMG' || el.tagName === 'VIDEO') ? el : el.querySelector('img, video');
                     if (mediaEl) {
                         mediaEl.src = src;
@@ -151,16 +226,10 @@
                         el.setAttribute('data-dock-current', value || "");
                     }
                 } else if (dockType === 'link') {
-                    // value is expected to be { label, url }
                     const { label, url } = (typeof value === 'object' && value !== null) ? value : { label: value, url: "" };
                     el.innerText = label || "";
                     el.setAttribute('data-dock-label', label || "");
                     el.setAttribute('data-dock-url', url || "");
-                    if (el.tagName === 'A') {
-                        // Don't actually change href in dev to prevent navigation, 
-                        // but maybe we should to show it in the browser's status bar?
-                        // For now keep it as # or just don't touch it.
-                    }
                 } else {
                     el.innerText = value || "";
                 }
@@ -179,14 +248,13 @@
 
     window.athenaScan = notifyDock;
 
-    // --- 7. DRAG & DROP (VIDEOS & IMAGES) ---
+    // --- 7. DRAG & DROP ---
     const isMediaBind = (bind) => {
         if (!bind || !bind.key) return false;
         const k = bind.key.toLowerCase();
         return k.includes('foto') || k.includes('image') || k.includes('img') || k.includes('afbeelding') || k.includes('hero_image') || k.includes('video');
     };
 
-    // Global Drag Tracking
     let dragEnterCount = 0;
     window.addEventListener('dragenter', (e) => {
         dragEnterCount++;
@@ -209,7 +277,7 @@
         document.body.classList.remove('dock-dragging-active');
 
         if (!target) return;
-        const bind = JSON.parse(target.getAttribute('data-dock-bind'));
+        const bind = parseBinding(target.getAttribute('data-dock-bind'));
         if (!isMediaBind(bind)) return;
 
         e.preventDefault();
@@ -223,7 +291,7 @@
                 body: file
             });
             const uploadData = await uploadRes.json();
-            
+
             if (uploadData.success) {
                 await fetch(getApiUrl('__athena/update-json'), {
                     method: 'POST',
@@ -240,22 +308,23 @@
         const target = e.target.closest('[data-dock-bind]');
         if (target && window.parent !== window) {
             // v8: Shift+Click is nu vereist voor bewerken in de Dock
+            // Zodat normale links/knoppen blijven werken voor navigatie
             if (!e.shiftKey) return;
 
             e.preventDefault();
             e.stopPropagation();
 
-            const binding = JSON.parse(target.getAttribute('data-dock-bind'));
+            const binding = parseBinding(target.getAttribute('data-dock-bind'));
             const dockType = target.getAttribute('data-dock-type') || (
-                (binding.key && (binding.key.toLowerCase().includes('foto') || 
-                                 binding.key.toLowerCase().includes('image') || 
-                                 binding.key.toLowerCase().includes('img') || 
-                                 binding.key.toLowerCase().includes('afbeelding') || 
-                                 binding.key.toLowerCase().includes('video'))) ? 'media' : 'text'
+                (binding.key && (binding.key.toLowerCase().includes('foto') ||
+                    binding.key.toLowerCase().includes('image') ||
+                    binding.key.toLowerCase().includes('img') ||
+                    binding.key.toLowerCase().includes('afbeelding') ||
+                    binding.key.toLowerCase().includes('video'))) ? 'media' : 'text'
             );
 
             let currentValue = target.getAttribute('data-dock-current') || target.innerText;
-            
+
             if (dockType === 'link') {
                 currentValue = {
                     label: target.getAttribute('data-dock-label') || target.innerText,

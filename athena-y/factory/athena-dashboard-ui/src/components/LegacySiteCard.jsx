@@ -70,10 +70,10 @@ export default function LegacySiteCard({ site, activeServer, onRefresh }) {
       {/* Grid of Actions */}
       <div className="px-3 pb-3 grid grid-cols-2 gap-1.5 mt-auto">
         <button 
-          onClick={isRunning ? () => window.open(activeServer.url, '_blank') : handleStart}
+          onClick={isRunning ? () => window.open(activeServer.url, '_blank') : (isStatic ? () => window.open(site.localUrl, '_blank') : handleStart)}
           className={isRunning ? activeBtnClass : btnClass}
         >
-          {isRunning ? '↗️ OPEN' : '▶️ VIEW'}
+          {isRunning ? '↗️ OPEN' : (isStatic ? '👁️ VIEW' : '▶️ START')}
         </button>
 
         <button 

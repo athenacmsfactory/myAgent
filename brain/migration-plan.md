@@ -16,7 +16,7 @@ Centralize the 8 core React components to reduce redundancy and simplify system-
 3. **Template Registry**: Implement a `components.json` registry in `shared/` to track versioning and dependencies.
 
 ## 🛠️ Implementation Steps
-- [ ] Move files to `shared/components/`.
-- [ ] Update `TransformationEngine.fixImports` to handle the new paths.
-- [ ] Refactor `ProjectGenerator.copyBoilerplate` to pull from the shared directory.
-- [ ] Run a batch update script to replace existing copies in all 63 sites with references to the shared library (where applicable).
+ - [x] Move files to `shared/components/`.
+ - [x] Update `TransformationEngine.fixImports` to handle the new paths.
+ - [x] Refactor `ProjectGenerator.copyBoilerplate` to pull from the shared directory.
+ - [x] Run a batch update script to replace existing copies in all 63 sites with references to the shared library (where applicable).

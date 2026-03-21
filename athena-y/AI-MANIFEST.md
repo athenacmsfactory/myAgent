@@ -5,7 +5,7 @@ Dit manifest is de definitieve operationele gids voor AI-agents (Gemini, Jules, 
 ---
 
 ## 🏗️ Fabriek Architectuur
-- **Locatie:** `/home/kareltestspecial/2-Fabriek/athena/athena-y/`
+- **Locatie:** `/home/kareltestspecial/0-IT/2-Productie/athena/`
 - **Engine Kern (`/factory/5-engine/`):** Bevat alle actieve scripts en wizards.
 - **Sites (`/sites/`):** De individuele projecten (bijv. `fpc-gent-site`, `portfolio-kbm`).
 - **Input (`/input/`):** Rauwe data bronnen (TSV, Scrapes).

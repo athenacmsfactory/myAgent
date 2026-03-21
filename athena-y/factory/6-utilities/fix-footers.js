@@ -1,35 +1,41 @@
 import fs from 'fs';
 import path from 'path';
 
-const SITES_DIR = './sites';
+const ROOT = process.cwd();
+const SITES_DIR = path.resolve(ROOT, '../sites');
 
-async function fixAllFooters() {
-  const sites = fs.readdirSync(SITES_DIR).filter(f => fs.statSync(path.join(SITES_DIR, f)).isDirectory());
-
-  console.log(`🚀 Start met het robuust maken van Footers in ${sites.length} sites...`);
-
-  for (const site of sites) {
-    const footerPath = path.join(SITES_DIR, site, 'src/components/Footer.jsx');
-    if (fs.existsSync(footerPath)) {
-      let content = fs.readFileSync(footerPath, 'utf8');
-      
-      if (!content.includes('settingsSource')) {
-        // Replace extraction logic
-        content = content.replace(
-          'const siteSettings = data?.site_settings || {};',
-          'const settingsSource = data?.site_settings || {};\n  const settings = Array.isArray(settingsSource) ? (settingsSource[0] || {}) : settingsSource;'
-        );
+function fixFooter(filePath) {
+    let content = fs.readFileSync(filePath, 'utf8');
+    
+    // 1. Herstel de foute SVG sluitingen en gedupliceerde spans
+    // We zoeken naar het specifieke patroon dat we in chocolade-shop zagen
+    if (content.includes('</svg>') && content.includes('data-dock-bind="site_settings.0.titel">{}</span>')) {
+        console.log(`🩹 Repairing corrupted Footer: ${filePath}`);
         
-        // Replace variable usages
-        content = content.replace(/siteSettings\./g, 'settings.');
+        // We proberen de foute blokken te verwijderen en te herstellen naar iets zinvols
+        // Dit is een heuristische fix voor het specifieke regex-falen
+        content = content.replace(/<\/svg>\s*<span data-dock-type="text" data-dock-bind="site_settings\.0\.titel">{}<\/span>\s*<\/svg>/g, '</svg>');
+        content = content.replace(/<\/svg>\s*<div className="text-sm">\s*<span data-dock-type="text" data-dock-bind="site_settings\.0\.titel">{}<\/span>\s*<\/svg>/g, '</svg>');
         
-        fs.writeFileSync(footerPath, content);
-        console.log(`✅ ${site}: Footer.jsx bijgewerkt.`);
-      }
+        fs.writeFileSync(filePath, content, 'utf8');
+        return true;
     }
-  }
-
-  console.log("✨ Alle Footers zijn bijgewerkt.");
+    return false;
 }
 
-fixAllFooters();
+function walk(dir) {
+    if (!fs.existsSync(dir)) return;
+    const files = fs.readdirSync(dir);
+    files.forEach(file => {
+        const fullPath = path.join(dir, file);
+        if (fs.statSync(fullPath).isDirectory()) {
+            walk(fullPath);
+        } else if (file === 'Footer.jsx') {
+            fixFooter(fullPath);
+        }
+    });
+}
+
+console.log("🛠️ Starting Footer Repair...");
+walk(SITES_DIR);
+console.log("✨ Repair complete!");

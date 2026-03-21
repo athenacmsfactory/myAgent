@@ -66,16 +66,25 @@ async function sync() {
             let tsv = await res.text();
             let json = await csv({ delimiter: '\t', checkType: true }).fromString(tsv.replace(/^\uFEFF/, ''));
 
-            const cleaned = json.map(row => {
-                const newRow = {};
+            // --- INTELLIGENT MERGE ---
+            const existingPath = path.join(outputDir, `${name.toLowerCase()}.json`);
+            let existingData = [];
+            if (fs.existsSync(existingPath)) {
+                try { existingData = JSON.parse(fs.readFileSync(existingPath, 'utf8')); }
+                catch (e) { existingData = []; }
+            }
+
+            const cleaned = json.map((row, rowIndex) => {
+                // START MET BESTAANDE DATA ALS BASELINE (BEHOUD ALLE NIET-SHEET VELDEN)
+                const existingRow = existingData[rowIndex] || {};
+                const newRow = { ...existingRow };
+
                 Object.keys(row).forEach(rawKey => {
                     const techKey = mapper.mapHeader(rawKey);
                     let val = row[rawKey];
                     
                     if (typeof val === 'string') {
-                        // Vertaal waarde indien nodig
                         val = mapper.mapValue(val);
-
                         val = val
                             .replace(/<br\s*\/?>/gi, '\n')
                             .replace(/<[^>]*>/g, '')
@@ -84,32 +93,25 @@ async function sync() {
                             .replace(/&nbsp;/g, ' ')
                             .trim();
                     }
-                    newRow[techKey] = val;
+
+                    // Behoud object-structuur (formatting) indien aanwezig in bestaande JSON
+                    if (existingRow[techKey] && typeof existingRow[techKey] === 'object' && existingRow[techKey] !== null) {
+                        newRow[techKey] = {
+                            ...existingRow[techKey],
+                            text: val // Update enkel de tekst, behoud color/fontSize/etc
+                        };
+                    } else {
+                        // Alleen updaten als de Sheet een waarde geeft (voorkomt placeholders/leeg)
+                        if (val !== undefined && val !== null) {
+                            newRow[techKey] = val;
+                        }
+                    }
                 });
                 return newRow;
             }).filter(row => Object.values(row).some(v => v !== ""));
 
-            // HERNOEMING LOGICA: _style_config -> style_config.json
-            let filename = `${name.toLowerCase()}.json`;
-            let finalData = cleaned;
-
-            if (name === '_style_config') {
-                filename = 'style_config.json';
-            }
-            
-            if (name === '_links_config') {
-                filename = 'links_config.json';
-                // Convert back to object
-                finalData = {};
-                cleaned.forEach(row => {
-                    const k = row.Key || row.key;
-                    const v = row.Value || row.value;
-                    if (k) finalData[k] = v;
-                });
-            }
-
-            fs.writeFileSync(path.join(outputDir, filename), JSON.stringify(finalData, null, 2));
-            console.log(`  ✅ ${name} verwerkt -> ${filename}`);
+            fs.writeFileSync(existingPath, JSON.stringify(cleaned, null, 2));
+            console.log(`  ✅ ${name}.json verwerkt (Intelligent Merge Actief).`);
             
         } catch (e) {
             console.error(`  ❌ Fout bij verwerken van ${name}:`, e.message);

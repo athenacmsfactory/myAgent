@@ -1,5 +1,4 @@
 import React from 'react';
-import EditableText from './EditableText';
 
 const Footer = ({ profile, socials }) => {
   return (
@@ -16,12 +15,12 @@ const Footer = ({ profile, socials }) => {
           </div>
           <div className="flex flex-col justify-end items-start md:items-end">
              <a href={`mailto:\${profile.contact_email}`} className="text-3xl md:text-5xl font-black uppercase tracking-tighter hover:text-blue-500 transition-colors mb-4 break-all">
-                <EditableText table="profile" field="contact_email" id={0} value={profile.contact_email} />
+                <span data-dock-type="text" data-dock-bind="site_settings.0.titel">...</span>
              </a>
              <div className="flex gap-6 mt-10">
                 {socials.map((social, idx) => (
                   <a key={idx} href={social.url} className="text-xs font-black uppercase tracking-widest text-zinc-500 hover:text-white transition-colors">
-                    <EditableText table="socials" field="platform" id={idx} value={social.platform} />
+                    <span data-dock-type="text" data-dock-bind="site_settings.0.titel">...</span>
                   </a>
                 ))}
              </div>
@@ -29,7 +28,7 @@ const Footer = ({ profile, socials }) => {
         </div>
 
         <div className="flex flex-col md:flex-row justify-between items-center gap-8 pt-10 border-t border-white/5 text-[10px] font-black uppercase tracking-[0.3em] text-zinc-600">
-          <div>© {new Date().getFullYear()} <EditableText table="profile" field="full_name" id={0} value={profile.full_name} /></div>
+          <div>© {new Date().getFullYear()} <span data-dock-type="text" data-dock-bind="site_settings.0.titel">...</span></div>
           <div className="flex gap-10">
             <a href="#">Privacy Policy</a>
             <a href="#">Terms of Service</a>

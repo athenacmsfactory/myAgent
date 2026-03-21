@@ -86,10 +86,19 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.ATHENA_DEPLOY_TOKEN }}
           API_TOKEN_GITHUB: ${{ secrets.ATHENA_DEPLOY_TOKEN }}
-          DEFAULT_OWNER: "athena-y-factory"
         run: |
           SITE="${{ matrix.site }}"
           BRANCH="${{ github.ref_name }}"
+          
+          # DYNAMISCHE TARGET ROUTING (v8.2)
+          if [ "${{ github.repository }}" == "athenacmsfactory/athena-x" ]; then
+            TARGET_ORG="ath-x"
+            echo "🛠️ Development environment detected. Targeting organization: $TARGET_ORG"
+          else
+            TARGET_ORG="athena-cms-factory"
+            echo "🚀 Production environment detected. Targeting organization: $TARGET_ORG"
+          fi
+
           if [ -d "sites/$SITE" ]; then
             PREFIX="sites/$SITE"
           elif [ -d "sites-external/$SITE" ]; then
@@ -97,7 +106,7 @@ jobs:
           else
             exit 1
           fi
-          TARGET_REPO="$DEFAULT_OWNER/$SITE"
+          TARGET_REPO="$TARGET_ORG/$SITE"
           
           if ! gh repo view "$TARGET_REPO" >/dev/null 2>&1; then
             echo "✨ Creating repo $TARGET_REPO..."

@@ -42,5 +42,21 @@
   "_links_config": {
     "editUrl": "https://docs.google.com/spreadsheets/d/11VsuteT7pMTBaB5nbTt6A2YVv0aPQmsFG8C0Lgw5edQ/edit#gid=882171744",
     "exportUrl": "https://docs.google.com/spreadsheets/d/11VsuteT7pMTBaB5nbTt6A2YVv0aPQmsFG8C0Lgw5edQ/export?format=tsv&gid=882171744"
+  },
+  "footer": {
+    "editUrl": "https://docs.google.com/spreadsheets/d/11VsuteT7pMTBaB5nbTt6A2YVv0aPQmsFG8C0Lgw5edQ/edit#gid=924025306",
+    "exportUrl": "https://docs.google.com/spreadsheets/d/11VsuteT7pMTBaB5nbTt6A2YVv0aPQmsFG8C0Lgw5edQ/export?format=tsv&gid=924025306"
+  },
+  "header": {
+    "editUrl": "https://docs.google.com/spreadsheets/d/11VsuteT7pMTBaB5nbTt6A2YVv0aPQmsFG8C0Lgw5edQ/edit#gid=1814112374",
+    "exportUrl": "https://docs.google.com/spreadsheets/d/11VsuteT7pMTBaB5nbTt6A2YVv0aPQmsFG8C0Lgw5edQ/export?format=tsv&gid=1814112374"
+  },
+  "innovatie": {
+    "editUrl": "https://docs.google.com/spreadsheets/d/11VsuteT7pMTBaB5nbTt6A2YVv0aPQmsFG8C0Lgw5edQ/edit#gid=394408078",
+    "exportUrl": "https://docs.google.com/spreadsheets/d/11VsuteT7pMTBaB5nbTt6A2YVv0aPQmsFG8C0Lgw5edQ/export?format=tsv&gid=394408078"
+  },
+  "style_bindings": {
+    "editUrl": "https://docs.google.com/spreadsheets/d/11VsuteT7pMTBaB5nbTt6A2YVv0aPQmsFG8C0Lgw5edQ/edit#gid=1080454274",
+    "exportUrl": "https://docs.google.com/spreadsheets/d/11VsuteT7pMTBaB5nbTt6A2YVv0aPQmsFG8C0Lgw5edQ/export?format=tsv&gid=1080454274"
   }
 }

@@ -1,7 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import Section from './Section'; 
-import EditableText from './EditableText';
-import EditableMedia from './EditableMedia';
 
 export default function PageRenderer({ file }) {
     const [data, setData] = useState(null);
@@ -120,10 +118,7 @@ export default function PageRenderer({ file }) {
             >
                 <header className="mb-8 border-b pb-8">
                     <h1 className="text-4xl font-extrabold text-gray-900 mb-4 capitalize">
-                        <EditableText 
-                            value={data.meta?.title || "Informatie"} 
-                            cmsBind={{ file: pageName, key: 'meta.title' }} 
-                        />
+                        <span data-dock-type="text" data-dock-bind="pageName.0.meta.title">{data.meta?.title || "Informatie"}</span>
                     </h1>
                     <div className="flex items-center text-sm text-gray-500 gap-4">
                         <span>Archief</span>
@@ -136,20 +131,12 @@ export default function PageRenderer({ file }) {
                 
                 {bannerImage && (
                     <div className="mb-8 rounded-2xl overflow-hidden shadow-xl bg-gray-100 aspect-video text-center flex items-center justify-center">
-                        <EditableMedia 
-                            src={bannerImage} 
-                            cmsBind={{ file: pageName, key: 'meta.images.0' }} 
-                            className="w-full h-full object-cover" 
-                        />
+                        <img src={bannerImage} className="w-full h-full object-cover" data-dock-type="media" data-dock-bind="pageName.0.meta.images.0" />
                     </div>
                 )}
                 
                 <div className="prose prose-lg prose-blue max-w-none text-gray-700 leading-relaxed whitespace-pre-wrap font-serif">
-                    <EditableText 
-                        value={data.content?.raw_text || "Geen inhoud beschikbaar."} 
-                        cmsBind={{ file: pageName, key: 'content.raw_text' }}
-                        renderValue={(val) => parseContentWithLinks(val)}
-                    />
+                    <span data-dock-type="text" data-dock-bind="pageName.0.content.raw_text">{data.content?.raw_text || "Geen inhoud beschikbaar."}</span>
                 </div>
             </article>
         );

@@ -39,8 +39,7 @@ const Section = ({ data }) => {
       const layout = layoutSettings[sectionName] || 'list';
 
       // Mapping Logic (Synced with Registry)
-      if (lower === 'basis' || lower === 'basisgegevens' || lower === 'hero') return Hero;
-      if (lower.includes('about') || lower.includes('info')) return AboutSection;
+      if (lower === 'basis' || lower === 'basisgegevens') return Hero;
       if (lower.includes('testimonial') || lower.includes('review') || lower.includes('ervaring')) return Testimonials;
       if (lower.includes('team') || lower.includes('medewerker') || lower.includes('wie_zijn_wij')) return Team;
       if (lower.includes('faq') || lower.includes('vragen')) return FAQ;

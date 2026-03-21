@@ -1,7 +1,4 @@
 import React from 'react';
-import EditableText from './EditableText';
-import EditableMedia from './EditableMedia';
-import EditableLink from './EditableLink';
 import { Link } from 'react-router-dom';
 
 function Header({ siteSettings = {} }) {
@@ -22,21 +19,16 @@ function Header({ siteSettings = {} }) {
         <Link to="/" className="flex items-center gap-4 group">
           
           <div className="relative w-12 h-12 overflow-hidden transition-transform duration-500">
-             <EditableMedia 
-               src={displayLogo} 
-               cmsBind={{file: 'site_settings', index: 0, key: 'site_logo_image'}} 
-               className="w-full h-full object-contain" 
-               fallback={logoChar}
-             />
+             <img src={displayLogo} className="w-full h-full object-contain" data-dock-type="media" data-dock-bind="site_settings.0.site_logo_image" />
           </div>
           
           <div className="flex flex-col">
             <span className="text-2xl font-serif font-black tracking-tight text-primary leading-none mb-1">
-              <EditableText value={siteName} cmsBind={{file: 'site_settings', index: 0, key: 'site_name'}} />
+              <span data-dock-type="text" data-dock-bind="site_settings.0.site_name">{siteName}</span>
             </span>
             {settings.tagline && (
               <span className="text-[10px] uppercase tracking-[0.3em] text-accent font-bold opacity-80">
-                <EditableText value={settings.tagline} cmsBind={{file: 'site_settings', index: 0, key: 'tagline'}} />
+                <span data-dock-type="text" data-dock-bind="site_settings.0.tagline">{settings.tagline}</span>
               </span>
             )}
           </div>
@@ -44,14 +36,7 @@ function Header({ siteSettings = {} }) {
 
         {/* Action Menu */}
         <div className="hidden md:flex items-center gap-8">
-            <EditableLink 
-              label={settings.header_cta_label || "Contact"}
-              url={settings.header_cta_url || "#contact"}
-              table="site_settings"
-              field="header_cta"
-              id={0}
-              className="bg-primary text-white px-6 py-3 rounded-xl font-bold hover:bg-accent transition-colors"
-            />
+            <a href={"#"} data-dock-type="link" data-dock-bind="site_settings.0.titel">{}</a>
         </div>
       </div>
     </nav>

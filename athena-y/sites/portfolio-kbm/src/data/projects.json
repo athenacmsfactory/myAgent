@@ -2,41 +2,41 @@
   {
     "title": "portfolio-kbm",
     "text": "Centraal re-integratie portfolio dossier.",
-    "link": "https://athena-y-factory.github.io/portfolio-kbm/"
+    "link": "https://github.com/KarelTestSpecial/portfolio-kbm"
   },
   {
-    "title": "Athena Pro - Classic",
-    "text": "Thema variant: Tijdloos en zakelijk.",
-    "link": "https://athena-y-factory.github.io/athena-pro-classic/"
+    "title": "kdc-master-dashboard",
+    "text": "Centraal dashboard voor KDC infrastructuur.",
+    "link": "https://github.com/KarelTestSpecial/kdc-master-dashboard"
   },
   {
-    "title": "Athena Pro - Modern Dark",
-    "text": "Thema variant: High-tech en futuristisch.",
-    "link": "https://athena-y-factory.github.io/athena-pro-modern-dark/"
+    "title": "aiga",
+    "text": "AI Automation Agency core engine.",
+    "link": "https://github.com/KarelTestSpecial/aiga"
   },
   {
-    "title": "Athena Pro - Bold",
-    "text": "Thema variant: Extravert en krachtig.",
-    "link": "https://athena-y-factory.github.io/athena-pro-bold/"
+    "title": "new-tab-organizer",
+    "text": "Chrome extension dashboard met Kanban.",
+    "link": "https://github.com/KarelTestSpecial/new-tab-organizer"
   },
   {
-    "title": "Athena Pro - Warm",
-    "text": "Thema variant: Zacht en verwelkomend.",
-    "link": "https://athena-y-factory.github.io/athena-pro-warm/"
+    "title": "youtube-rightclick",
+    "text": "Browser extension voor media-export.",
+    "link": "https://github.com/KarelTestSpecial/youtube-rightclick"
   },
   {
-    "title": "Athena Hub",
-    "text": "Centrale portaal voor Athena diensten en Stripe betalingen.",
-    "link": "https://athena-y-factory.github.io/athena-hub/"
+    "title": "athena-x",
+    "text": "Core engine van Athena CMS Factory.",
+    "link": "https://github.com/athenacmsfactory/athena-x"
   },
   {
-    "title": "FPC Gent MPA",
-    "text": "Complex Multi-Page Application prototype (466 pagina's).",
-    "link": "https://athena-y-factory.github.io/fpc-gent-site/"
+    "title": "demo-portfolio",
+    "text": "Athena CMS Showcase: Portfolio template.",
+    "link": "https://github.com/athenacmsfactory/demo-portfolio"
   },
   {
-    "title": "Athena CMS Engine (athena-y)",
-    "text": "De core engine die dit alles mogelijk maakt.",
-    "link": "https://github.com/athenacmsfactory/athena-y"
+    "title": "demo-consultant",
+    "text": "Athena CMS Showcase: Consultant template.",
+    "link": "https://github.com/athenacmsfactory/demo-consultant"
   }
 ]

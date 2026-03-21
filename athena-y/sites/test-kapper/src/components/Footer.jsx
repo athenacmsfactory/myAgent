@@ -1,103 +1,77 @@
 import React from 'react';
-import EditableText from './EditableText';
-import EditableLink from './EditableLink';
 
-export default function Footer({ data }) {
-  const settingsSource = data?.site_settings || {};
-  const settings = Array.isArray(settingsSource) ? (settingsSource[0] || {}) : settingsSource;
-  const contactInfo = data?.contact?.[0] || {};
-
-  const naam = settings.site_name || "test-kapper";
-  const email = contactInfo.email || settings.email || '';
-  const locatie = contactInfo.location || '';
-  const btw = contactInfo.btw_nummer || contactInfo.btw || '';
-  const linkedin = contactInfo.linkedin_url || contactInfo.linkedin || '';
+const Footer = ({ data }) => {
+  const info = data.Basisgegevens?.[0] || {};
+  const uren = data.Openingstijden || [];
 
   return (
-    <footer
-      className="py-24 text-slate-400 border-t border-slate-800 relative overflow-hidden"
-      style={{ backgroundColor: 'var(--color-footer-bg, #0f172a)' }}
-    >
-      <div className="absolute bottom-0 left-0 w-64 h-64 bg-accent/5 rounded-full blur-[80px] -ml-32 -mb-32"></div>
-
-      <div className="container mx-auto px-6 relative z-10">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-20 mb-20">
-
-          {/* Brand Identity */}
-          <div className="space-y-6">
-            <h3 className="text-3xl font-serif font-bold text-white">
-              <EditableText value={naam} cmsBind={{ file: 'site_settings', index: 0, key: 'site_name' }} />
-            </h3>
-            {settings.tagline && (
-              <p className="text-lg leading-relaxed font-light">
-                <EditableText value={settings.tagline} cmsBind={{ file: 'site_settings', index: 0, key: 'tagline' }} />
-              </p>
-            )}
-          </div>
-
-          {/* Contact Details */}
-          <div className="space-y-6">
-            <h4 className="text-sm font-bold uppercase tracking-[0.2em] text-accent">
-              <EditableText value={settings.footer_contact_title || 'Contact'} cmsBind={{ file: 'site_settings', index: 0, key: 'footer_contact_title' }} />
-            </h4>
-            <ul className="space-y-4">
-              {email && (
-                <li className="flex items-center gap-4">
-                  <i className="fa-solid fa-envelope text-accent w-5"></i>
-                  <EditableText value={email} cmsBind={{ file: 'contact', index: 0, key: 'email' }} />
-                </li>
-              )}
-              {locatie && (
-                <li className="flex items-center gap-4">
-                  <i className="fa-solid fa-location-dot text-accent w-5"></i>
-                  <EditableText value={locatie} cmsBind={{ file: 'contact', index: 0, key: 'location' }} />
-                </li>
-              )}
-              {linkedin && (
-                <li className="flex items-center gap-4">
-                  <i className="fa-brands fa-linkedin text-accent w-5"></i>
-                  <EditableLink
-                    label={contactInfo.linkedin_label || "LinkedIn Profile"}
-                    url={contactInfo.linkedin_url_url || linkedin}
-                    table="contact"
-                    field="linkedin_url"
-                    id={0}
-                    className="hover:text-white transition-colors"
-                  />
-                </li>
-              )}
-            </ul>
-          </div>
-
-          {/* Legal / Company Info */}
-          <div className="space-y-6">
-            <h4 className="text-sm font-bold uppercase tracking-[0.2em] text-accent">
-              <EditableText value={settings.footer_legal_title || 'Bedrijfsgegevens'} cmsBind={{ file: 'site_settings', index: 0, key: 'footer_legal_title' }} />
-            </h4>
-            <div className="space-y-4">
-              {btw && (
-                <p className="flex items-center gap-2">
-                  <span className="text-slate-500">BTW:</span>
-                  <EditableText value={btw} cmsBind={{ file: 'contact', index: 0, key: 'btw_nummer' }} />
-                </p>
-              )}
-              <p className="text-sm font-light leading-relaxed">
-                <EditableText value={settings.footer_text || 'Professionele website geleverd door Athena CMS Factory.'} cmsBind={{ file: 'site_settings', index: 0, key: 'footer_text' }} />
-              </p>
-            </div>
-          </div>
-
+    <footer id="contact" className="bg-stone-900 text-white pt-24 pb-12">
+      <div className="max-w-7xl mx-auto px-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-16 lg:gap-8 border-b border-white/10 pb-24">
+        {/* Brand */}
+        <div className="lg:col-span-1">
+          <a href="#" className="text-2xl font-serif tracking-widest uppercase block mb-8">
+            Soap <span className="font-light italic">Antwerp</span>
+          </a>
+          <p className="text-white/40 font-light leading-relaxed text-sm">
+            Een exclusieve locatie, hoogwaardige producten, persoonlijke service en een touch of Soap!
+          </p>
         </div>
 
-        {/* Copyright Bar */}
-        <div className="pt-12 border-t border-slate-800 flex flex-col md:flex-row justify-between items-center gap-6 text-sm">
-          <p>&copy; {new Date().getFullYear()} {naam}. Alle rechten voorbehouden.</p>
-          <div className="flex items-center gap-2 opacity-50">
-            <img src="./athena-icon.svg" alt="Athena Logo" className="w-5 h-5" />
-            <EditableText value={settings.footer_credit_text || 'Gemaakt met Athena CMS Factory'} cmsBind={{ file: 'site_settings', index: 0, key: 'footer_credit_text' }} />
+        {/* Contact */}
+        <div>
+          <h4 className="text-[10px] uppercase tracking-[0.3em] text-white/50 mb-8">Contact</h4>
+          <address className="not-italic space-y-4 text-sm font-light text-white/70">
+            <p className="flex items-start gap-4">
+              <span>{info.adres}</span>
+            </p>
+            <p>
+              <a href={`tel:${info.telefoon}`} className="hover:text-white transition-colors">{info.telefoon}</a>
+            </p>
+            <p>
+              <a href={`mailto:${info.email}`} className="hover:text-white transition-colors">{info.email}</a>
+            </p>
+          </address>
+        </div>
+
+        {/* Hours */}
+        <div>
+          <h4 className="text-[10px] uppercase tracking-[0.3em] text-white/50 mb-8">Openingsuren</h4>
+          <div className="space-y-3 text-sm font-light text-white/70">
+            {uren.map((dag, idx) => (
+              <div key={idx} className="flex justify-between border-b border-white/5 pb-2">
+                <span>{dag.dag}</span>
+                <span className={dag.uren === 'Gesloten' ? 'text-white/30' : ''}>{dag.uren}</span>
+              </div>
+            ))}
           </div>
         </div>
+
+        {/* Social & CTA */}
+        <div>
+          <h4 className="text-[10px] uppercase tracking-[0.3em] text-white/50 mb-8">Volg Ons</h4>
+          <div className="flex gap-6 mb-12">
+            <a href="#" className="text-white/60 hover:text-white transition-colors">Instagram</a>
+            <a href="#" className="text-white/60 hover:text-white transition-colors">Facebook</a>
+          </div>
+          <a 
+            href={info.boekings_url}
+            className="inline-block px-10 py-4 bg-white text-stone-900 rounded-full text-[10px] uppercase tracking-[0.2em] font-bold hover:bg-stone-100 transition-all"
+          >
+            Maak Afspraak
+          </a>
+        </div>
+      </div>
+
+      <div className="max-w-7xl mx-auto px-6 pt-12 flex flex-col md:flex-row justify-between items-center gap-6">
+        <p className="text-white/20 text-[10px] uppercase tracking-widest">
+          &copy; {new Date().getFullYear()} Soap Antwerp. Alle rechten voorbehouden.
+        </p>
+        <p className="text-white/20 text-[10px] uppercase tracking-widest">
+          Gebouwd met <span className="text-white/40">Athena CMS Factory</span>
+        </p>
       </div>
     </footer>
   );
-}
+};
+
+export default Footer;

@@ -1,5 +1,6 @@
 import React from 'react';
 import { useCart } from './CartContext';
+import { Link } from 'react-router-dom';
 
 const CartOverlay = () => {
   const { cart, isCartOpen, setIsCartOpen, updateQuantity, cartTotal, cartCount } = useCart();
@@ -79,12 +80,13 @@ const CartOverlay = () => {
               </span>
             </div>
             
-            <button 
-              className="btn-primary w-full py-5 text-lg shadow-xl shadow-accent/20" 
-              onClick={() => alert('Bedankt voor je interesse! De checkout wordt momenteel geconfigureerd.')}
+            <Link 
+              to="/checkout"
+              className="btn-primary block w-full py-5 text-lg shadow-xl shadow-accent/20 text-center" 
+              onClick={() => setIsCartOpen(false)}
             >
               Afrekenen
-            </button>
+            </Link>
             
             <p className="mt-4 text-center text-xs text-secondary italic">
               Gratis verzending bij bestellingen boven €50,-

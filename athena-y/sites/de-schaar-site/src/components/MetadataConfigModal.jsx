@@ -1,23 +1,17 @@
 import React, { useState, useEffect } from 'react';
 
-const MetadataConfigModal = ({ isOpen, onClose, tableName, sampleItem }) => {
+const MetadataConfigModal = ({ isOpen, onClose, tableName, sampleItem, currentConfig }) => {
   const [config, setConfig] = useState({ visible_fields: [], hidden_fields: [] });
   const [allFields, setAllFields] = useState([]);
 
   useEffect(() => {
     if (!isOpen || !sampleItem) return;
     
-    // Load current config
-    fetch(`${import.meta.env.BASE_URL}display_config.json`)
-      .then(res => res.json())
-      .then(data => {
-        const sectionConfig = data.sections?.[tableName] || { visible_fields: [], hidden_fields: [] };
-        setConfig(sectionConfig);
-      })
-      .catch(() => setConfig({ visible_fields: [], hidden_fields: [] }));
+    // Gebruik de meegegeven config
+    setConfig(currentConfig || { visible_fields: [], hidden_fields: [] });
 
     // Extract all fields from sample item
-    const technicalFields = ['absoluteIndex', 'id', 'pk', 'uuid', 'naam', 'product_naam', 'bedrijfsnaam', 'titel', 'kaas_naam', 'naam_hond', 'beschrijving', 'omschrijving', 'korte_bio', 'info', 'inhoud_bericht', 'prijs', 'kosten', 'categorie', 'type', 'specialisatie'];
+    const technicalFields = ['absoluteIndex', '_hidden', 'id', 'pk', 'uuid', 'naam', 'product_naam', 'bedrijfsnaam', 'titel', 'kaas_naam', 'naam_hond', 'beschrijving', 'omschrijving', 'korte_bio', 'info', 'inhoud_bericht', 'prijs', 'kosten', 'categorie', 'type', 'specialisatie'];
     const fields = Object.keys(sampleItem).filter(key => 
       !technicalFields.includes(key) && 
       !key.toLowerCase().includes('afbeelding') &&
@@ -25,7 +19,7 @@ const MetadataConfigModal = ({ isOpen, onClose, tableName, sampleItem }) => {
       !key.toLowerCase().includes('image')
     );
     setAllFields(fields);
-  }, [isOpen, tableName, sampleItem]);
+  }, [isOpen, tableName, sampleItem, currentConfig]);
 
   const toggleField = (field) => {
     const isCurrentlyVisible = config.visible_fields.includes(field);
@@ -57,13 +51,10 @@ const MetadataConfigModal = ({ isOpen, onClose, tableName, sampleItem }) => {
 
   const saveConfig = async () => {
     try {
-      const response = await fetch(`${import.meta.env.BASE_URL}display_config.json`);
-      const fullConfig = await response.json();
-      
-      fullConfig.sections = fullConfig.sections || {};
-      fullConfig.sections[tableName] = config;
+      const baseUrl = import.meta.env.BASE_URL || '/';
+      const apiUrl = (baseUrl + '/__athena/update-json').replace(/\/+/g, '/');
 
-      await fetch(`${import.meta.env.BASE_URL}__athena/update-json`, {
+      await fetch(apiUrl, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ 

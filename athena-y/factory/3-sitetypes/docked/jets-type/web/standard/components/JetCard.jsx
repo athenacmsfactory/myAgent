@@ -1,6 +1,4 @@
 import React, { useState } from 'react';
-import EditableMedia from './EditableMedia';
-import EditableText from './EditableText';
 
 const JetCard = ({ jet, index }) => {
   const [imageError, setImageError] = useState(false);
@@ -9,19 +7,14 @@ const JetCard = ({ jet, index }) => {
     <article className={`jet-card ${jet.origin?.toLowerCase() || ''} flex flex-col bg-white rounded-xl overflow-hidden shadow-lg transition-all duration-300 hover:shadow-2xl hover:-translate-y-1`}>
       <div className="relative aspect-video overflow-hidden">
         {!imageError ? (
-          <EditableMedia 
-            src={jet.image_url} 
-            cmsBind={{file: 'jets', index, key: 'image_url'}}
-            className="w-full h-full object-cover transition-transform duration-500 hover:scale-110"
-            onError={() => setImageError(true)}
-          />
+          <img src={jet.image_url} className="w-full h-full object-cover transition-transform duration-500 hover:scale-110" data-dock-type="media" data-dock-bind="jets.0.image_url" />
         ) : (
           <div className="w-full h-full bg-slate-200 flex items-center justify-center text-slate-400 font-bold text-2xl">
             {jet.name?.substring(0, 2).toUpperCase()}
           </div>
         )}
         <div className="absolute top-4 right-4 bg-sky-500 text-white px-3 py-1 rounded-full text-sm font-bold shadow-md">
-          <EditableText value={jet.introduction_year} cmsBind={{file: 'jets', index, key: 'introduction_year'}} />
+          <span data-dock-type="text" data-dock-bind="jets.0.introduction_year">{jet.introduction_year}</span>
         </div>
       </div>
       
@@ -31,20 +24,20 @@ const JetCard = ({ jet, index }) => {
              {jet.origin === 'US' ? '🇺🇸 USA' : '🇪🇺 Europe'}
           </span>
           <span className="text-xs text-slate-400 font-medium">
-            <EditableText value={jet.manufacturer} cmsBind={{file: 'jets', index, key: 'manufacturer'}} />
+            <span data-dock-type="text" data-dock-bind="jets.0.manufacturer">{jet.manufacturer}</span>
           </span>
         </div>
         
         <h3 className="text-xl font-bold text-slate-900 mb-1">
-          <EditableText value={jet.name} cmsBind={{file: 'jets', index, key: 'name'}} />
+          <span data-dock-type="text" data-dock-bind="jets.0.name">{jet.name}</span>
         </h3>
         
         <p className="text-sm text-slate-500 italic mb-4">
-          <EditableText value={jet.full_name} cmsBind={{file: 'jets', index, key: 'full_name'}} />
+          <span data-dock-type="text" data-dock-bind="jets.0.full_name">{jet.full_name}</span>
         </p>
         
         <p className="text-slate-600 text-sm leading-relaxed line-clamp-4">
-          <EditableText value={jet.description} cmsBind={{file: 'jets', index, key: 'description'}} />
+          <span data-dock-type="text" data-dock-bind="jets.0.description">{jet.description}</span>
         </p>
       </div>
     </article>

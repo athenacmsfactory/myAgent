@@ -1,64 +1,49 @@
-# 🤖 Autonomous AI Employee System
+# 🤖 Autonomous AI Employee System (v2.0)
 
-This project implements a persistent, autonomous "AI Employee" on a Chromebook (Debian 12) using Gemini CLI's native hooks and a specialized skill for Markdown-based memory.
+This project implements a persistent, autonomous "AI Employee" on a Chromebook (Debian 12) using Gemini CLI's native hooks and a specialized skill for Markdown-based memory. It is currently integrated with the **Athena CMS Factory** to manage a large portfolio of websites autonomously.
 
-## 🏛️ Architecture
+## 🏛️ Project Structure
 
-### 1. Memory Layer (`~/myAgent/brain/`)
-A directory of context-specific Markdown files:
+### 🧠 The Brain (`~/myAgent/brain/`)
+The central nervous system of the AI Employee:
 *   `tasks.md`: Current prioritized work queue.
-*   `context.md`: Long-term memory (user preferences, project architectural decisions).
-*   `blockers.md`: Explicitly logged issues requiring user intervention.
-*   `logs.md`: Historical record of completed tasks.
+*   `logs.md`: Historical record of all autonomous actions.
+*   `modular-engine-plan.md`: Roadmap for the factory refactoring.
 
-### 2. Custom Skill (`brain-md`)
-A local Gemini CLI skill that provides specialized tools:
-*   `read_brain`: Reads the state of the brain.
-*   `update_brain`: Appends content to a specific brain file.
+### 🔱 Athena CMS Factory (`~/myAgent/athena-y/`)
+A high-performance website generation engine:
+*   **Modular Engine**: AST-based code generation and phase-driven orchestration.
+*   **MPA Support**: Capable of generating complex sites with hundreds of pages.
+*   **Data Aggregator**: Optimized data loading via `all_data.json`.
 
-### 3. The Autonomous Hook (`AfterAgent`)
-A Node.js hook (`~/myAgent/hooks/employee-loop.js`) that:
-*   Inspects the model's output for a "WORK_COMPLETE" or "BLOCKER" keyword.
-*   If neither is found, returns `{"decision": "deny", "reason": "Task in progress. Continue to next step."}` to force an automatic retry turn.
-
-### 4. Background Persistence (Systemd)
-A Systemd User Service (`~/.config/systemd/user/ai-employee.service`) to ensure the employee loop starts on boot and restarts on failure.
+### 🏥 Ecosystem Monitoring
+*   **Health Dashboard**: Visual status of 55+ sites (http://localhost:5001/portfolio-status.html).
+*   **Build Orchestration**: Trigger production builds directly from the dashboard.
+*   **Doctor Controller**: Automated integrity audits and storage management (hydration/dehydration).
 
 ---
 
-## 🚀 How to Use It
+## 🚀 Autonomous Operations
 
-### ⚙️ Starting/Stopping the Employee
-*   **Start the employee:**
-    ```bash
-    systemctl --user start ai-employee.service
-    ```
-*   **Stop the employee:**
-    ```bash
-    systemctl --user stop ai-employee.service
-    ```
-*   **Check service status:**
-    ```bash
-    systemctl --user status ai-employee.service
-    ```
-
-### 🔍 Monitoring Progress
-*   **Real-time logs (Journalctl):**
-    ```bash
-    journalctl --user -u ai-employee.service -f
-    ```
-*   **Inspect the Brain:**
-    ```bash
-    cat ~/myAgent/brain/tasks.md
-    cat ~/myAgent/brain/logs.md
-    ```
-
-### ✍️ Managing Tasks
-To give the AI Employee a new task, simply append it to `~/myAgent/brain/tasks.md`:
+### ⚙️ Starting the Employee
+The AI Employee runs as a systemd background service:
 ```bash
-echo "- [ ] TASK-5: Refactor the CSS in project X." >> ~/myAgent/brain/tasks.md
+systemctl --user start ai-employee.service
 ```
 
-## ⚖️ Tradeoffs
-*   **Pros:** Robust persistent memory, zero-latency (local files), background autonomy, follows Gemini CLI's native standards.
-*   **Cons:** Requires initial setup of hooks and systemd.
+### 🔍 Monitoring
+*   **Visual Dashboard:** http://localhost:5001/portfolio-status.html
+*   **Service Logs:** `journalctl --user -u ai-employee.service -f`
+*   **Brain State:** `cat ~/myAgent/brain/tasks.md`
+
+### 🛠️ Capabilities
+*   **Self-Healing**: Automatically detects and fixes missing `node_modules` or empty JSON files.
+*   **Batch Operations**: Can publish, build, or update components across the entire 60+ site portfolio.
+*   **Digital Strategist**: Simulated client onboarding and automated provisioning.
+
+---
+
+## ⚖️ Architecture Standards
+*   **Memory-First**: All state is stored in local Markdown files for zero-latency context.
+*   **Security-First**: Automated secret scanning and protected `.env` management.
+*   **Efficiency**: Proactive Chromebook storage management through site dehydration.

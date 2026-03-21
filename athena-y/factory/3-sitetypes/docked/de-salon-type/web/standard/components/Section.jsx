@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { useCart } from './CartContext';
-import EditableText from './EditableText';
 
 const Section = ({ title, data, tableName }) => {
   const { addToCart } = useCart();
@@ -77,26 +76,14 @@ const Section = ({ title, data, tableName }) => {
                 </div>
 
                 <div className="flex flex-col flex-grow">
-                  <EditableText
-                    tag="h3"
-                    className="text-2xl mb-2 group-hover:text-accent transition-colors font-bold"
-                    table={tableName}
-                    id={absoluteIndex}
-                    field={nameField}
-                  >
+                  <span data-dock-type="text" data-dock-bind="site_settings.0.titel">
                     {name}
-                  </EditableText>
+                  </span>
                   
                   {description && (
-                    <EditableText
-                      tag="p"
-                      className="text-secondary line-clamp-3 mb-4 text-sm"
-                      table={tableName}
-                      id={absoluteIndex}
-                      field={descField}
-                    >
+                    <span data-dock-type="text" data-dock-bind="site_settings.0.titel">
                       {description}
-                    </EditableText>
+                    </span>
                   )}
                   
                   <div className="mt-auto flex items-center justify-between pt-4 border-t border-slate-50">

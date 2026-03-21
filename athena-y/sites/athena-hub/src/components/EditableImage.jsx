@@ -28,7 +28,7 @@ export default function EditableImage({ src, alt, className, cmsBind, ...props }
     e.preventDefault();
     e.stopPropagation();
     setIsHovering(false);
-
+    
     const files = e.dataTransfer.files;
     if (files.length > 0) {
       const file = files[0];
@@ -38,7 +38,7 @@ export default function EditableImage({ src, alt, className, cmsBind, ...props }
       }
 
       setIsUploading(true);
-
+      
       try {
         const baseUrl = import.meta.env.BASE_URL || '/';
         const uploadUrl = `${baseUrl}__athena/upload`.replace(/\/+/g, '/');
@@ -49,19 +49,19 @@ export default function EditableImage({ src, alt, className, cmsBind, ...props }
           headers: { 'X-Filename': file.name },
           body: file
         });
-
+        
         const uploadData = await uploadRes.json();
         if (!uploadData.success) throw new Error(uploadData.error || "Upload failed");
 
         await fetch(updateUrl, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            file: cmsBind.file,
-            index: cmsBind.index || 0,
-            key: cmsBind.key,
-            value: uploadData.filename
-          })
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                file: cmsBind.file,
+                index: cmsBind.index || 0,
+                key: cmsBind.key,
+                value: uploadData.filename
+            })
         });
 
         window.location.reload();
@@ -74,10 +74,8 @@ export default function EditableImage({ src, alt, className, cmsBind, ...props }
     }
   };
 
-  const isRootPublic = typeof src === 'string' && src && (src.endsWith('.svg') || src.endsWith('.ico') || src === 'site-logo.svg' || src === 'athena-icon.svg');
-  const pathPrefix = isRootPublic ? '' : 'images/';
-  const finalSrc = (typeof src === 'string' && src && !src.startsWith('http') && !src.startsWith('/') && !src.startsWith('data:'))
-    ? `${import.meta.env.BASE_URL}${pathPrefix}${src}`.replace(/\/+/g, '/')
+  const finalSrc = (src && !src.startsWith('http') && !src.startsWith('/') && !src.startsWith('data:'))
+    ? `${import.meta.env.BASE_URL}images/${src}`.replace(/\/+/g, '/')
     : src;
 
   if (!isDev) {
@@ -91,17 +89,17 @@ export default function EditableImage({ src, alt, className, cmsBind, ...props }
   }) : undefined;
 
   return (
-    <div
-      className={`relative group ${className} cursor-pointer`}
-      onDragOver={handleDragOver}
-      onDragLeave={handleDragLeave}
+    <div 
+      className={`relative group ${className} cursor-pointer`} 
+      onDragOver={handleDragOver} 
+      onDragLeave={handleDragLeave} 
       onDrop={handleDrop}
       data-dock-bind={dockBind}
       data-dock-type="media"
       title={cmsBind ? `Shift+Klik om "${cmsBind.key}" te bewerken in de Dock` : undefined}
     >
       <img src={finalSrc} alt={alt} className="w-full h-full object-cover" {...props} />
-
+      
       <div className="absolute inset-0 bg-blue-600/40 flex items-center justify-center transition-opacity duration-300 pointer-events-none" style={{ opacity: isHovering || isUploading ? 1 : 0 }}>
         <div className="bg-black/80 text-white px-4 py-2 rounded-full text-[10px] font-black uppercase border border-white/20">
           {isUploading ? "Uploaden..." : "Afbeelding Hier Slepen"}

@@ -1,6 +1,5 @@
 import React from 'react';
 import { ExternalLink, Github } from 'lucide-react';
-import EditableText from './EditableText';
 import EditableImage from './EditableImage';
 
 const Portfolio = ({ data }) => {
@@ -39,11 +38,11 @@ const Portfolio = ({ data }) => {
                   <div className="flex-1">
                     <div className="flex justify-between items-start">
                       <h3 className="text-xl font-bold text-slate-900">
-                        <EditableText table="portfolio" field="title" id={idx} value={item.title} />
+                        <span data-dock-type="text" data-dock-bind="site_settings.0.titel">...</span>
                       </h3>
                     </div>
                     <p className="mt-3 text-base text-slate-600 leading-relaxed">
-                      <EditableText table="portfolio" field="description" id={idx} value={item.description} />
+                      <span data-dock-type="text" data-dock-bind="site_settings.0.titel">...</span>
                     </p>
                     <div className="mt-4 flex flex-wrap gap-2">
                       {techStack.map((tech, tIdx) => (

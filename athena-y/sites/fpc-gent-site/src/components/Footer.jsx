@@ -1,103 +1,109 @@
-import React from 'react';
-import EditableText from './EditableText';
-import EditableLink from './EditableLink';
+import React, { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 
-export default function Footer({ data }) {
-  const settingsSource = data?.site_settings || {};
-  const settings = Array.isArray(settingsSource) ? (settingsSource[0] || {}) : settingsSource;
-  const contactInfo = data?.contact?.[0] || {};
+export default function Footer() {
+    const currentYear = new Date().getFullYear();
+    const [logo, setLogo] = useState(null);
 
-  const naam = settings.site_name || "fpc-gent";
-  const email = contactInfo.email || settings.email || '';
-  const locatie = contactInfo.location || '';
-  const btw = contactInfo.btw_nummer || contactInfo.btw || '';
-  const linkedin = contactInfo.linkedin_url || contactInfo.linkedin || '';
+    // Haal logo op uit home.json
+    useEffect(() => {
+        const loadLogo = async () => {
+            try {
+                const base = import.meta.env.BASE_URL || '/';
+                const res = await fetch(`${base}data/pages/home.json`.replace(/\/+/g, '/'));
+                if (res.ok) {
+                    const data = await res.json();
+                    if (data.meta?.logo) {
+                        const rawLogo = data.meta.logo;
+                        const resolvedLogo = (rawLogo && rawLogo !== "" && !rawLogo.startsWith('http') && !rawLogo.startsWith('/') && !rawLogo.startsWith('data:'))
+                            ? `${base}${rawLogo}`.replace(/\/+/g, '/')
+                            : rawLogo;
+                        setLogo(resolvedLogo);
+                    }
+                }
+            } catch (e) {}
+        };
+        loadLogo();
+    }, []);
+    
+    return (
+        <footer className="bg-slate-900 text-white pt-20 pb-10 px-6 mt-20">
+            <div className="max-w-7xl mx-auto">
+                <div className="grid grid-cols-1 md:grid-cols-4 gap-12 mb-16">
+                    {/* Brand Column */}
+                    <div className="md:col-span-1">
+                        <div className="flex items-center gap-3 mb-6">
+                            {logo ? (
+                                <img src={logo} alt="FPC Gent" className="h-10 w-auto object-contain" />
+                            ) : (
+                                <div className="flex items-center gap-3">
+                                    <div className="w-10 h-10 bg-blue-600 rounded-xl flex items-center justify-center font-black text-white shadow-lg shadow-blue-500/20">F</div>
+                                    <span className="text-xl font-black tracking-tight">FPC Gent</span>
+                                </div>
+                            )}
+                        </div>
+                        <p className="text-slate-400 text-sm leading-relaxed">
+                            Kwaliteitsvolle forensische psychiatrische zorg in een veilige en humane omgeving. 
+                            Gericht op herstel en re-integratie.
+                        </p>
+                    </div>
 
-  return (
-    <footer
-      className="py-24 text-slate-400 border-t border-slate-800 relative overflow-hidden"
-      style={{ backgroundColor: 'var(--color-footer-bg, #0f172a)' }}
-    >
-      <div className="absolute bottom-0 left-0 w-64 h-64 bg-accent/5 rounded-full blur-[80px] -ml-32 -mb-32"></div>
+                    {/* Quick Links */}
+                    <div>
+                        <h4 className="font-bold mb-6 text-slate-200">Snel naar</h4>
+                        <ul className="space-y-4 text-sm text-slate-400">
+                            <li><Link to="/" className="hover:text-blue-400 transition-colors">Home</Link></li>
+                            <li><Link to="/over-ons" className="hover:text-blue-400 transition-colors">Over ons</Link></li>
+                            <li><Link to="/jobs" className="hover:text-blue-400 transition-colors">Werken bij</Link></li>
+                            <li><Link to="/contact" className="hover:text-blue-400 transition-colors">Contact</Link></li>
+                        </ul>
+                    </div>
 
-      <div className="container mx-auto px-6 relative z-10">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-20 mb-20">
+                    {/* Support */}
+                    <div>
+                        <h4 className="font-bold mb-6 text-slate-200">Informatie</h4>
+                        <ul className="space-y-4 text-sm text-slate-400">
+                            <li><Link to="/sitemap" className="hover:text-blue-400 transition-colors">Archief</Link></li>
+                            <li><a href="#" className="hover:text-blue-400 transition-colors">Disclaimer</a></li>
+                            <li><a href="#" className="hover:text-blue-400 transition-colors">Privacy Policy</a></li>
+                            <li><a href="#" className="hover:text-blue-400 transition-colors">Cookie Instellingen</a></li>
+                        </ul>
+                    </div>
 
-          {/* Brand Identity */}
-          <div className="space-y-6">
-            <h3 className="text-3xl font-serif font-bold text-white">
-              <EditableText value={naam} cmsBind={{ file: 'site_settings', index: 0, key: 'site_name' }} />
-            </h3>
-            {settings.tagline && (
-              <p className="text-lg leading-relaxed font-light">
-                <EditableText value={settings.tagline} cmsBind={{ file: 'site_settings', index: 0, key: 'tagline' }} />
-              </p>
-            )}
-          </div>
+                    {/* Contact */}
+                    <div>
+                        <h4 className="font-bold mb-6 text-slate-200">Contact</h4>
+                        <ul className="space-y-4 text-sm text-slate-400">
+                            <li className="flex items-center gap-3">
+                                <i className="fa-solid fa-phone text-blue-500 w-4"></i>
+                                <span>+32 (0)9 325 21 00</span>
+                            </li>
+                            <li className="flex items-center gap-3">
+                                <i className="fa-solid fa-envelope text-blue-500 w-4"></i>
+                                <span className="truncate">info@fpcgent.be</span>
+                            </li>
+                            <li className="flex items-start gap-3">
+                                <i className="fa-solid fa-location-dot text-blue-500 w-4 mt-1"></i>
+                                <span>Beukenlaan 20,<br />9051 Gent, België</span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
 
-          {/* Contact Details */}
-          <div className="space-y-6">
-            <h4 className="text-sm font-bold uppercase tracking-[0.2em] text-accent">
-              <EditableText value={settings.footer_contact_title || 'Contact'} cmsBind={{ file: 'site_settings', index: 0, key: 'footer_contact_title' }} />
-            </h4>
-            <ul className="space-y-4">
-              {email && (
-                <li className="flex items-center gap-4">
-                  <i className="fa-solid fa-envelope text-accent w-5"></i>
-                  <EditableText value={email} cmsBind={{ file: 'contact', index: 0, key: 'email' }} />
-                </li>
-              )}
-              {locatie && (
-                <li className="flex items-center gap-4">
-                  <i className="fa-solid fa-location-dot text-accent w-5"></i>
-                  <EditableText value={locatie} cmsBind={{ file: 'contact', index: 0, key: 'location' }} />
-                </li>
-              )}
-              {linkedin && (
-                <li className="flex items-center gap-4">
-                  <i className="fa-brands fa-linkedin text-accent w-5"></i>
-                  <EditableLink
-                    label={contactInfo.linkedin_label || "LinkedIn Profile"}
-                    url={contactInfo.linkedin_url_url || linkedin}
-                    table="contact"
-                    field="linkedin_url"
-                    id={0}
-                    className="hover:text-white transition-colors"
-                  />
-                </li>
-              )}
-            </ul>
-          </div>
-
-          {/* Legal / Company Info */}
-          <div className="space-y-6">
-            <h4 className="text-sm font-bold uppercase tracking-[0.2em] text-accent">
-              <EditableText value={settings.footer_legal_title || 'Bedrijfsgegevens'} cmsBind={{ file: 'site_settings', index: 0, key: 'footer_legal_title' }} />
-            </h4>
-            <div className="space-y-4">
-              {btw && (
-                <p className="flex items-center gap-2">
-                  <span className="text-slate-500">BTW:</span>
-                  <EditableText value={btw} cmsBind={{ file: 'contact', index: 0, key: 'btw_nummer' }} />
-                </p>
-              )}
-              <p className="text-sm font-light leading-relaxed">
-                <EditableText value={settings.footer_text || 'Professionele website geleverd door Athena CMS Factory.'} cmsBind={{ file: 'site_settings', index: 0, key: 'footer_text' }} />
-              </p>
+                <div className="border-t border-white/5 pt-10 flex flex-col md:flex-row justify-between items-center gap-6">
+                    <p className="text-[11px] font-medium text-slate-500 uppercase tracking-widest">
+                        © {currentYear} FPC Gent — Built with <span className="text-blue-500">Athena Factory MPA Engine</span>
+                    </p>
+                    <div className="flex gap-4">
+                        <a href="https://www.linkedin.com/company/fpc-antwerpen-gent/" target="_blank" className="w-8 h-8 rounded-full bg-white/5 flex items-center justify-center text-slate-400 hover:bg-blue-600 hover:text-white transition-all">
+                            <i className="fa-brands fa-linkedin-in text-xs"></i>
+                        </a>
+                        <a href="#" className="w-8 h-8 rounded-full bg-white/5 flex items-center justify-center text-slate-400 hover:bg-blue-600 hover:text-white transition-all">
+                            <i className="fa-brands fa-twitter text-xs"></i>
+                        </a>
+                    </div>
+                </div>
             </div>
-          </div>
-
-        </div>
-
-        {/* Copyright Bar */}
-        <div className="pt-12 border-t border-slate-800 flex flex-col md:flex-row justify-between items-center gap-6 text-sm">
-          <p>&copy; {new Date().getFullYear()} {naam}. Alle rechten voorbehouden.</p>
-          <div className="flex items-center gap-2 opacity-50">
-            <img src="./athena-icon.svg" alt="Athena Logo" className="w-5 h-5" />
-            <EditableText value={settings.footer_credit_text || 'Gemaakt met Athena CMS Factory'} cmsBind={{ file: 'site_settings', index: 0, key: 'footer_credit_text' }} />
-          </div>
-        </div>
-      </div>
-    </footer>
-  );
+        </footer>
+    );
 }

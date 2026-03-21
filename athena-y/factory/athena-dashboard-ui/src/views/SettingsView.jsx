@@ -59,13 +59,16 @@ export default function SettingsView() {
                 <div className="space-y-2">
                   <label className="text-[10px] font-black text-slate-500 uppercase">Primair Model</label>
                   <select 
-                    value={config.AI_MODEL || 'gemini-1.5-flash'}
-                    onChange={e => setConfig({...config, AI_MODEL: e.target.value})}
+                    value={config.AI_MODEL_DEFAULT || 'gemini-2.0-flash'}
+                    onChange={e => setConfig({...config, AI_MODEL_DEFAULT: e.target.value})}
                     className="w-full bg-black/40 border border-athena-border rounded px-3 py-2 text-sm text-slate-300 outline-none focus:border-athena-accent"
                   >
-                    <option value="gemini-1.5-flash">Gemini 1.5 Flash (Snel)</option>
-                    <option value="gemini-1.5-pro">Gemini 1.5 Pro (Slim)</option>
-                    <option value="gemini-2.0-flash">Gemini 2.0 Flash (v8.7+)</option>
+                    <option value="gemini-flash-latest">Gemini Flash (Latest)</option>
+                    <option value="gemini-pro-latest">Gemini Pro (Latest)</option>
+                    <option value="gemini-2.0-flash">Gemini 2.0 Flash</option>
+                    <option value="gemini-3-flash-preview">Gemini 3.0 Flash (Preview)</option>
+                    <option value="gemini-3-pro-preview">Gemini 3.0 Pro (Preview)</option>
+                    <option value="gemini-3.1-pro-preview">Gemini 3.1 Pro (Preview)</option>
                   </select>
                 </div>
                 <div className="space-y-2">

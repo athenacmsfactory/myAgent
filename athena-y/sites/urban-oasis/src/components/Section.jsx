@@ -1,7 +1,4 @@
 import React, { useEffect } from 'react';
-import EditableMedia from './EditableMedia';
-import EditableText from './EditableText';
-import EditableLink from './EditableLink';
 import Team from './Team';
 import Testimonials from './Testimonials';
 
@@ -55,38 +52,25 @@ const Section = ({ data }) => {
               className="relative w-full h-auto min-h-[85vh] flex items-center justify-center overflow-hidden bg-slate-900 pt-24"
             >
               <div className="absolute inset-0 z-0">
-                <EditableMedia
-                  src={hero[imgKey]}
-                  cmsBind={{ file: sectionName, index: 0, key: imgKey }}
-                  className="w-full h-full object-cover object-top"
-                />
+                <img src={hero[imgKey]} className="w-full h-full object-cover object-top" data-dock-type="media" data-dock-bind={`sectionName.0.imgKey`} />
                 <div className="absolute inset-0 z-20 pointer-events-none" style={{
                   backgroundImage: 'linear-gradient(to bottom, var(--hero-overlay-start, rgba(0,0,0,0.4)), var(--hero-overlay-end, rgba(0,0,0,0.2)))'
                 }}></div>
               </div>
               <div className="relative z-30 text-center px-6 max-w-5xl">
                 <h1 className="text-5xl md:text-8xl font-serif font-bold text-white mb-8 leading-tight drop-shadow-2xl">
-                  <EditableText value={heroTitle} cmsBind={{ file: sectionName, index: 0, key: Object.keys(hero).find(k => k === 'titel' || k === 'title' || k === 'name') || 'name' }} />
+                  <span data-dock-type="text" data-dock-bind={`sectionName.0.Object.keys(hero).find(k`}>{heroTitle}</span>
                 </h1>
                 <div className="h-2 w-32 bg-accent mx-auto mb-10 rounded-full shadow-lg shadow-accent/50"></div>
                 <p className="text-xl md:text-2xl text-white/95 max-w-3xl mx-auto mb-12 leading-relaxed drop-shadow-lg font-light italic">
-                  <EditableText value={heroSubtitle} cmsBind={{ file: sectionName, index: 0, key: Object.keys(hero).find(k => k === 'ondertitel' || k === 'subtitle' || k === 'tagline') || 'tagline' }} />
+                  <span data-dock-type="text" data-dock-bind={`sectionName.0.Object.keys(hero).find(k`}>{heroSubtitle}</span>
                 </p>
                 <div className="flex justify-center">
-                  <EditableLink
-                    as="button"
-                    label={hero.cta_label || "Maak een afspraak"}
-                    url={hero.cta_url || "#services"}
-                    className="bg-[var(--color-button-bg, var(--color-primary))] text-white px-12 py-5 text-xl font-bold shadow-2xl hover:scale-105 transition-all rounded-full"
-                    onClick={(e) => {
-                      const url = hero.cta_url || "#services";
-                      if (url.startsWith('#')) {
-                        e.preventDefault();
-                        const el = document.getElementById(url.substring(1));
-                        if (el) el.scrollIntoView({ behavior: 'smooth' });
-                      }
-                    }}
-                  />
+                  <button onClick={(e) => { 
+                if (e.shiftKey) return; 
+                const target = document.getElementById("contact");
+                if (target) { e.preventDefault(); target.scrollIntoView({ behavior: "smooth" }); }
+            }} data-dock-type="link" data-dock-bind="site_settings.0.titel">{}</button>
                 </div>
               </div>
             </section>
@@ -123,17 +107,17 @@ const Section = ({ data }) => {
                       <div key={index} className="flex flex-col items-center text-center bg-[var(--color-card-bg,#ffffff)] p-10 rounded-[2.5rem] shadow-xl border border-slate-100 hover:shadow-2xl transition-all duration-300">
                         {img && (
                           <div className="w-full aspect-[4/3] rounded-[2rem] overflow-hidden mb-8 shadow-inner">
-                            <EditableMedia src={img} cmsBind={{ file: sectionName, index: index, key: Object.keys(item).find(k => /foto|afbeelding|url|image|img/i.test(k)) || 'image' }} className="w-full h-full object-cover" />
+                            <img src={img} className="w-full h-full object-cover" data-dock-type="media" data-dock-bind={`sectionName.${index}.${Object.keys(item).find(k}`} />
                           </div>
                         )}
                         {title && (
                           <h3 className="text-2xl font-bold text-primary mb-4 leading-tight">
-                            <EditableText value={title} cmsBind={{ file: sectionName, index: index, key: Object.keys(item).find(k => /naam|titel|name|title/i.test(k)) || 'name' }} />
+                            <span data-dock-type="text" data-dock-bind={`sectionName.${index}.${Object.keys(item).find(k}`}>{title}</span>
                           </h3>
                         )}
                         {text && (
                           <div className="text-slate-600 text-lg leading-relaxed">
-                            <EditableText value={text} cmsBind={{ file: sectionName, index: index, key: Object.keys(item).find(k => /tekst|description|text|summary/i.test(k)) || 'description' }} />
+                            <span data-dock-type="text" data-dock-bind={`sectionName.${index}.${Object.keys(item).find(k}`}>{text}</span>
                           </div>
                         )}
                       </div>
@@ -144,18 +128,18 @@ const Section = ({ data }) => {
                     <div key={index} className={`flex flex-col items-center text-center ${currentLayout === 'list' ? '' : (isEven ? 'md:flex-row' : 'md:flex-row-reverse')} gap-12 md:gap-20`}>
                       {img && (
                         <div className="w-full md:w-1/2 aspect-[4/3] rounded-[3rem] overflow-hidden shadow-2xl rotate-1 group hover:rotate-0 transition-transform duration-500 border-8 border-[var(--color-card-bg,#ffffff)]">
-                          <EditableMedia src={img} cmsBind={{ file: sectionName, index: index, key: Object.keys(item).find(k => /foto|afbeelding|url|image|img/i.test(k)) || 'image' }} className="w-full h-full object-cover" />
+                          <img src={img} className="w-full h-full object-cover" data-dock-type="media" data-dock-bind={`sectionName.${index}.${Object.keys(item).find(k}`} />
                         </div>
                       )}
                       <div className="flex-1">
                         {title && (
                           <h3 className="text-3xl font-serif font-bold text-primary mb-8 leading-tight">
-                            <EditableText value={title} cmsBind={{ file: sectionName, index: index, key: Object.keys(item).find(k => /naam|titel|name|title/i.test(k)) || 'name' }} />
+                            <span data-dock-type="text" data-dock-bind={`sectionName.${index}.${Object.keys(item).find(k}`}>{title}</span>
                           </h3>
                         )}
                         {text && (
                           <div className="text-xl leading-relaxed text-slate-600 mb-6 font-light">
-                            <EditableText value={text} cmsBind={{ file: sectionName, index: index, key: Object.keys(item).find(k => /tekst|description|text|summary/i.test(k)) || 'description' }} />
+                            <span data-dock-type="text" data-dock-bind={`sectionName.${index}.${Object.keys(item).find(k}`}>{text}</span>
                           </div>
                         )}
                       </div>

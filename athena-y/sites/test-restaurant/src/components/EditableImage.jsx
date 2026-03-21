@@ -1,112 +1,101 @@
 import React, { useState } from 'react';
 
 /**
- * EditableImage (Legacy Alias for EditableMedia)
- * Maakt afbeeldingen versleepbaar en bewerkbaar.
+ * EditableImage
+ * Wraps a standard img tag. In Development, it allows dragging a new image onto it.
  */
 export default function EditableImage({ src, alt, className, cmsBind, ...props }) {
   const isDev = import.meta.env.DEV;
   const [isHovering, setIsHovering] = useState(false);
   const [isUploading, setIsUploading] = useState(false);
 
+  // Als we niet in dev mode zijn, render gewoon de image
+  if (!isDev) {
+    return <img src={src} alt={alt} className={className} />;
+  }
+
   const handleDragOver = (e) => {
-    if (!isDev) return;
     e.preventDefault();
-    e.stopPropagation();
-    if (!isHovering) setIsHovering(true);
+    setIsHovering(true);
   };
 
   const handleDragLeave = (e) => {
-    if (!isDev) return;
     e.preventDefault();
-    e.stopPropagation();
     setIsHovering(false);
   };
 
   const handleDrop = async (e) => {
-    if (!isDev) return;
     e.preventDefault();
-    e.stopPropagation();
     setIsHovering(false);
+    
+    if (!cmsBind) return;
 
     const files = e.dataTransfer.files;
     if (files.length > 0) {
       const file = files[0];
-      if (!file.type.startsWith('image/')) {
-        alert("Alleen afbeeldingen zijn toegestaan.");
-        return;
-      }
+      if (!file.type.startsWith('image/')) return;
 
       setIsUploading(true);
-
+      
       try {
-        const baseUrl = import.meta.env.BASE_URL || '/';
-        const uploadUrl = `${baseUrl}__athena/upload`.replace(/\/+/g, '/');
-        const updateUrl = `${baseUrl}__athena/update-json`.replace(/\/+/g, '/');
-
-        const uploadRes = await fetch(uploadUrl, {
+        const uploadRes = await fetch('/__athena/upload', {
           method: 'POST',
           headers: { 'X-Filename': file.name },
           body: file
         });
-
         const uploadData = await uploadRes.json();
+        
         if (!uploadData.success) throw new Error(uploadData.error || "Upload failed");
 
-        await fetch(updateUrl, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            file: cmsBind.file,
-            index: cmsBind.index || 0,
-            key: cmsBind.key,
-            value: uploadData.filename
-          })
+        await fetch('/__athena/update-json', {
+            method: 'POST',
+            body: JSON.stringify({
+                file: cmsBind.file,
+                index: cmsBind.index || 0,
+                key: cmsBind.key,
+                value: uploadData.filename
+            })
         });
 
         window.location.reload();
       } catch (err) {
-        console.error("❌ Upload Error:", err);
-        alert("Fout bij uploaden: " + err.message);
+        console.error("Edit error:", err);
+        alert("Fout bij updaten: " + err.message);
       } finally {
         setIsUploading(false);
       }
     }
   };
 
-  const isRootPublic = typeof src === 'string' && src && (src.endsWith('.svg') || src.endsWith('.ico') || src === 'site-logo.svg' || src === 'athena-icon.svg');
-  const pathPrefix = isRootPublic ? '' : 'images/';
-  const finalSrc = (typeof src === 'string' && src && !src.startsWith('http') && !src.startsWith('/') && !src.startsWith('data:'))
-    ? `${import.meta.env.BASE_URL}${pathPrefix}${src}`.replace(/\/+/g, '/')
-    : src;
-
-  if (!isDev) {
-    return <img src={finalSrc} alt={alt} className={className} {...props} />;
-  }
-
-  const dockBind = cmsBind ? JSON.stringify({
-    file: cmsBind.file,
-    index: cmsBind.index || 0,
-    key: cmsBind.key
-  }) : undefined;
-
   return (
-    <div
-      className={`relative group ${className} cursor-pointer`}
-      onDragOver={handleDragOver}
-      onDragLeave={handleDragLeave}
+    <div 
+      className={`relative group ${className}`} 
+      onMouseEnter={() => setIsHovering(true)}
+      onMouseLeave={() => setIsHovering(false)}
+      onDragOver={handleDragOver} 
+      onDragLeave={handleDragLeave} 
       onDrop={handleDrop}
-      data-dock-bind={dockBind}
-      data-dock-type="media"
-      title={cmsBind ? `Shift+Klik om "${cmsBind.key}" te bewerken in de Dock` : undefined}
+      style={{ cursor: 'pointer' }}
     >
-      <img src={finalSrc} alt={alt} className="w-full h-full object-cover" {...props} />
-
-      <div className="absolute inset-0 bg-blue-600/40 flex items-center justify-center transition-opacity duration-300 pointer-events-none" style={{ opacity: isHovering || isUploading ? 1 : 0 }}>
-        <div className="bg-black/80 text-white px-4 py-2 rounded-full text-[10px] font-black uppercase border border-white/20">
-          {isUploading ? "Uploaden..." : "Afbeelding Hier Slepen"}
+      <img src={src} alt={alt} className="w-full h-full object-cover" />
+      
+      {/* 
+          OVERLAY - Altijd in het midden, zichtbaar bij hover of drag 
+          We gebruiken inline style voor opacity om Tailwind-conflicten te vermijden
+      */}
+      {cmsBind && (
+        <div 
+          className="absolute inset-0 bg-blue-500/40 flex items-center justify-center transition-opacity duration-300 pointer-events-none"
+          style={{ 
+            opacity: isHovering ? 1 : 0,
+            zIndex: 50 
+          }}
+        >
+          <span className="text-white font-black bg-black/60 px-4 py-2 rounded-lg text-xs uppercase tracking-widest shadow-2xl border border-white/20">
+            {isUploading ? "⏳ Uploaden..." : "📸 Sleep foto hier"}
+          </span>
         </div>
-      </div>
+      )}
     </div>
   );
 }

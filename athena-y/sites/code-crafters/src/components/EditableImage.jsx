@@ -74,31 +74,20 @@ export default function EditableImage({ src, alt, className, cmsBind, ...props }
     }
   };
 
-  const isRootPublic = typeof src === 'string' && src && (src.endsWith('.svg') || src.endsWith('.ico') || src === 'site-logo.svg' || src === 'athena-icon.svg');
-  const pathPrefix = isRootPublic ? '' : 'images/';
-  const finalSrc = (typeof src === 'string' && src && !src.startsWith('http') && !src.startsWith('/') && !src.startsWith('data:'))
-    ? `${import.meta.env.BASE_URL}${pathPrefix}${src}`.replace(/\/+/g, '/')
+  const finalSrc = (src && !src.startsWith('http') && !src.startsWith('/') && !src.startsWith('data:'))
+    ? `${import.meta.env.BASE_URL}${src.startsWith('images/') ? '' : 'images/'}${src}`.replace(/\/+/g, '/')
     : src;
 
   if (!isDev) {
     return <img src={finalSrc} alt={alt} className={className} {...props} />;
   }
 
-  const dockBind = cmsBind ? JSON.stringify({
-    file: cmsBind.file,
-    index: cmsBind.index || 0,
-    key: cmsBind.key
-  }) : undefined;
-
   return (
     <div
-      className={`relative group ${className} cursor-pointer`}
+      className={`relative group ${className}`}
       onDragOver={handleDragOver}
       onDragLeave={handleDragLeave}
       onDrop={handleDrop}
-      data-dock-bind={dockBind}
-      data-dock-type="media"
-      title={cmsBind ? `Shift+Klik om "${cmsBind.key}" te bewerken in de Dock` : undefined}
     >
       <img src={finalSrc} alt={alt} className="w-full h-full object-cover" {...props} />
 

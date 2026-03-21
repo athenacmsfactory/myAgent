@@ -126,11 +126,17 @@ export class AthenaProcessManager {
         for (const port in registry) {
             const pid = registry[port].pid;
             try {
-                process.kill(pid, 0); // Check if alive
+                // Check if alive using signal 0
+                process.kill(pid, 0); 
                 active[port] = registry[port];
             } catch (e) {
-                changed = true;
-                console.log(`🧹 Cleaning up stale registry entry for port ${port}`);
+                // EPERM means it's alive but not ours, ESRCH means it's dead
+                if (e.code === 'EPERM') {
+                    active[port] = registry[port];
+                } else {
+                    changed = true;
+                    console.log(`🧹 Cleaning up stale registry entry for port ${port}`);
+                }
             }
         }
 

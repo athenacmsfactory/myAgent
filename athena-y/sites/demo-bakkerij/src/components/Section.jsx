@@ -1,6 +1,4 @@
 import React, { useEffect } from 'react';
-import EditableMedia from './EditableMedia';
-import EditableText from './EditableText';
 import { useCart } from './CartContext';
 
 const Section = ({ data }) => {
@@ -30,16 +28,12 @@ const Section = ({ data }) => {
               className="relative h-[90vh] flex items-center justify-center overflow-hidden"
             >
               <div className="absolute inset-0 z-0">
-                <EditableMedia 
-                  src={hero.hero_afbeelding} 
-                  cmsBind={{file: 'basisgegevens', index: 0, key: 'hero_afbeelding'}}
-                  className="w-full h-full object-cover" 
-                />
+                <img src={hero.hero_afbeelding} className="w-full h-full object-cover" data-dock-type="media" data-dock-bind="basisgegevens.0.hero_afbeelding" />
                 <div className="absolute inset-0 bg-black/40 backdrop-blur-[2px]"></div>
               </div>
               <div className="relative z-10 text-center px-6 max-w-4xl">
                 <h1 className="text-5xl md:text-7xl font-serif font-bold text-white mb-8 drop-shadow-xl">
-                  <EditableText value={hero.hero_header} cmsBind={{file: 'basisgegevens', index: 0, key: 'hero_header'}} />
+                  <span data-dock-type="text" data-dock-bind="basisgegevens.0.hero_header">{hero.hero_header}</span>
                 </h1>
                 <div className="h-1.5 w-24 bg-accent mx-auto mb-8"></div>
                 <button 
@@ -76,21 +70,17 @@ const Section = ({ data }) => {
                         style={{ borderRadius: 'var(--radius-custom)', boxShadow: 'var(--shadow-main)' }}
                       >
                         <div className="relative aspect-square overflow-hidden mb-8 shadow-inner flex-shrink-0" style={{ borderRadius: 'calc(var(--radius-custom) * 0.8)' }}>
-                          <EditableMedia 
-                            src={item.product_foto_url} 
-                            cmsBind={{file: 'producten', index, key: 'product_foto_url'}}
-                            className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" 
-                          />
+                          <img src={item.product_foto_url} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" data-dock-type="media" data-dock-bind="producten.0.product_foto_url" />
                           <div className="absolute top-6 right-6 bg-accent text-white px-5 py-2 rounded-full font-bold text-lg shadow-lg">
                             €{priceValue.toFixed(2)}
                           </div>
                         </div>
                         <div className="flex-grow text-left flex flex-col">
                           <h3 className="text-2xl font-bold mb-3 text-[var(--color-heading)] min-h-[4rem] flex items-center">
-                            <EditableText value={item.naam} cmsBind={{file: 'producten', index, key: 'naam'}} />
+                            <span data-dock-type="text" data-dock-bind="producten.0.naam">{item.naam}</span>
                           </h3>
                           <p className="text-sm opacity-60 line-clamp-3 mb-6 leading-relaxed flex-grow">
-                            <EditableText value={item.korte_beschrijving} cmsBind={{file: 'producten', index, key: 'korte_beschrijving'}} />
+                            <span data-dock-type="text" data-dock-bind="producten.0.korte_beschrijving">{item.korte_beschrijving}</span>
                           </p>
                         </div>
                         <button 
@@ -123,7 +113,7 @@ const Section = ({ data }) => {
                        <i className={`fa-solid ${item.icoon_naam || 'fa-star'} text-3xl`}></i>
                     </div>
                     <h4 className="text-xl font-bold mb-2">
-                      <EditableText value={item.titel} cmsBind={{file: 'sterke_punten', index, key: 'titel'}} />
+                      <span data-dock-type="text" data-dock-bind="sterke_punten.0.titel">{item.titel}</span>
                     </h4>
                   </div>
                 ))}

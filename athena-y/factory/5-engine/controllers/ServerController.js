@@ -68,10 +68,13 @@ export class ServerController {
             if (!systemPorts.includes(apiPort)) systemPorts.push(apiPort);
 
             const addServer = (port, info) => {
-                if (!activeMap.has(port)) {
-                    if (port === (this.configManager.get('ports.dashboard') || 5001)) return;
-                    const isSystem = systemPorts.includes(port);
-                    activeMap.set(port, { ...info, isSystem });
+                const portNum = parseInt(port);
+                if (!activeMap.has(portNum)) {
+                    // Verberg het dashboard zelf uit de lijst (poort 5001)
+                    if (portNum === 5001) return;
+                    
+                    const isSystem = systemPorts.includes(portNum) || [5000, 5001, 5002, 5003, 5004, 5005].includes(portNum);
+                    activeMap.set(portNum, { ...info, isSystem, port: portNum });
                 }
             };
 
@@ -149,7 +152,7 @@ export class ServerController {
     async startMediaVisualizer(siteName = null) {
         const port = this.configManager.get('ports.media') || 5004;
         await this.pm.stopProcessByPort(port);
-        const args = ['5-engine/media-mapper.js'];
+        const args = ['5-engine/media-mapper.js', '--port', port.toString()];
         if (siteName) args.push(siteName);
         this.pm.startProcess('media-mapper', 'editor', port, process.execPath, args, { cwd: this.factoryDir });
         return { success: true, message: `Media Mapper starting on port ${port}...` };

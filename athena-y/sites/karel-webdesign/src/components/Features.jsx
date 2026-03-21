@@ -1,6 +1,5 @@
 import React from 'react';
 import { ShieldCheck, User, Zap } from 'lucide-react';
-import EditableText from './EditableText';
 
 const iconMap = {
   ShieldCheck,
@@ -39,10 +38,10 @@ const Features = ({ data }) => {
                         </span>
                       </div>
                       <h3 className="mt-8 text-lg font-medium text-slate-900 tracking-tight">
-                        <EditableText table="features" field="title" id={idx} value={feature.title} />
+                        <span data-dock-type="text" data-dock-bind="site_settings.0.titel">...</span>
                       </h3>
                       <p className="mt-5 text-base text-slate-600">
-                        <EditableText table="features" field="description" id={idx} value={feature.description} />
+                        <span data-dock-type="text" data-dock-bind="site_settings.0.titel">...</span>
                       </p>
                     </div>
                   </div>

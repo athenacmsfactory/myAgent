@@ -1,6 +1,4 @@
 import React, { useState } from 'react';
-import EditableMedia from './EditableMedia';
-import EditableText from './EditableText';
 import RepeaterControls from './RepeaterControls';
 
 const Section = ({ data }) => {
@@ -87,6 +85,14 @@ const Section = ({ data }) => {
 
   const getText = (val) => (typeof val === 'object' && val !== null) ? (val.text || '') : val;
 
+  const getImageUrl = (url) => {
+    if (!url) return '';
+    if (typeof url === 'object') url = url.text || url.url || '';
+    if (url.startsWith('http') || url.startsWith('data:')) return url;
+    const base = import.meta.env.BASE_URL || '/';
+    return (base + '/images/' + url).replace(new RegExp('/+', 'g'), '/');
+  };
+
   if (!data || Object.keys(data).length === 0) {
     return <div className="p-20 text-center opacity-50">Data aan het laden...</div>;
   }
@@ -101,8 +107,8 @@ const Section = ({ data }) => {
         const sectionMeta = (data.section_settings || []).find(s => s && s.id === config.table.toLowerCase()) || {};
         const isVisible = sectionMeta.visible !== false;
 
-        // Skip technical sections that are handled by dedicated components
-        if (config.table === 'navbar' || config.table === 'social_media' || config.table.includes('hoofdgroepen')) return null;
+        // Skip technical sections by default
+        if (config.table === 'navbar' || config.table === 'footer' || config.table === 'social_media' || config.table.includes('hoofdgroepen')) return null;
         
         // Skip based on visibility setting (except in Dev mode where we show them dimmed)
         if (!isVisible && !isDev) return null;
@@ -163,17 +169,11 @@ const Section = ({ data }) => {
               <div className="max-w-6xl mx-auto">
                 <header className="mb-24 text-center max-w-3xl mx-auto group/header relative">
                   <h2 className="text-5xl md:text-6xl font-serif font-bold mb-8 text-[var(--color-heading)] text-center">
-                    <EditableText
-                      value={sectionTitle}
-                      cmsBind={metaBind('title')}
-                    />
+                    <span data-dock-type="text" data-dock-bind="site_settings.0.titel">...</span>
                   </h2>
                   <div className="h-1.5 w-12 mx-auto mb-8 bg-accent"></div>
                   <div className="text-xl italic font-light opacity-60 text-text text-center">
-                    <EditableText
-                      value={sectionSubtitle}
-                      cmsBind={metaBind('subtitle')}
-                    />
+                    <span data-dock-type="text" data-dock-bind="site_settings.0.titel">...</span>
                   </div>
                 </header>
 
@@ -183,18 +183,11 @@ const Section = ({ data }) => {
                       <div className="relative group/category">
                         <div className="flex items-center gap-6 mb-10">
                           <div className="w-20 h-20 rounded-2xl overflow-hidden shadow-lg shrink-0">
-                            <EditableMedia
-                              src={group.afbeelding}
-                              className="w-full h-full object-cover"
-                              cmsBind={{ file: 'diensten_hoofdgroepen', index: group.originalIndex, key: 'afbeelding' }}
-                            />
+                            <img src={getImageUrl(group.afbeelding)} className="w-full h-full object-cover" data-dock-type="media" data-dock-bind={`diensten_hoofdgroepen.${group.originalIndex}.afbeelding`} />
                           </div>
                           <div className="flex-1">
                             <h3 className="text-3xl font-serif font-bold text-accent uppercase tracking-[0.2em]">
-                              <EditableText
-                                value={group.naam}
-                                cmsBind={{ file: 'diensten_hoofdgroepen', index: group.originalIndex, key: 'naam' }}
-                              />
+                              <span data-dock-type="text" data-dock-bind={`diensten_hoofdgroepen.${group.originalIndex}.naam`}>{group.naam}</span>
                             </h3>
                             <div className="h-1 w-12 bg-accent/30 mt-2"></div>
                           </div>
@@ -204,24 +197,13 @@ const Section = ({ data }) => {
                           {group.items.map((item, iIdx) => (
                             <div key={iIdx} className="group/item relative">
                               <div className="flex justify-between items-baseline gap-4 mb-1">
-                                <EditableText
-                                  tagName="span"
-                                  value={item.dienst_naam}
-                                  className="text-lg font-medium text-text group-hover/item:text-accent transition-colors duration-300"
-                                  cmsBind={{ file: 'tarieven', index: item.absoluteIndex ?? iIdx, key: 'dienst_naam' }}
-                                />
+                                <span className="text-lg font-medium text-text group-hover/item:text-accent transition-colors duration-300" data-dock-type="text" data-dock-bind={`tarieven.${item.absoluteIndex}.dienst_naam`}>{item.dienst_naam}</span>
                                 <div className="flex-1 border-b border-dotted border-slate-300 dark:border-white/10 mx-2 relative top-[-4px] opacity-40"></div>
                                 <div className="flex items-center gap-2">
                                   <span className="text-[10px] uppercase tracking-widest opacity-40 font-bold whitespace-nowrap">
                                     {getText(item.prijs_indicatie)}
                                   </span>
-                                  <EditableText
-                                    tagName="span"
-                                    value={item.basis_prijs}
-                                    className="font-serif font-bold text-xl text-text"
-                                    cmsBind={{ file: 'tarieven', index: item.absoluteIndex ?? iIdx, key: 'basis_prijs' }}
-                                    renderValue={(val) => `€${getText(val)}`}
-                                  />
+                                  <span className="font-serif font-bold text-xl text-text" data-dock-type="text" data-dock-bind={`tarieven.${item.absoluteIndex}.basis_prijs`}>{item.basis_prijs}</span>
                                 </div>
                               </div>
                               {item.gradatie_afhankelijk && (
@@ -255,23 +237,11 @@ const Section = ({ data }) => {
 
               <header className="mb-24 text-center max-w-3xl mx-auto group/header relative">
                 <h2 className="text-5xl md:text-6xl font-serif font-bold mb-8 text-[var(--color-heading)] text-center">
-                  <EditableText
-                    value={sectionTitle}
-                    cmsBind={metaBind('title')}
-                    table="section_settings"
-                    field="title"
-                    id={metaIndex}
-                  />
+                  <span data-dock-type="text" data-dock-bind="site_settings.0.titel">...</span>
                 </h2>
                 <div className="h-1.5 w-12 mx-auto mb-8 bg-accent"></div>
                 <div className="text-xl italic font-light opacity-60 text-text text-center">
-                  <EditableText
-                    value={sectionSubtitle}
-                    cmsBind={metaBind('subtitle')}
-                    table="section_settings"
-                    field="subtitle"
-                    id={metaIndex}
-                  />
+                  <span data-dock-type="text" data-dock-bind="site_settings.0.titel">...</span>
                 </div>
               </header>
 
@@ -344,14 +314,9 @@ const Section = ({ data }) => {
                           className += "text-sm opacity-60";
                         }
 
+                        const TagName = tagName;
                         return (
-                          <EditableText
-                            key={`${k}-${i}`}
-                            tagName={tagName}
-                            value={item[k]}
-                            cmsBind={{ file: config.table.toLowerCase(), index, key: k }}
-                            className={className}
-                          />
+                          <TagName className={className} data-dock-type="text" data-dock-bind={`${config.table.toLowerCase()}.${0}.${k}`}>{item[k]}</TagName>
                         );
                       })}
                     </div>
@@ -366,10 +331,10 @@ const Section = ({ data }) => {
                       <div key={index} className={itemClass + " w-full max-w-2xl mx-auto"}>
                         <div className="flex justify-between items-end border-b border-dotted border-slate-300 dark:border-white/20 pb-4">
                           <div className="flex-1">
-                            {titleKey && <EditableText tagName="span" value={item[titleKey]} className="text-lg font-medium block text-text" cmsBind={{ file: config.table.toLowerCase(), index, key: titleKey }} />}
-                            {descKey && <EditableText tagName="span" value={item[descKey]} className="text-sm opacity-60 block mt-1 text-text" cmsBind={{ file: config.table.toLowerCase(), index, key: descKey }} />}
+                            {titleKey && <span className="text-lg font-medium block text-text" data-dock-type="text" data-dock-bind={`${config.table.toLowerCase()}.${index}.${titleKey}`}>{item[titleKey]}</span>}
+                            {descKey && <span className="text-sm opacity-60 block mt-1 text-text" data-dock-type="text" data-dock-bind={`${config.table.toLowerCase()}.${index}.${descKey}`}>{item[descKey]}</span>}
                           </div>
-                          <EditableText tagName="span" value={item[priceKey]} className="font-serif font-bold text-lg text-text ml-4" cmsBind={{ file: config.table.toLowerCase(), index, key: priceKey }} />
+                          <span className="font-serif font-bold text-lg text-text ml-4" data-dock-type="text" data-dock-bind={`${config.table.toLowerCase()}.${index}.${priceKey}`}>{item[priceKey]}</span>
                         </div>
                       </div>
                     );
@@ -381,7 +346,7 @@ const Section = ({ data }) => {
                       <article key={index} className={itemClass + ' flex flex-col ' + (isEven ? 'md:flex-row' : 'md:flex-row-reverse') + ' items-center gap-16 md:gap-24'}>
                         {imgKey && (
                           <div className="w-full md:w-1/2 aspect-square md:aspect-video rounded-[3rem] overflow-hidden shadow-2xl">
-                            <EditableMedia src={item[imgKey]} dataItem={item} cmsBind={{ file: config.table.toLowerCase(), index, key: imgKey }} data-dock-bind={bind(imgKey)} className="w-full h-full object-cover" />
+                            <img src={getImageUrl(item[imgKey] || item.afbeelding || item.foto)} className="w-full h-full object-cover" data-dock-type="media" data-dock-bind={`${config.table.toLowerCase()}.${index}.${imgKey}`} />
                           </div>
                         )}
                         <div className={`w-full ${imgKey ? 'md:w-1/2' : 'max-w-3xl mx-auto'} text-center ${imgKey ? 'md:text-left' : ''}`}>
@@ -396,7 +361,7 @@ const Section = ({ data }) => {
                       <article key={index} className={itemClass + ' flex flex-col md:flex-row items-start gap-12 border-b border-slate-100 dark:border-white/5 pb-24 last:border-0'}>
                         {imgKey && (
                           <div className="w-32 h-32 rounded-full overflow-hidden flex-shrink-0 shadow-lg">
-                            <EditableMedia src={item[imgKey]} dataItem={item} cmsBind={{ file: config.table.toLowerCase(), index, key: imgKey }} data-dock-bind={bind(imgKey)} className="w-full h-full object-cover" />
+                            <img src={getImageUrl(item[imgKey] || item.afbeelding || item.foto)} className="w-full h-full object-cover" data-dock-type="media" data-dock-bind={`${config.table.toLowerCase()}.${index}.${imgKey}`} />
                           </div>
                         )}
                         <div className="flex-1">
@@ -410,7 +375,7 @@ const Section = ({ data }) => {
                     <article key={index} className={itemClass + ' ' + (currentLayout === 'focus' && index === 0 ? 'md:col-span-3' : 'w-full md:w-[calc(45%)] lg:w-[calc(30%)] min-w-[300px]')}>
                       {imgKey && (
                         <div className={'relative overflow-hidden mb-10 ' + (currentLayout === 'focus' && index === 0 ? 'aspect-video rounded-[4rem]' : 'aspect-square rounded-[3rem]') + ' shadow-2xl'}>
-                          <EditableMedia src={item[imgKey]} alt={getText(item[titleKey])} className="w-full h-full object-cover" dataItem={item} cmsBind={{ file: config.table.toLowerCase(), index, key: imgKey }} data-dock-bind={bind(imgKey)} />
+                          <img src={getImageUrl(item[imgKey] || item.afbeelding || item.foto)} className="w-full h-full object-cover" data-dock-type="media" data-dock-bind={`${config.table.toLowerCase()}.${index}.${imgKey}`} />
                         </div>
                       )}
                       {renderContents()}

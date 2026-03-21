@@ -27,7 +27,7 @@ export class MarketingController {
         const paths = this.dataManager.resolvePaths(projectName);
         const siteSettings = this.dataManager.loadJSON(path.join(paths.dataDir, 'site_settings.json')) || {};
         const basis = this.dataManager.loadJSON(path.join(paths.dataDir, 'basis.json')) || {};
-        
+
         const systemInstruction = `
             Je bent een 'SEO Copywriter'. Schrijf een boeiende blogpost voor de website '${projectName}'.
             SITE CONTEXT: ${JSON.stringify(siteSettings)}
@@ -54,15 +54,15 @@ export class MarketingController {
         if (fs.existsSync(blogFilePath)) {
             existingBlogs = JSON.parse(fs.readFileSync(blogFilePath, 'utf8'));
         }
-        
+
         existingBlogs.unshift(blogJson); // Nieuwste bovenaan
         fs.writeFileSync(blogFilePath, JSON.stringify(existingBlogs, null, 2));
-        
+
         console.log(`✅ Blog lokaal opgeslagen: ${blogJson.title}`);
 
         // 3. SYNC NAAR GOOGLE SHEETS
         console.log(`📡 Blog synchroniseren naar Google Sheet van ${projectName}...`);
-        await this.dataManager.syncToSheet(projectName);
+        await this.dataManager.pushToSheet(projectName);
 
         // Map excerpt to summary for UI consistency
         const article = { ...blogJson, summary: blogJson.excerpt };
@@ -84,11 +84,11 @@ export class MarketingController {
         const paths = this.dataManager.resolvePaths(projectName);
         const siteSettings = this.dataManager.loadJSON(path.join(paths.dataDir, 'site_settings.json')) || {};
         const basis = this.dataManager.loadJSON(path.join(paths.dataDir, 'basis.json')) || {};
-        
+
         // We proberen ook pagina-specifieke data te laden als die er is
         const pagesDir = path.join(paths.dataDir);
         const dataFiles = fs.readdirSync(pagesDir).filter(f => f.endsWith('.json') && f !== 'seo.json');
-        
+
         const context = {
             settings: siteSettings,
             basis: basis,
@@ -122,12 +122,12 @@ export class MarketingController {
         const seoFilePath = path.join(paths.dataDir, 'seo.json');
         // We slaan het op als een array met 1 object voor consistentie met andere data files
         fs.writeFileSync(seoFilePath, JSON.stringify([seoJson], null, 2));
-        
+
         console.log(`✅ SEO metadata lokaal opgeslagen.`);
 
         // SYNC NAAR GOOGLE SHEETS
         console.log(`📡 SEO synchroniseren naar Google Sheet van ${projectName}...`);
-        await this.dataManager.syncToSheet(projectName);
+        await this.dataManager.pushToSheet(projectName);
 
         return {
             success: true,

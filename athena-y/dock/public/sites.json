@@ -1,5 +1,14 @@
 [
   {
+    "id": "academy-1",
+    "name": "academy-1",
+    "siteType": "academy",
+    "governance_mode": "dev-mode",
+    "repoUrl": "https://github.com/athena-cms-factory/academy-1",
+    "liveUrl": "https://athena-cms-factory.github.io/academy-1",
+    "port": 5006
+  },
+  {
     "id": "jets-archive",
     "name": "jets-archive",
     "siteType": "jets-type",
@@ -137,7 +146,7 @@
     "governance_mode": "dev-mode",
     "repoUrl": "https://github.com/athena-cms-factory/code-crafters-plain.git",
     "liveUrl": null,
-    "port": 3000
+    "port": 5203
   },
   {
     "id": "urban-oasis",
@@ -240,6 +249,35 @@
     "port": 5860
   },
   {
+    "id": "athena-hub",
+    "name": "athena-hub",
+    "siteType": "professional-service-provider",
+    "generatedAt": "2026-02-04T15:55:23.382Z",
+    "governance_mode": "dev-mode",
+    "repoUrl": "https://github.com/athena-cms-factory/athena-hub",
+    "liveUrl": "https://athena-cms-factory.github.io/athena-hub",
+    "port": 6041
+  },
+  {
+    "id": "athena-pro",
+    "name": "athena-pro",
+    "siteType": "professional-service-provider",
+    "generatedAt": "2026-01-30T11:33:00.674Z",
+    "governance_mode": "dev-mode",
+    "repoUrl": "https://github.com/athena-cms-factory/athena-pro",
+    "liveUrl": "https://athena-cms-factory.github.io/athena-pro",
+    "port": 6001
+  },
+  {
+    "id": "bakkerij-de-graankorrel",
+    "name": "bakkerij-de-graankorrel",
+    "siteType": "basis",
+    "governance_mode": "dev-mode",
+    "repoUrl": "https://github.com/athena-cms-factory/bakkerij-de-graankorrel",
+    "liveUrl": "https://athena-cms-factory.github.io/bakkerij-de-graankorrel",
+    "port": 5007
+  },
+  {
     "id": "demo-bakkerij",
     "name": "demo-bakkerij",
     "siteType": "chocolade-shop-type",
@@ -280,16 +318,6 @@
     "port": 5736
   },
   {
-    "id": "athena-hub",
-    "name": "athena-hub",
-    "siteType": "professional-service-provider",
-    "generatedAt": "2026-02-04T15:55:23.382Z",
-    "governance_mode": "dev-mode",
-    "repoUrl": "https://github.com/athena-cms-factory/athena-hub",
-    "liveUrl": "https://athena-cms-factory.github.io/athena-hub",
-    "port": 6041
-  },
-  {
     "id": "karel-portfolio-ath",
     "name": "karel-portfolio-ath",
     "siteType": "karel-portfolio-ath",
@@ -308,16 +336,6 @@
     "repoUrl": "https://github.com/athena-cms-factory/karel-webdesign",
     "liveUrl": "https://athena-cms-factory.github.io/karel-webdesign",
     "port": 6105
-  },
-  {
-    "id": "athena-pro",
-    "name": "athena-pro",
-    "siteType": "professional-service-provider",
-    "generatedAt": "2026-01-30T11:33:00.674Z",
-    "governance_mode": "dev-mode",
-    "repoUrl": "https://github.com/athena-cms-factory/athena-pro",
-    "liveUrl": "https://athena-cms-factory.github.io/athena-pro",
-    "port": 6001
   },
   {
     "id": "nieuwe-tanden",
@@ -360,6 +378,15 @@
     "port": 6110
   },
   {
+    "id": "de-stijlvolle-kapper",
+    "name": "de-stijlvolle-kapper",
+    "siteType": "kapper",
+    "governance_mode": "dev-mode",
+    "repoUrl": null,
+    "liveUrl": null,
+    "port": 5008
+  },
+  {
     "id": "test-medical",
     "name": "test-medical",
     "siteType": "medical-basic",
@@ -367,7 +394,7 @@
     "governance_mode": "dev-mode",
     "repoUrl": "https://github.com/athena-cms-factory/test-medical",
     "liveUrl": "https://athena-cms-factory.github.io/test-medical",
-    "port": 3000
+    "port": 5201
   },
   {
     "id": "test-store-fashion",
@@ -377,7 +404,7 @@
     "governance_mode": "dev-mode",
     "repoUrl": null,
     "liveUrl": null,
-    "port": 3000
+    "port": 5207
   },
   {
     "id": "test-real-estate",
@@ -387,7 +414,7 @@
     "governance_mode": "dev-mode",
     "repoUrl": null,
     "liveUrl": null,
-    "port": 3000
+    "port": 5206
   },
   {
     "id": "test-dentist",
@@ -397,7 +424,7 @@
     "governance_mode": "dev-mode",
     "repoUrl": "https://github.com/athena-cms-factory/test-dentist",
     "liveUrl": "https://athena-cms-factory.github.io/test-dentist",
-    "port": 3000
+    "port": 5200
   },
   {
     "id": "test-portfolio",
@@ -407,7 +434,7 @@
     "governance_mode": "dev-mode",
     "repoUrl": null,
     "liveUrl": null,
-    "port": 3000
+    "port": 5205
   },
   {
     "id": "test-restaurant",
@@ -417,7 +444,7 @@
     "governance_mode": "dev-mode",
     "repoUrl": "https://github.com/athena-cms-factory/test-restaurant",
     "liveUrl": "https://athena-cms-factory.github.io/test-restaurant",
-    "port": 3000
+    "port": 5202
   },
   {
     "id": "test-kapper",
@@ -427,7 +454,7 @@
     "governance_mode": "dev-mode",
     "repoUrl": null,
     "liveUrl": null,
-    "port": 3000
+    "port": 5204
   },
   {
     "id": "test-store-payment",
@@ -437,7 +464,7 @@
     "governance_mode": "dev-mode",
     "repoUrl": null,
     "liveUrl": null,
-    "port": 3000
+    "port": 5208
   },
   {
     "id": "urban-sneakers-store",

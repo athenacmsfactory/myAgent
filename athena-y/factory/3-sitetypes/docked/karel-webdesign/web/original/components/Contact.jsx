@@ -1,6 +1,5 @@
 import React from 'react';
 import { Mail, MessageSquare } from 'lucide-react';
-import EditableText from './EditableText';
 
 const Contact = ({ data, settings }) => {
   const contactData = data || {
@@ -17,10 +16,10 @@ const Contact = ({ data, settings }) => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="max-w-3xl mx-auto text-center mb-12">
           <h2 className="text-3xl font-extrabold text-white sm:text-4xl">
-            <EditableText table="contact" field="title" id={0} value={contactData.title} />
+            <span data-dock-type="text" data-dock-bind="site_settings.0.titel">...</span>
           </h2>
           <p className="mt-4 text-xl text-slate-300">
-            <EditableText table="contact" field="description" id={0} value={contactData.description} />
+            <span data-dock-type="text" data-dock-bind="site_settings.0.titel">...</span>
           </p>
         </div>
 
@@ -34,7 +33,7 @@ const Contact = ({ data, settings }) => {
               
               <div className="flex items-center space-x-4 text-white mb-4">
                 <Mail className="h-6 w-6 text-blue-200" />
-                <span><EditableText table="site_settings" field="contact_email" id={0} value={email} /></span>
+                <span><span data-dock-type="text" data-dock-bind="site_settings.0.titel">...</span></span>
               </div>
               <div className="flex items-center space-x-4 text-white">
                 <MessageSquare className="h-6 w-6 text-blue-200" />

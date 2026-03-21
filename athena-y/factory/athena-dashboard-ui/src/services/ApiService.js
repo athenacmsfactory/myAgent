@@ -9,7 +9,7 @@ export const ApiService = {
   // System
   getSystemStatus: () => fetch(`${API_BASE}/system-status`).then(res => res.json()),
   getConfig: () => fetch(`${API_BASE}/system/config`).then(res => res.json()),
-  
+
   // Projects
   getProjects: () => fetch(`${API_BASE}/projects`).then(res => res.json()),
   createProject: (projectName) => fetch(`${API_BASE}/projects/create`, {
@@ -20,6 +20,7 @@ export const ApiService = {
 
   // Sites
   getSites: () => fetch(`${API_BASE}/sites`).then(res => res.json()),
+  getSiteStructure: (id) => fetch(`${API_BASE}/sites/${id}/structure`).then(res => res.json()),
   getSiteStatus: (name) => fetch(`${API_BASE}/sites/${name}/status`).then(res => res.json()),
   startSiteDev: (id) => fetch(`${API_BASE}/sites/${id}/preview`, { method: 'POST' }).then(res => res.json()),
   athenifySite: (id) => fetch(`${API_BASE}/sites/${id}/athenify`, { method: 'POST' }).then(res => res.json()),
@@ -40,10 +41,10 @@ export const ApiService = {
     method: 'POST'
   }).then(res => res.json()),
 
-  syncToSheet: (id) => fetch(`${API_BASE}/sites/${id}/sync-to-sheet`, {
+  pushToSheet: (id) => fetch(`${API_BASE}/sites/${id}/sync-to-sheet`, {
     method: 'POST'
   }).then(res => res.json()),
-  
+
   // Site Actions
   getThemeInfo: (id) => fetch(`${API_BASE}/sites/${id}/theme-info`).then(res => res.json()),
   generateVariants: (id, styles) => fetch(`${API_BASE}/sites/${id}/generate-variants`, {
@@ -61,10 +62,10 @@ export const ApiService = {
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ projectName, topic })
   }).then(res => res.json()),
-  
+
   // Data Gateway
   pullFromSheet: (id) => fetch(`${API_BASE}/sites/${id}/pull-from-sheet`, { method: 'POST' }).then(res => res.json()),
-  syncToSheet: (id) => fetch(`${API_BASE}/sites/${id}/sync-to-sheet`, { method: 'POST' }).then(res => res.json()),
+  pushToSheet: (id) => fetch(`${API_BASE}/sites/${id}/sync-to-sheet`, { method: 'POST' }).then(res => res.json()),
   // Servers
   getActiveServers: () => fetch(`${API_BASE}/servers/active`).then(res => res.json()),
 
@@ -108,7 +109,7 @@ export const ApiService = {
   cleanupTempData: () => fetch(`${API_BASE}/storage/cleanup-temp`, { method: 'POST' }).then(res => res.json()),
 
   // Settings
-  updateConfig: (config) => fetch(`${API_BASE}/system/config/update`, {
+  updateConfig: (config) => fetch(`${API_BASE}/settings`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(config)

@@ -17,18 +17,29 @@ The primary development machine is a Chromebook with limited resources (16GB RAM
     - The `storage-prune-all` command sweeps inactive site `node_modules`.
     - It also sweeps `src/data-temp/` directories older than 3 weeks to prevent infinite disk space accumulation.
 
-## 🛡️ Git Governance & "Safe Ingress" Protocol
-- **Single Source of Truth**: The remote GitHub repository (`origin/main`) is the definitive Source of Truth. The Google Sheet is a managed upstream interface.
-- **SSH Protocol**: Before any Git push, check `~/.ssh/config` and verify the identity using `gh auth status` to ensure you push as the correct user (e.g., `KarelTestSpecial`).
-- **Safe Ingress (GitHub Pull)**: When a site is opened in the Dock:
-    1.  The system checks for a GitHub repository (`hasRepo`).
-    2.  If found, the Dock prompts the user to sync.
-    3.  If accepted, `safePullFromGitHub` FIRST triggers a local backup of `src/data/`.
-    4.  It then uses **`git sparse-checkout`** to pull only the relevant site directory, preventing the monorepo from overriding other sites.
-    5.  It pulls and merges the changes safely.
+## 🛡️ Git Governance & Environment Isolation (v8.2)
+- **Environment Isolation**: Er is een strikte scheiding tussen de monorepo's:
+    - `KarelTestSpecial/athena-x` (Development) ➔ Pusht naar GitHub organisatie `ath-x`.
+    - `athena-cms-factory/athena` (Production) ➔ Pusht naar GitHub organisatie `athena-cms-factory`.
+- **Backup Protocol**: Elke significante release naar productie moet voorafgegaan worden door een backup van de productie-organisatie naar de `bUP` organisatie via `factory/6-utilities/backup-org.sh`.
 
-## 🏛️ Project Architecture & Tooling Stack
-Athena v8.1 is an automated factory featuring the v33 Sync Bridge and Modular Component Architecture, built as a monorepo (`athena-y`).
+## 🏛️ Project Architecture & Dual-Data Standard
+- **Dual-Data Architecture (v8.1)**: Sites gebruiken een hybride datasysteem voor maximale prestaties en bewerkbaarheid:
+    1. **Source of Truth (Modular)**: Losse `.json` bestanden in `src/data/` (bv. `hero.json`). Deze zijn 1-op-1 gekoppeld aan Google Sheets tabs.
+    2. **Performance Aggregator**: `all_data.json` bevat de samengevoegde inhoud van alle losse JSON's voor snelle site-loading.
+- **Aggregation Rule**: Na **elke** bewerking aan een los JSON bestand (via Dock, MediaMapper of scripts) MOET `all_data.json` onmiddellijk worden herbouwd via de centrale `data-aggregator.js`. Handmatige edits in `all_data.json` zijn verboden.
+
+### 📦 Modular Data Architecture Standard (1-on-1 Rule)
+To ensure maximum clarity and safety, every site follows a strict mapping:
+1.  **Content Tabs (Visible to Client)**: Every UI Section (e.g., `header`, `hero`, `voordelen`, `footer`) has its own dedicated JSON file and a visible, human-readable tab in Google Sheets.
+2.  **Config Tabs (Hidden from Client)**: All technical configurations MUST be prefixed with an underscore (`_`) in Google Sheets to be hidden from the client.
+    -   `_site_settings`: Global identity (Name, Logo, Header/Footer heights).
+    -   `_style_config`: Colors, Fonts, Spacing.
+    -   `_links_config`: Diverted URL mapping.
+    -   `_section_order`: The sequence of sections on the page.
+    -   `_layout_settings`: Grid and spacing logic.
+    -   `_system`: Internal factory metadata.
+
 *   **Stack**: React 19 + Vite + Tailwind v4.
 *   **Two-Track Strategy**:
     *   **Docked**: Lightweight, editor-less sites controlled by Athena Dock.
@@ -47,6 +58,7 @@ Athena v8.1 is an automated factory featuring the v33 Sync Bridge and Modular Co
 
 ## 🚨 Critical Code Constraints & Guardrails
 - **Human-Readable Data Rule**: Alle veldnamen in Google Sheets en JSON bestanden moeten in het **Nederlands** zijn en een natuurlijke, leesbare naam hebben (bv. `bedrijfsnaam` in plaats van `company_name`, `titel` in plaats van `title`). Dit maximaliseert de gebruiksvriendelijkheid voor de eindklant in de Google Sheets interface.
+- **Shell Commando's**: Gebruik NOOIT interactieve commando's die niet vanzelf afsluiten (zoals `pm2 logs` zonder `--no-daemon`, `top`, of `watch`). Gebruik in plaats daarvan `cat`, `tail -n`, of lees logbestanden direct uit `/home/kareltestspecial/.pm2/logs/`.
 - **Template Literals**: In `5-engine/logic/`, ALWAYS escape dollar signs in generated code: `\$`.
 - **BaseURL**: Use `import.meta.env.BASE_URL` for ALL internal links and assets perfectly support GitHub Pages.
 - **CSS Architecture**: ONLY `index.css` is allowed to `@import "tailwindcss"`. No custom CSS unless standard Tailwind utilities fail.
@@ -54,7 +66,7 @@ Athena v8.1 is an automated factory featuring the v33 Sync Bridge and Modular Co
 
 ## 📂 Detailed Project Directory Structure
 ```text
-/home/kareltestspecial/0-IT/2-Productie/athena-y/
+/home/kareltestspecial/0-IT/2-Productie/athena-x/
 ├── GEMINI.md                     # Master Context for the Factory (THIS FILE)
 ├── dock/                         # Visual Editor (Athena Dock) React App (Port 5002)
 │   ├── public/sites.json         # Central registry of all generated sites

@@ -51,7 +51,7 @@ const Section = ({ data }) => {
 
         // 3. Showcase/Portfolio Sections
         if (sectionName === 'showcase' || sectionName === 'portfolio') {
-          return <ShowcaseSection key={idx} sectionName={sectionName} items={items} sectionStyle={sectionStyle} />;
+          return <ShowcaseSection key={idx} sectionName={sectionName} items={items} sectionStyle={sectionStyle} data={data} />;
         }
 
         // 4. Process/Stappen Sections

@@ -76,7 +76,7 @@ export async function deployProject(selectedProject, commitMsg = "Deploy update"
 
             return {
                 success: true,
-                repoUrl: `https://github.com/${ORG}/athena-y`,
+                repoUrl: `https://github.com/${ORG}/athena-x`,
                 liveUrl: deployUrl,
                 status: 'pushed'
             };

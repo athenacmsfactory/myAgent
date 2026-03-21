@@ -1,5 +1,4 @@
 import React from 'react';
-import EditableText from './EditableText';
 import { useCart } from './CartContext';
 import { Link } from 'react-router-dom';
 
@@ -19,7 +18,7 @@ function Header({ primaryTable, siteSettings = {} }) {
             {info.site_naam?.charAt(0) || info.naam?.charAt(0) || 'A'}
           </div>
           <span className="text-xl font-serif font-bold tracking-tight text-primary">
-            <EditableText value={info.site_naam || info.naam || 'Athena'} cmsBind={{file: 'basis', index: 0, key: info.site_naam ? 'site_naam' : 'naam'}} />
+            <span data-dock-type="text" data-dock-bind="basis.0.info.site_naam">{info.site_naam || info.naam || 'Athena'}</span>
           </span>
         </Link>
 

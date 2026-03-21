@@ -110,9 +110,9 @@ export class AthenaDataManager {
     }
 
     /**
-     * Sync from Sheet (Trigger pnpm fetch-data in site)
+     * Pull from Sheet (Trigger pnpm fetch-data in site)
      */
-    async syncFromSheet(projectName) {
+    async pullFromSheet(projectName) {
         const paths = this.resolvePaths(projectName);
         if (!fs.existsSync(paths.siteDir)) throw new Error(`Site directory not found for ${projectName}`);
 
@@ -304,9 +304,49 @@ export class AthenaDataManager {
     }
 
     /**
+     * Compare local data with temporary data (from Sheet)
+     */
+    compareSources(projectName) {
+        const paths = this.resolvePaths(projectName);
+        const localDir = paths.dataDir;
+        const tempDir = path.join(paths.siteDir, 'src/data-temp');
+
+        if (!fs.existsSync(localDir) || !fs.existsSync(tempDir)) {
+            return { success: false, message: "Lokale of tijdelijke data map niet gevonden." };
+        }
+
+        const localFiles = fs.readdirSync(localDir).filter(f => f.endsWith('.json'));
+        const diffs = [];
+
+        localFiles.forEach(file => {
+            const localPath = path.join(localDir, file);
+            const tempPath = path.join(tempDir, file);
+
+            if (fs.existsSync(tempPath)) {
+                const localData = fs.readFileSync(localPath, 'utf8');
+                const tempData = fs.readFileSync(tempPath, 'utf8');
+
+                if (localData !== tempData) {
+                    diffs.push({
+                        file,
+                        status: 'changed',
+                        message: `Bestand ${file} is gewijzigd op Google Sheets.`
+                    });
+                }
+            }
+        });
+
+        return {
+            success: true,
+            hasDifferences: diffs.length > 0,
+            differences: diffs
+        };
+    }
+
+    /**
      * Sync local JSON data back to Google Sheet
      */
-    async syncToSheet(projectName) {
+    async pushToSheet(projectName) {
         const paths = this.resolvePaths(projectName);
         if (!fs.existsSync(paths.siteDir)) {
              throw new Error(`Site directory not found for ${projectName}`);
@@ -412,10 +452,25 @@ export class AthenaDataManager {
                     rows = [headers];
                     jsonData.forEach(item => {
                         rows.push(headers.map(h => {
-                            const val = item[h];
-                            if (val && typeof val === 'object' && !Array.isArray(val)) {
-                                return val.text || val.title || val.label || JSON.stringify(val);
+                            let val = item[h];
+                            
+                            // 🔱 v8.8 Ultra-Robust Primitive Extraction for Google Sheets
+                            if (val !== null && typeof val === 'object') {
+                                // Als het een bekend CMS object is, pak de tekst
+                                if (!Array.isArray(val)) {
+                                    if (val.text !== undefined) val = val.text;
+                                    else if (val.title !== undefined) val = val.title;
+                                    else if (val.label !== undefined) val = val.label;
+                                    else if (val.value !== undefined) val = val.value;
+                                    else val = JSON.stringify(val); // Fallback voor complexe objecten
+                                } else {
+                                    // Voor arrays: comma separated string of JSON
+                                    val = val.every(i => typeof i === 'string' || typeof i === 'number') 
+                                        ? val.join(', ') 
+                                        : JSON.stringify(val);
+                                }
                             }
+                            
                             return val === null || val === undefined ? "" : val;
                         }));
                     });

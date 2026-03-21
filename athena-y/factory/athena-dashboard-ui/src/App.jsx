@@ -36,7 +36,7 @@ function App() {
 
   useEffect(() => {
     refreshData()
-    const interval = setInterval(refreshServers, 5000)
+    const interval = setInterval(refreshServers, 15000)
     return () => clearInterval(interval)
   }, [])
 
@@ -151,8 +151,8 @@ function App() {
                <div className="space-y-6">
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-2">
                      <StatBox label="Geregistreerde Sites" value={sites.length} />
-                     <StatBox label="Online (Dev)" value={activeServers.filter(s => !s.isSystem).length} color="text-emerald-500" />
-                     <StatBox label="Live op GitHub" value={sites.filter(s => s.status === 'live').length} color="text-athena-accent" />
+                     <StatBox label="Online (Dev)" value={activeServers.filter(s => !s.isSystem && s.siteName !== 'athena-api' && s.siteName !== 'athena-ui').length} color="text-emerald-500" />
+                     <StatBox label="Live op GitHub" value={sites.filter(s => s.status === 'live' || s.deployData?.liveUrl).length} color="text-athena-accent" />
                   </div>
 
                   {/* NATIVE ATHENA SITES */}

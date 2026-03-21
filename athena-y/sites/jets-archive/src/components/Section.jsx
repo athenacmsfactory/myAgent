@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
-import Hero from './Hero';
-import GenericSection from './GenericSection';
+import Hero from './components/Hero';
+import GenericSection from './components/GenericSection';
 import { useCart } from './CartContext'; 
 
 const Section = ({ data }) => {

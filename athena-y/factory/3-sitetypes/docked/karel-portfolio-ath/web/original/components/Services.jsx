@@ -1,5 +1,4 @@
 import React from 'react';
-import EditableText from './EditableText';
 import * as Icons from 'lucide-react';
 import RepeaterControls from './RepeaterControls';
 
@@ -20,10 +19,10 @@ const Services = ({ services }) => {
                     <IconComponent size={32} />
                   </div>
                   <h3 className="text-2xl font-black uppercase tracking-tighter mb-4">
-                    <EditableText table="services" field="title" id={idx} value={service.title} />
+                    <span data-dock-type="text" data-dock-bind="site_settings.0.titel">...</span>
                   </h3>
                   <p className="text-zinc-500 text-sm leading-relaxed">
-                    <EditableText table="services" field="description" id={idx} value={service.description} />
+                    <span data-dock-type="text" data-dock-bind="site_settings.0.titel">...</span>
                   </p>
                 </div>
               </div>

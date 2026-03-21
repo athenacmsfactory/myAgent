@@ -1,5 +1,4 @@
 import React from 'react';
-import EditableText from './EditableText';
 import RepeaterControls from './RepeaterControls';
 
 const Testimonials = ({ testimonials }) => {
@@ -14,7 +13,7 @@ const Testimonials = ({ testimonials }) => {
               <RepeaterControls file="testimonials" index={idx} isHidden={test.hidden} />
               <div className="p-12 bg-zinc-900/50 rounded-[40px] border border-white/5 flex flex-col justify-between h-full">
                 <p className="text-2xl font-medium text-zinc-300 mb-12 italic leading-relaxed tracking-tight">
-                  "<EditableText table="testimonials" field="quote" id={idx} value={test.quote} />"
+                  "<span data-dock-type="text" data-dock-bind="site_settings.0.titel">...</span>"
                 </p>
                 <div className="flex items-center gap-4">
                   <div className="w-12 h-12 bg-blue-500 rounded-full flex items-center justify-center font-black text-xs">
@@ -22,10 +21,10 @@ const Testimonials = ({ testimonials }) => {
                   </div>
                   <div>
                     <h4 className="font-black uppercase text-sm tracking-wider">
-                      <EditableText table="testimonials" field="client_name" id={idx} value={test.client_name} />
+                      <span data-dock-type="text" data-dock-bind="site_settings.0.titel">...</span>
                     </h4>
                     <p className="text-zinc-500 text-[10px] uppercase font-bold tracking-widest">
-                      <EditableText table="testimonials" field="company" id={idx} value={test.company} />
+                      <span data-dock-type="text" data-dock-bind="site_settings.0.titel">...</span>
                     </p>
                   </div>
                 </div>

@@ -1,0 +1,1152 @@
+[
+  {
+    "site": "ai-consultant-smartbe",
+    "status": "warning",
+    "issues": [
+      "Policy requires dormancy, but node_modules exists (space waste)",
+      "Empty JSON file: projects.json",
+      "Component drift detected: 1 components out of sync",
+      "Standard violation: Missing @import 'tailwindcss' in src/index.css"
+    ],
+    "fixes": [],
+    "hydration": "hydrated",
+    "storage": 2,
+    "hasTempData": false,
+    "policy": "dormant",
+    "syncDetails": [
+      "SectionToolbar.jsx"
+    ],
+    "sheetDrift": null
+  },
+  {
+    "site": "athena-hub",
+    "status": "warning",
+    "issues": [
+      "Empty JSON file: innovatie.json",
+      "Component drift detected: 1 components out of sync"
+    ],
+    "fixes": [],
+    "hydration": "hydrated",
+    "storage": 21,
+    "hasTempData": false,
+    "policy": "hydrated",
+    "syncDetails": [
+      "SectionToolbar.jsx"
+    ],
+    "sheetDrift": null
+  },
+  {
+    "site": "athena-pro",
+    "status": "warning",
+    "issues": [
+      "Policy requires dormancy, but node_modules exists (space waste)",
+      "Empty JSON file: layout_settings.json",
+      "Component drift detected: 1 components out of sync"
+    ],
+    "fixes": [],
+    "hydration": "hydrated",
+    "storage": 6,
+    "hasTempData": false,
+    "policy": "dormant",
+    "syncDetails": [
+      "SectionToolbar.jsx"
+    ],
+    "sheetDrift": null
+  },
+  {
+    "site": "athena-pro-bold",
+    "status": "warning",
+    "issues": [
+      "Policy requires dormancy, but node_modules exists (space waste)",
+      "Empty JSON file: layout_settings.json",
+      "Component drift detected: 1 components out of sync"
+    ],
+    "fixes": [],
+    "hydration": "hydrated",
+    "storage": 6,
+    "hasTempData": false,
+    "policy": "dormant",
+    "syncDetails": [
+      "SectionToolbar.jsx"
+    ],
+    "sheetDrift": null
+  },
+  {
+    "site": "athena-pro-classic",
+    "status": "warning",
+    "issues": [
+      "Policy requires dormancy, but node_modules exists (space waste)",
+      "Empty JSON file: layout_settings.json",
+      "Component drift detected: 1 components out of sync"
+    ],
+    "fixes": [],
+    "hydration": "hydrated",
+    "storage": 6,
+    "hasTempData": false,
+    "policy": "dormant",
+    "syncDetails": [
+      "SectionToolbar.jsx"
+    ],
+    "sheetDrift": null
+  },
+  {
+    "site": "athena-pro-modern-dark",
+    "status": "warning",
+    "issues": [
+      "Policy requires dormancy, but node_modules exists (space waste)",
+      "Empty JSON file: layout_settings.json",
+      "Component drift detected: 1 components out of sync"
+    ],
+    "fixes": [],
+    "hydration": "hydrated",
+    "storage": 6,
+    "hasTempData": false,
+    "policy": "dormant",
+    "syncDetails": [
+      "SectionToolbar.jsx"
+    ],
+    "sheetDrift": null
+  },
+  {
+    "site": "athena-pro-warm",
+    "status": "warning",
+    "issues": [
+      "Policy requires dormancy, but node_modules exists (space waste)",
+      "Empty JSON file: layout_settings.json",
+      "Component drift detected: 1 components out of sync"
+    ],
+    "fixes": [],
+    "hydration": "hydrated",
+    "storage": 6,
+    "hasTempData": false,
+    "policy": "dormant",
+    "syncDetails": [
+      "SectionToolbar.jsx"
+    ],
+    "sheetDrift": null
+  },
+  {
+    "site": "athena-promo",
+    "status": "warning",
+    "issues": [
+      "Empty JSON file: contact.json",
+      "Empty JSON file: innovatie.json",
+      "Empty JSON file: intro.json",
+      "Empty JSON file: proces.json",
+      "Component drift detected: 1 components out of sync"
+    ],
+    "fixes": [],
+    "hydration": "hydrated",
+    "storage": 6,
+    "hasTempData": false,
+    "policy": "hydrated",
+    "syncDetails": [
+      "SectionToolbar.jsx"
+    ],
+    "sheetDrift": null
+  },
+  {
+    "site": "athena-test-discovery",
+    "status": "warning",
+    "issues": [
+      "Policy requires dormancy, but node_modules exists (space waste)",
+      "Empty JSON file: about.json",
+      "Empty JSON file: bedrijfsinformatie.json",
+      "Empty JSON file: hero.json",
+      "Component drift detected: 1 components out of sync"
+    ],
+    "fixes": [],
+    "hydration": "hydrated",
+    "storage": 2,
+    "hasTempData": false,
+    "policy": "dormant",
+    "syncDetails": [
+      "SectionToolbar.jsx"
+    ],
+    "sheetDrift": null
+  },
+  {
+    "site": "chocolade-shop",
+    "status": "warning",
+    "issues": [
+      "Policy requires dormancy, but node_modules exists (space waste)",
+      "Empty JSON file: klantbeoordelingen.json",
+      "Empty JSON file: layout_settings.json",
+      "Empty JSON file: product_specificaties.json",
+      "Component drift detected: 1 components out of sync"
+    ],
+    "fixes": [],
+    "hydration": "hydrated",
+    "storage": 9,
+    "hasTempData": false,
+    "policy": "dormant",
+    "syncDetails": [
+      "SectionToolbar.jsx"
+    ],
+    "sheetDrift": null
+  },
+  {
+    "site": "cloud-architects",
+    "status": "warning",
+    "issues": [
+      "Policy requires dormancy, but node_modules exists (space waste)",
+      "Component drift detected: 1 components out of sync"
+    ],
+    "fixes": [],
+    "hydration": "hydrated",
+    "storage": 2,
+    "hasTempData": false,
+    "policy": "dormant",
+    "syncDetails": [
+      "SectionToolbar.jsx"
+    ],
+    "sheetDrift": null
+  },
+  {
+    "site": "cloud-architects-bold",
+    "status": "warning",
+    "issues": [
+      "Policy requires dormancy, but node_modules exists (space waste)",
+      "Component drift detected: 1 components out of sync"
+    ],
+    "fixes": [],
+    "hydration": "hydrated",
+    "storage": 2,
+    "hasTempData": false,
+    "policy": "dormant",
+    "syncDetails": [
+      "SectionToolbar.jsx"
+    ],
+    "sheetDrift": null
+  },
+  {
+    "site": "cloud-architects-corporate",
+    "status": "warning",
+    "issues": [
+      "Policy requires dormancy, but node_modules exists (space waste)",
+      "Component drift detected: 1 components out of sync"
+    ],
+    "fixes": [],
+    "hydration": "hydrated",
+    "storage": 2,
+    "hasTempData": false,
+    "policy": "dormant",
+    "syncDetails": [
+      "SectionToolbar.jsx"
+    ],
+    "sheetDrift": null
+  },
+  {
+    "site": "cloud-architects-cyberpunk",
+    "status": "warning",
+    "issues": [
+      "Policy requires dormancy, but node_modules exists (space waste)",
+      "Component drift detected: 1 components out of sync"
+    ],
+    "fixes": [],
+    "hydration": "hydrated",
+    "storage": 2,
+    "hasTempData": false,
+    "policy": "dormant",
+    "syncDetails": [
+      "SectionToolbar.jsx"
+    ],
+    "sheetDrift": null
+  },
+  {
+    "site": "cloud-architects-glassmorphism",
+    "status": "warning",
+    "issues": [
+      "Policy requires dormancy, but node_modules exists (space waste)",
+      "Component drift detected: 1 components out of sync"
+    ],
+    "fixes": [],
+    "hydration": "hydrated",
+    "storage": 2,
+    "hasTempData": false,
+    "policy": "dormant",
+    "syncDetails": [
+      "SectionToolbar.jsx"
+    ],
+    "sheetDrift": null
+  },
+  {
+    "site": "code-crafters",
+    "status": "warning",
+    "issues": [
+      "Policy requires dormancy, but node_modules exists (space waste)",
+      "Component drift detected: 1 components out of sync"
+    ],
+    "fixes": [],
+    "hydration": "hydrated",
+    "storage": 2,
+    "hasTempData": false,
+    "policy": "dormant",
+    "syncDetails": [
+      "SectionToolbar.jsx"
+    ],
+    "sheetDrift": null
+  },
+  {
+    "site": "code-crafters-bold",
+    "status": "warning",
+    "issues": [
+      "Policy requires dormancy, but node_modules exists (space waste)",
+      "Component drift detected: 1 components out of sync"
+    ],
+    "fixes": [],
+    "hydration": "hydrated",
+    "storage": 2,
+    "hasTempData": false,
+    "policy": "dormant",
+    "syncDetails": [
+      "SectionToolbar.jsx"
+    ],
+    "sheetDrift": null
+  },
+  {
+    "site": "code-crafters-modern-dark",
+    "status": "warning",
+    "issues": [
+      "Policy requires dormancy, but node_modules exists (space waste)",
+      "Component drift detected: 1 components out of sync"
+    ],
+    "fixes": [],
+    "hydration": "hydrated",
+    "storage": 2,
+    "hasTempData": false,
+    "policy": "dormant",
+    "syncDetails": [
+      "SectionToolbar.jsx"
+    ],
+    "sheetDrift": null
+  },
+  {
+    "site": "code-crafters-plain",
+    "status": "warning",
+    "issues": [
+      "Policy requires dormancy, but node_modules exists (space waste)",
+      "Component drift detected: 1 components out of sync"
+    ],
+    "fixes": [],
+    "hydration": "hydrated",
+    "storage": 2,
+    "hasTempData": false,
+    "policy": "dormant",
+    "syncDetails": [
+      "SectionToolbar.jsx"
+    ],
+    "sheetDrift": null
+  },
+  {
+    "site": "de-schaar-site",
+    "status": "warning",
+    "issues": [
+      "Policy requires dormancy, but node_modules exists (space waste)",
+      "Empty JSON file: _links_config.json",
+      "Empty JSON file: style_bindings.json",
+      "Component drift detected: 1 components out of sync"
+    ],
+    "fixes": [],
+    "hydration": "hydrated",
+    "storage": 37,
+    "hasTempData": false,
+    "policy": "dormant",
+    "syncDetails": [
+      "SectionToolbar.jsx"
+    ],
+    "sheetDrift": null
+  },
+  {
+    "site": "demo-bakkerij",
+    "status": "warning",
+    "issues": [
+      "Policy requires dormancy, but node_modules exists (space waste)",
+      "Empty JSON file: klantbeoordelingen.json",
+      "Empty JSON file: product_specificaties.json",
+      "Empty JSON file: sterke_punten.json",
+      "Component drift detected: 1 components out of sync"
+    ],
+    "fixes": [],
+    "hydration": "hydrated",
+    "storage": 3,
+    "hasTempData": false,
+    "policy": "dormant",
+    "syncDetails": [
+      "SectionToolbar.jsx"
+    ],
+    "sheetDrift": null
+  },
+  {
+    "site": "demo-consultant",
+    "status": "warning",
+    "issues": [
+      "Policy requires dormancy, but node_modules exists (space waste)",
+      "Empty JSON file: innovatie.json",
+      "Empty JSON file: proces.json",
+      "Empty JSON file: showcase.json",
+      "Component drift detected: 1 components out of sync"
+    ],
+    "fixes": [],
+    "hydration": "hydrated",
+    "storage": 2,
+    "hasTempData": false,
+    "policy": "dormant",
+    "syncDetails": [
+      "SectionToolbar.jsx"
+    ],
+    "sheetDrift": null
+  },
+  {
+    "site": "demo-consultant-bold",
+    "status": "warning",
+    "issues": [
+      "Policy requires dormancy, but node_modules exists (space waste)",
+      "Empty JSON file: innovatie.json",
+      "Empty JSON file: proces.json",
+      "Empty JSON file: showcase.json",
+      "Component drift detected: 1 components out of sync"
+    ],
+    "fixes": [],
+    "hydration": "hydrated",
+    "storage": 2,
+    "hasTempData": false,
+    "policy": "dormant",
+    "syncDetails": [
+      "SectionToolbar.jsx"
+    ],
+    "sheetDrift": null
+  },
+  {
+    "site": "demo-consultant-classic",
+    "status": "warning",
+    "issues": [
+      "Policy requires dormancy, but node_modules exists (space waste)",
+      "Empty JSON file: innovatie.json",
+      "Empty JSON file: proces.json",
+      "Empty JSON file: showcase.json",
+      "Component drift detected: 1 components out of sync"
+    ],
+    "fixes": [],
+    "hydration": "hydrated",
+    "storage": 2,
+    "hasTempData": false,
+    "policy": "dormant",
+    "syncDetails": [
+      "SectionToolbar.jsx"
+    ],
+    "sheetDrift": null
+  },
+  {
+    "site": "demo-portfolio",
+    "status": "warning",
+    "issues": [
+      "Policy requires dormancy, but node_modules exists (space waste)",
+      "Empty JSON file: socials.json",
+      "Empty JSON file: testimonials.json",
+      "Component drift detected: 1 components out of sync"
+    ],
+    "fixes": [],
+    "hydration": "hydrated",
+    "storage": 2,
+    "hasTempData": false,
+    "policy": "dormant",
+    "syncDetails": [
+      "SectionToolbar.jsx"
+    ],
+    "sheetDrift": null
+  },
+  {
+    "site": "demo-portfolio-corporate",
+    "status": "warning",
+    "issues": [
+      "Policy requires dormancy, but node_modules exists (space waste)",
+      "Empty JSON file: socials.json",
+      "Empty JSON file: testimonials.json",
+      "Component drift detected: 1 components out of sync"
+    ],
+    "fixes": [],
+    "hydration": "hydrated",
+    "storage": 2,
+    "hasTempData": false,
+    "policy": "dormant",
+    "syncDetails": [
+      "SectionToolbar.jsx"
+    ],
+    "sheetDrift": null
+  },
+  {
+    "site": "demo-portfolio-warm",
+    "status": "warning",
+    "issues": [
+      "Policy requires dormancy, but node_modules exists (space waste)",
+      "Empty JSON file: socials.json",
+      "Empty JSON file: testimonials.json",
+      "Component drift detected: 1 components out of sync"
+    ],
+    "fixes": [],
+    "hydration": "hydrated",
+    "storage": 2,
+    "hasTempData": false,
+    "policy": "dormant",
+    "syncDetails": [
+      "SectionToolbar.jsx"
+    ],
+    "sheetDrift": null
+  },
+  {
+    "site": "dirk-de-witte-kappers",
+    "status": "warning",
+    "issues": [
+      "Policy requires dormancy, but node_modules exists (space waste)",
+      "Empty JSON file: d.json",
+      "Empty JSON file: producten.json",
+      "Empty JSON file: team.json",
+      "Standard violation: Missing @import 'tailwindcss' in src/index.css"
+    ],
+    "fixes": [],
+    "hydration": "hydrated",
+    "storage": 1,
+    "hasTempData": false,
+    "policy": "dormant",
+    "sheetDrift": null
+  },
+  {
+    "site": "fpc-gent-site",
+    "status": "warning",
+    "issues": [
+      "Policy requires dormancy, but node_modules exists (space waste)",
+      "Empty JSON file: style_bindings.json",
+      "Component drift detected: 1 components out of sync"
+    ],
+    "fixes": [],
+    "hydration": "hydrated",
+    "storage": 87,
+    "hasTempData": false,
+    "policy": "dormant",
+    "syncDetails": [
+      "SectionToolbar.jsx"
+    ],
+    "sheetDrift": null
+  },
+  {
+    "site": "gentse-dakwerken",
+    "status": "warning",
+    "issues": [
+      "Policy requires dormancy, but node_modules exists (space waste)",
+      "Empty JSON file: section_order.json"
+    ],
+    "fixes": [],
+    "hydration": "hydrated",
+    "storage": 1,
+    "hasTempData": false,
+    "policy": "dormant",
+    "sheetDrift": null
+  },
+  {
+    "site": "jets-archive",
+    "status": "warning",
+    "issues": [
+      "Policy requires dormancy, but node_modules exists (space waste)",
+      "Component drift detected: 1 components out of sync"
+    ],
+    "fixes": [],
+    "hydration": "hydrated",
+    "storage": 10,
+    "hasTempData": false,
+    "policy": "dormant",
+    "syncDetails": [
+      "SectionToolbar.jsx"
+    ],
+    "sheetDrift": null
+  },
+  {
+    "site": "karel-portfolio-ath",
+    "status": "warning",
+    "issues": [
+      "Policy requires dormancy, but node_modules exists (space waste)",
+      "Empty JSON file: layout_settings.json",
+      "Component drift detected: 1 components out of sync"
+    ],
+    "fixes": [],
+    "hydration": "hydrated",
+    "storage": 21,
+    "hasTempData": false,
+    "policy": "dormant",
+    "syncDetails": [
+      "SectionToolbar.jsx"
+    ],
+    "sheetDrift": null
+  },
+  {
+    "site": "karel-webdesign",
+    "status": "warning",
+    "issues": [
+      "Policy requires dormancy, but node_modules exists (space waste)",
+      "Empty JSON file: layout_settings.json",
+      "Empty JSON file: style_bindings.json",
+      "Component drift detected: 1 components out of sync"
+    ],
+    "fixes": [],
+    "hydration": "hydrated",
+    "storage": 7,
+    "hasTempData": false,
+    "policy": "dormant",
+    "syncDetails": [
+      "SectionToolbar.jsx"
+    ],
+    "sheetDrift": null
+  },
+  {
+    "site": "lex-justitia",
+    "status": "warning",
+    "issues": [
+      "Policy requires dormancy, but node_modules exists (space waste)",
+      "Empty JSON file: section_order.json"
+    ],
+    "fixes": [],
+    "hydration": "hydrated",
+    "storage": 1,
+    "hasTempData": false,
+    "policy": "dormant",
+    "sheetDrift": null
+  },
+  {
+    "site": "nieuwe-tanden",
+    "status": "warning",
+    "issues": [
+      "Policy requires dormancy, but node_modules exists (space waste)",
+      "Component drift detected: 1 components out of sync"
+    ],
+    "fixes": [],
+    "hydration": "hydrated",
+    "storage": 2,
+    "hasTempData": false,
+    "policy": "dormant",
+    "syncDetails": [
+      "SectionToolbar.jsx"
+    ],
+    "sheetDrift": null
+  },
+  {
+    "site": "portfolio-kbm",
+    "status": "warning",
+    "issues": [
+      "Policy requires dormancy, but node_modules exists (space waste)",
+      "Empty JSON file: about_me.json",
+      "Empty JSON file: contact.json",
+      "Empty JSON file: hero.json",
+      "Empty JSON file: links_config.json",
+      "Empty JSON file: services.json",
+      "Empty JSON file: testimonials.json",
+      "Component drift detected: 1 components out of sync",
+      "Standard violation: Missing @import 'tailwindcss' in src/index.css"
+    ],
+    "fixes": [],
+    "hydration": "hydrated",
+    "storage": 4,
+    "hasTempData": false,
+    "policy": "dormant",
+    "syncDetails": [
+      "SectionToolbar.jsx"
+    ],
+    "sheetDrift": null
+  },
+  {
+    "site": "pure-bloom-floral",
+    "status": "warning",
+    "issues": [
+      "Policy requires dormancy, but node_modules exists (space waste)",
+      "Empty JSON file: section_order.json"
+    ],
+    "fixes": [],
+    "hydration": "hydrated",
+    "storage": 1,
+    "hasTempData": false,
+    "policy": "dormant",
+    "sheetDrift": null
+  },
+  {
+    "site": "pure-relaxation",
+    "status": "warning",
+    "issues": [
+      "Policy requires dormancy, but node_modules exists (space waste)",
+      "Component drift detected: 1 components out of sync"
+    ],
+    "fixes": [],
+    "hydration": "hydrated",
+    "storage": 2,
+    "hasTempData": false,
+    "policy": "dormant",
+    "syncDetails": [
+      "SectionToolbar.jsx"
+    ],
+    "sheetDrift": null
+  },
+  {
+    "site": "pure-relaxation-glassmorphism",
+    "status": "warning",
+    "issues": [
+      "Policy requires dormancy, but node_modules exists (space waste)",
+      "Component drift detected: 1 components out of sync"
+    ],
+    "fixes": [],
+    "hydration": "hydrated",
+    "storage": 2,
+    "hasTempData": false,
+    "policy": "dormant",
+    "syncDetails": [
+      "SectionToolbar.jsx"
+    ],
+    "sheetDrift": null
+  },
+  {
+    "site": "pure-relaxation-nature",
+    "status": "warning",
+    "issues": [
+      "Policy requires dormancy, but node_modules exists (space waste)",
+      "Component drift detected: 1 components out of sync"
+    ],
+    "fixes": [],
+    "hydration": "hydrated",
+    "storage": 2,
+    "hasTempData": false,
+    "policy": "dormant",
+    "syncDetails": [
+      "SectionToolbar.jsx"
+    ],
+    "sheetDrift": null
+  },
+  {
+    "site": "pure-relaxation-warm",
+    "status": "warning",
+    "issues": [
+      "Policy requires dormancy, but node_modules exists (space waste)",
+      "Component drift detected: 1 components out of sync"
+    ],
+    "fixes": [],
+    "hydration": "hydrated",
+    "storage": 2,
+    "hasTempData": false,
+    "policy": "dormant",
+    "syncDetails": [
+      "SectionToolbar.jsx"
+    ],
+    "sheetDrift": null
+  },
+  {
+    "site": "sites-modular-test",
+    "status": "warning",
+    "issues": [
+      "Policy requires dormancy, but node_modules exists (space waste)",
+      "Empty JSON file: about.json",
+      "Empty JSON file: bedrijfsinformatie.json",
+      "Empty JSON file: hero.json",
+      "Component drift detected: 1 components out of sync"
+    ],
+    "fixes": [],
+    "hydration": "hydrated",
+    "storage": 2,
+    "hasTempData": false,
+    "policy": "dormant",
+    "syncDetails": [
+      "SectionToolbar.jsx"
+    ],
+    "sheetDrift": null
+  },
+  {
+    "site": "sites-modular-test-v3",
+    "status": "warning",
+    "issues": [
+      "Policy requires dormancy, but node_modules exists (space waste)",
+      "Empty JSON file: about.json",
+      "Empty JSON file: bedrijfsinformatie.json",
+      "Empty JSON file: hero.json",
+      "Component drift detected: 1 components out of sync"
+    ],
+    "fixes": [],
+    "hydration": "hydrated",
+    "storage": 2,
+    "hasTempData": false,
+    "policy": "dormant",
+    "syncDetails": [
+      "SectionToolbar.jsx"
+    ],
+    "sheetDrift": null
+  },
+  {
+    "site": "sites-mytest",
+    "status": "warning",
+    "issues": [
+      "Policy requires dormancy, but node_modules exists (space waste)",
+      "Component drift detected: 1 components out of sync"
+    ],
+    "fixes": [],
+    "hydration": "hydrated",
+    "storage": 2,
+    "hasTempData": false,
+    "policy": "dormant",
+    "syncDetails": [
+      "SectionToolbar.jsx"
+    ],
+    "sheetDrift": null
+  },
+  {
+    "site": "sites-mytest-v3",
+    "status": "warning",
+    "issues": [
+      "Policy requires dormancy, but node_modules exists (space waste)",
+      "Component drift detected: 1 components out of sync"
+    ],
+    "fixes": [],
+    "hydration": "hydrated",
+    "storage": 2,
+    "hasTempData": false,
+    "policy": "dormant",
+    "syncDetails": [
+      "SectionToolbar.jsx"
+    ],
+    "sheetDrift": null
+  },
+  {
+    "site": "sites-test-site",
+    "status": "warning",
+    "issues": [
+      "Policy requires dormancy, but node_modules exists (space waste)",
+      "Empty JSON file: about.json",
+      "Empty JSON file: bedrijfsinformatie.json",
+      "Empty JSON file: hero.json",
+      "Component drift detected: 1 components out of sync"
+    ],
+    "fixes": [],
+    "hydration": "hydrated",
+    "storage": 2,
+    "hasTempData": false,
+    "policy": "dormant",
+    "syncDetails": [
+      "SectionToolbar.jsx"
+    ],
+    "sheetDrift": null
+  },
+  {
+    "site": "sites-test-site-2",
+    "status": "warning",
+    "issues": [
+      "Policy requires dormancy, but node_modules exists (space waste)",
+      "Empty JSON file: about.json",
+      "Empty JSON file: bedrijfsinformatie.json",
+      "Empty JSON file: hero.json",
+      "Component drift detected: 1 components out of sync"
+    ],
+    "fixes": [],
+    "hydration": "hydrated",
+    "storage": 2,
+    "hasTempData": false,
+    "policy": "dormant",
+    "syncDetails": [
+      "SectionToolbar.jsx"
+    ],
+    "sheetDrift": null
+  },
+  {
+    "site": "test-dentist",
+    "status": "warning",
+    "issues": [
+      "Policy requires dormancy, but node_modules exists (space waste)",
+      "Component drift detected: 1 components out of sync"
+    ],
+    "fixes": [],
+    "hydration": "hydrated",
+    "storage": 2,
+    "hasTempData": false,
+    "policy": "dormant",
+    "syncDetails": [
+      "SectionToolbar.jsx"
+    ],
+    "sheetDrift": null
+  },
+  {
+    "site": "test-kapper",
+    "status": "warning",
+    "issues": [
+      "Policy requires dormancy, but node_modules exists (space waste)",
+      "Component drift detected: 1 components out of sync"
+    ],
+    "fixes": [],
+    "hydration": "hydrated",
+    "storage": 2,
+    "hasTempData": false,
+    "policy": "dormant",
+    "syncDetails": [
+      "SectionToolbar.jsx"
+    ],
+    "sheetDrift": null
+  },
+  {
+    "site": "test-medical",
+    "status": "warning",
+    "issues": [
+      "Policy requires dormancy, but node_modules exists (space waste)",
+      "Empty JSON file: artsen.json",
+      "Empty JSON file: info.json",
+      "Empty JSON file: praktijk_info.json",
+      "Empty JSON file: specialisaties.json",
+      "Component drift detected: 1 components out of sync",
+      "Standard violation: Missing @import 'tailwindcss' in src/index.css"
+    ],
+    "fixes": [],
+    "hydration": "hydrated",
+    "storage": 1,
+    "hasTempData": false,
+    "policy": "dormant",
+    "syncDetails": [
+      "SectionToolbar.jsx"
+    ],
+    "sheetDrift": null
+  },
+  {
+    "site": "test-portfolio",
+    "status": "warning",
+    "issues": [
+      "Policy requires dormancy, but node_modules exists (space waste)",
+      "Empty JSON file: Profile.json",
+      "Empty JSON file: Projects.json",
+      "Empty JSON file: Services.json",
+      "Empty JSON file: Socials.json",
+      "Empty JSON file: Testimonials.json",
+      "Component drift detected: 1 components out of sync"
+    ],
+    "fixes": [],
+    "hydration": "hydrated",
+    "storage": 1,
+    "hasTempData": false,
+    "policy": "dormant",
+    "syncDetails": [
+      "SectionToolbar.jsx"
+    ],
+    "sheetDrift": null
+  },
+  {
+    "site": "test-real-estate",
+    "status": "warning",
+    "issues": [
+      "Policy requires dormancy, but node_modules exists (space waste)",
+      "Empty JSON file: Agency_Info.json",
+      "Empty JSON file: Agenten.json",
+      "Empty JSON file: Panden.json",
+      "Component drift detected: 1 components out of sync"
+    ],
+    "fixes": [],
+    "hydration": "hydrated",
+    "storage": 1,
+    "hasTempData": false,
+    "policy": "dormant",
+    "syncDetails": [
+      "SectionToolbar.jsx"
+    ],
+    "sheetDrift": null
+  },
+  {
+    "site": "test-restaurant",
+    "status": "warning",
+    "issues": [
+      "Policy requires dormancy, but node_modules exists (space waste)",
+      "Component drift detected: 1 components out of sync"
+    ],
+    "fixes": [],
+    "hydration": "hydrated",
+    "storage": 3,
+    "hasTempData": false,
+    "policy": "dormant",
+    "syncDetails": [
+      "SectionToolbar.jsx"
+    ],
+    "sheetDrift": null
+  },
+  {
+    "site": "test-store-fashion",
+    "status": "warning",
+    "issues": [
+      "Policy requires dormancy, but node_modules exists (space waste)",
+      "Empty JSON file: Categorieen.json",
+      "Empty JSON file: Producten.json",
+      "Empty JSON file: Winkel_Info.json",
+      "Component drift detected: 1 components out of sync"
+    ],
+    "fixes": [],
+    "hydration": "hydrated",
+    "storage": 1,
+    "hasTempData": false,
+    "policy": "dormant",
+    "syncDetails": [
+      "SectionToolbar.jsx"
+    ],
+    "sheetDrift": null
+  },
+  {
+    "site": "test-store-payment",
+    "status": "warning",
+    "issues": [
+      "Policy requires dormancy, but node_modules exists (space waste)",
+      "Empty JSON file: Categorieen.json",
+      "Empty JSON file: Producten.json",
+      "Empty JSON file: Winkel_Info.json",
+      "Component drift detected: 1 components out of sync"
+    ],
+    "fixes": [],
+    "hydration": "hydrated",
+    "storage": 1,
+    "hasTempData": false,
+    "policy": "dormant",
+    "syncDetails": [
+      "SectionToolbar.jsx"
+    ],
+    "sheetDrift": null
+  },
+  {
+    "site": "urban-brew-bite",
+    "status": "warning",
+    "issues": [
+      "Policy requires dormancy, but node_modules exists (space waste)",
+      "Empty JSON file: section_order.json"
+    ],
+    "fixes": [],
+    "hydration": "hydrated",
+    "storage": 1,
+    "hasTempData": false,
+    "policy": "dormant",
+    "sheetDrift": null
+  },
+  {
+    "site": "urban-oasis",
+    "status": "warning",
+    "issues": [
+      "Policy requires dormancy, but node_modules exists (space waste)",
+      "Component drift detected: 1 components out of sync"
+    ],
+    "fixes": [],
+    "hydration": "hydrated",
+    "storage": 2,
+    "hasTempData": false,
+    "policy": "dormant",
+    "syncDetails": [
+      "SectionToolbar.jsx"
+    ],
+    "sheetDrift": null
+  },
+  {
+    "site": "urban-oasis-classic",
+    "status": "warning",
+    "issues": [
+      "Policy requires dormancy, but node_modules exists (space waste)",
+      "Component drift detected: 1 components out of sync"
+    ],
+    "fixes": [],
+    "hydration": "hydrated",
+    "storage": 2,
+    "hasTempData": false,
+    "policy": "dormant",
+    "syncDetails": [
+      "SectionToolbar.jsx"
+    ],
+    "sheetDrift": null
+  },
+  {
+    "site": "urban-oasis-warm",
+    "status": "warning",
+    "issues": [
+      "Policy requires dormancy, but node_modules exists (space waste)",
+      "Component drift detected: 1 components out of sync"
+    ],
+    "fixes": [],
+    "hydration": "hydrated",
+    "storage": 2,
+    "hasTempData": false,
+    "policy": "dormant",
+    "syncDetails": [
+      "SectionToolbar.jsx"
+    ],
+    "sheetDrift": null
+  },
+  {
+    "site": "urban-sneakers-store",
+    "status": "warning",
+    "issues": [
+      "Policy requires dormancy, but node_modules exists (space waste)",
+      "Empty JSON file: Winkel_Info.json",
+      "Empty JSON file: basisgegevens.json",
+      "Component drift detected: 1 components out of sync"
+    ],
+    "fixes": [],
+    "hydration": "hydrated",
+    "storage": 3,
+    "hasTempData": false,
+    "policy": "dormant",
+    "syncDetails": [
+      "SectionToolbar.jsx"
+    ],
+    "sheetDrift": null
+  },
+  {
+    "site": "urban-soles",
+    "status": "warning",
+    "issues": [
+      "Policy requires dormancy, but node_modules exists (space waste)",
+      "Empty JSON file: klantbeoordelingen.json",
+      "Empty JSON file: product_specificaties.json",
+      "Empty JSON file: sterke_punten.json",
+      "Component drift detected: 1 components out of sync",
+      "Standard violation: Missing @import 'tailwindcss' in src/index.css"
+    ],
+    "fixes": [],
+    "hydration": "hydrated",
+    "storage": 4,
+    "hasTempData": false,
+    "policy": "dormant",
+    "syncDetails": [
+      "SectionToolbar.jsx"
+    ],
+    "sheetDrift": null
+  },
+  {
+    "site": "war-game-site",
+    "status": "warning",
+    "issues": [
+      "Policy requires dormancy, but node_modules exists (space waste)",
+      "Empty JSON file: about.json",
+      "Empty JSON file: bedrijfsinformatie.json",
+      "Empty JSON file: hero.json",
+      "Component drift detected: 1 components out of sync"
+    ],
+    "fixes": [],
+    "hydration": "hydrated",
+    "storage": 1,
+    "hasTempData": false,
+    "policy": "dormant",
+    "syncDetails": [
+      "SectionToolbar.jsx"
+    ],
+    "sheetDrift": null
+  },
+  {
+    "site": "war-game-site-2",
+    "status": "warning",
+    "issues": [
+      "Policy requires dormancy, but node_modules exists (space waste)",
+      "Empty JSON file: basis.json",
+      "Empty JSON file: expertise.json",
+      "Empty JSON file: packages.json",
+      "Empty JSON file: projects.json",
+      "Component drift detected: 1 components out of sync"
+    ],
+    "fixes": [],
+    "hydration": "hydrated",
+    "storage": 1,
+    "hasTempData": false,
+    "policy": "dormant",
+    "syncDetails": [
+      "SectionToolbar.jsx"
+    ],
+    "sheetDrift": null
+  }
+]

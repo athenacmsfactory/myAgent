@@ -8,10 +8,20 @@ export default function SheetModal({ isOpen, site, onClose }) {
   const [loading, setLoading] = useState(false)
 
   useEffect(() => {
-    if (site) {
+    if (isOpen && site) {
+      setLoading(true)
       setSheetUrl(site.sheetUrl || '')
+
+      // Fetch fresh structure data to get the latest sheetUrl
+      ApiService.getSiteStructure(site.name)
+        .then(res => {
+          if (res && res.sheetUrl) {
+            setSheetUrl(res.sheetUrl)
+          }
+        })
+        .finally(() => setLoading(false))
     }
-  }, [site])
+  }, [isOpen, site])
 
   if (!isOpen || !site) return null
 
@@ -47,7 +57,7 @@ export default function SheetModal({ isOpen, site, onClose }) {
     setLoading(true)
     addToast("Lokale data wordt verzonden naar Google Sheets...", "info")
     try {
-      const res = await ApiService.syncToSheet(site.name)
+      const res = await ApiService.pushToSheet(site.name)
       if (res.success) {
         addToast("Data succesvol verzonden!", "success")
       } else {
@@ -60,7 +70,7 @@ export default function SheetModal({ isOpen, site, onClose }) {
   return (
     <div className="fixed inset-0 z-[2000] flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm animate-in fade-in duration-200">
       <div className="bg-[#0d1117] border border-athena-border w-full max-w-lg rounded-sm shadow-2xl overflow-hidden flex flex-col">
-        
+
         {/* Header */}
         <div className="p-6 border-b border-athena-border bg-gradient-to-r from-blue-900/20 to-transparent">
           <h2 className="text-xl font-black text-white uppercase tracking-tighter flex items-center gap-3">
@@ -72,19 +82,19 @@ export default function SheetModal({ isOpen, site, onClose }) {
 
         {/* Content */}
         <div className="p-8 space-y-8">
-          
+
           {/* Link Section */}
           <div className="space-y-3">
             <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest block">Google Sheet Edit URL</label>
             <div className="flex gap-2">
-              <input 
-                type="text" 
+              <input
+                type="text"
                 value={sheetUrl}
                 onChange={(e) => setSheetUrl(e.target.value)}
                 placeholder="https://docs.google.com/spreadsheets/d/..."
                 className="flex-1 bg-black/40 border border-athena-border rounded-sm px-4 py-2.5 text-sm text-white placeholder:text-slate-700 focus:border-athena-accent outline-none transition-all"
               />
-              <button 
+              <button
                 onClick={handleLink}
                 disabled={loading || !sheetUrl}
                 className="px-6 bg-athena-accent text-white text-[10px] font-black uppercase rounded-sm hover:opacity-90 disabled:opacity-30 transition-all"
@@ -96,28 +106,28 @@ export default function SheetModal({ isOpen, site, onClose }) {
 
           {/* Sync Actions */}
           <div className="grid grid-cols-2 gap-4">
-            <button 
+            <button
               onClick={handlePull}
-              disabled={loading || !site.sheetUrl}
+              disabled={loading || !sheetUrl}
               className="flex flex-col items-center gap-3 p-6 bg-emerald-500/5 border border-emerald-500/20 rounded-sm hover:bg-emerald-500/10 hover:border-emerald-500/40 transition-all group disabled:opacity-10 disabled:grayscale"
             >
               <span className="text-2xl group-hover:scale-110 transition-transform">📥</span>
-              <span className="text-[10px] font-black text-emerald-500 uppercase tracking-widest text-center">Pull from Cloud<br/><span className="text-[8px] opacity-60">(Cloud → Local)</span></span>
+              <span className="text-[10px] font-black text-emerald-500 uppercase tracking-widest text-center">Pull from Cloud<br /><span className="text-[8px] opacity-60">(Cloud → Local)</span></span>
             </button>
 
-            <button 
+            <button
               onClick={handlePush}
-              disabled={loading || !site.sheetUrl}
+              disabled={loading || !sheetUrl}
               className="flex flex-col items-center gap-3 p-6 bg-blue-500/5 border border-blue-500/20 rounded-sm hover:bg-blue-500/10 hover:border-blue-500/40 transition-all group disabled:opacity-10 disabled:grayscale"
             >
               <span className="text-2xl group-hover:scale-110 transition-transform">📤</span>
-              <span className="text-[10px] font-black text-blue-500 uppercase tracking-widest text-center">Push to Cloud<br/><span className="text-[8px] opacity-60">(Local → Cloud)</span></span>
+              <span className="text-[10px] font-black text-blue-500 uppercase tracking-widest text-center">Push to Cloud<br /><span className="text-[8px] opacity-60">(Local → Cloud)</span></span>
             </button>
           </div>
 
-          {site.sheetUrl && (
-            <button 
-              onClick={() => window.open(site.sheetUrl, '_blank')}
+          {sheetUrl && (
+            <button
+              onClick={() => window.open(sheetUrl, '_blank')}
               className="w-full py-3 bg-black/40 border border-athena-border text-slate-400 text-[10px] font-black uppercase tracking-widest hover:text-white hover:border-slate-500 transition-all rounded-sm"
             >
               🌐 Open Sheet in browser
@@ -127,12 +137,12 @@ export default function SheetModal({ isOpen, site, onClose }) {
 
         {/* Footer */}
         <div className="p-4 bg-black/20 border-t border-athena-border flex justify-end">
-           <button 
-             onClick={onClose}
-             className="px-6 py-2.5 bg-[#21262d] border border-athena-border text-slate-400 text-[11px] font-black uppercase rounded-sm hover:text-white transition-colors"
-           >
-              SLUITEN
-           </button>
+          <button
+            onClick={onClose}
+            className="px-6 py-2.5 bg-[#21262d] border border-athena-border text-slate-400 text-[11px] font-black uppercase rounded-sm hover:text-white transition-colors"
+          >
+            SLUITEN
+          </button>
         </div>
       </div>
     </div>

@@ -16,7 +16,7 @@ import { fileURLToPath } from 'url';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
-const SITES_DIR = path.resolve(__dirname, '../../../../athena-y/sites');
+const SITES_DIR = path.resolve(__dirname, '../../../../athena-x/sites');
 const THEMES_DIR = path.resolve(__dirname, '../../2-templates/boilerplate/docked/css');
 const PORTS_FILE = path.resolve(__dirname, '../../config/site-ports.json');
 console.log(`   🔍 variant-generator.js: SITES_DIR = ${SITES_DIR}`);

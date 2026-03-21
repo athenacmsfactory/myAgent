@@ -1,9 +1,9 @@
 /**
- * ⚓ Athena Dock Connector v6 (Universal - Docked Track)
+ * ⚓ Athena Dock Connector v7 (Universal - Docked Track)
  * Handles communication between the generated site (iframe) and the Athena Dock (parent).
  */
-(function() {
-    console.log("⚓ Athena Dock Connector v6 Active");
+(function () {
+    console.log("⚓ Athena Dock Connector v7 Active");
 
     // --- 1. CONFIGURATION & STATE ---
     let lastKnownData = null;
@@ -13,57 +13,61 @@
         return (base + '/' + path).replace(new RegExp('/+', 'g'), '/');
     };
 
-    // --- 2. THEME MAPPINGS ---
-    const themeMappings = {
-        'primary_color': ['--color-primary', '--primary-color'],
-        'title_color': ['--color-title'],
-        'heading_color': ['--color-heading'],
-        'accent_color': ['--color-accent'],
-        'button_color': ['--color-button'],
-        'card_color': ['--color-card', '--bg-surface'],
-        'header_color': ['--color-header', '--bg-header'],
-        'bg_color': ['--color-background', '--bg-site'],
-        'text_color': ['--color-text'],
-        'hero_bg_color': ['--color-hero-bg']
-    };
-
-    const globalMappings = {
-        'global_radius': '--radius-custom'
-    };
-
-    // --- 3. SECTION SCANNER & STYLE CAPTURE ---
-    function getComputedThemeColors() {
+    // 🔱 v8.8 Universal Binding Parser
+    // Converteert 'hero.0.titel' naar {file: 'hero', index: 0, key: 'titel'}
+    const parseBinding = (bindStr) => {
+        if (!bindStr) return {};
         try {
-            const root = getComputedStyle(document.documentElement);
-            const captured = {};
-            const isDark = document.documentElement.classList.contains('dark');
-            const prefix = isDark ? 'dark_' : 'light_';
-
-            const map = {
-                '--color-primary': 'primary_color',
-                '--color-accent': 'accent_color',
-                '--color-button': 'button_color',
-                '--color-card': 'card_color',
-                '--color-header': 'header_color',
-                '--color-background': 'bg_color',
-                '--color-text': 'text_color',
-                '--color-title': 'title_color',
-                '--color-heading': 'heading_color'
-            };
-
-            Object.entries(map).forEach(([cssVar, athenaKey]) => {
-                const val = root.getPropertyValue(cssVar).trim();
-                if (val && (val.startsWith('#') || val.startsWith('rgb'))) {
-                    captured[`${prefix}${athenaKey}`] = val;
-                }
-            });
-
-            return captured;
-        } catch (e) {
+            // Check if it's already JSON
+            if (bindStr.startsWith('{')) return JSON.parse(bindStr);
+            
+            // Handle dot notation (e.g., "hero.0.titel")
+            const parts = bindStr.split('.');
+            if (parts.length >= 3) {
+                return {
+                    file: parts[0],
+                    index: parseInt(parts[1], 10),
+                    key: parts.slice(2).join('.')
+                };
+            }
+            return { key: bindStr }; // Fallback
+        } catch(e) {
+            console.warn("Athena: Kon binding niet parsen", bindStr);
             return {};
         }
-    }
+    };
 
+    // --- 2. THEME MAPPINGS ---
+    const themeMappings = {
+        light: {
+            'light_primary_color': ['--color-primary', '--primary-color'],
+            'light_title_color': ['--color-title'],
+            'light_heading_color': ['--color-heading'],
+            'light_accent_color': ['--color-accent'],
+            'light_button_color': ['--color-button-bg', '--btn-bg'],
+            'light_card_color': ['--color-card-bg', '--card-bg', '--surface', '--color-surface'],
+            'light_header_color': ['--color-header-bg', '--nav-bg'],
+            'light_bg_color': ['--color-background', '--bg-site'],
+            'light_text_color': ['--color-text'],
+            'global_radius': ['--radius-custom', '--radius-main'],
+            'global_shadow': ['--shadow-main']
+        },
+        dark: {
+            'dark_primary_color': ['--color-primary'],
+            'dark_title_color': ['--color-title'],
+            'dark_heading_color': ['--color-heading'],
+            'dark_accent_color': ['--color-accent'],
+            'dark_button_color': ['--color-button-bg', '--btn-bg'],
+            'dark_card_color': ['--color-card-bg', '--card-bg', '--surface', '--color-surface'],
+            'dark_header_color': ['--color-header-bg', '--nav-bg'],
+            'dark_bg_color': ['--color-background', '--bg-site'],
+            'dark_text_color': ['--color-text'],
+            'global_radius': ['--radius-custom', '--radius-main'],
+            'global_shadow': ['--shadow-main']
+        }
+    };
+
+    // --- 3. SECTION SCANNER ---
     function scanSections() {
         const sections = [];
         const sectionElements = document.querySelectorAll('[data-dock-section]');
@@ -76,22 +80,11 @@
     // --- 4. COMMUNICATION (OUTBOUND) ---
     function notifyDock(fullData = null) {
         if (fullData) lastKnownData = fullData;
-        
-        const computedDefaults = getComputedThemeColors();
 
         const structure = {
             sections: scanSections(),
             layouts: lastKnownData?.layout_settings?.[0] || lastKnownData?.layout_settings || {},
-            data: {
-                ...lastKnownData,
-                // Merge computed defaults with actual JSON data
-                site_settings: {
-                    ...computedDefaults,
-                    ...(Array.isArray(lastKnownData?.hero) ? lastKnownData?.hero[0] : lastKnownData?.hero),
-                    ...(Array.isArray(lastKnownData?.header_settings) ? lastKnownData?.header_settings[0] : lastKnownData?.header_settings),
-                    ...(lastKnownData?.style_config || {})
-                }
-            },
+            data: lastKnownData || {},
             url: window.location.href,
             timestamp: Date.now()
         };
@@ -108,65 +101,56 @@
 
         // Color Update
         if (type === 'DOCK_UPDATE_COLOR') {
-            const root = document.documentElement;
-            const isDark = root.classList.contains('dark');
+            const isDark = document.documentElement.classList.contains('dark');
             const currentTheme = isDark ? 'dark' : 'light';
-            
+
             if (key === 'theme') {
                 if (value === 'dark') {
-                    root.classList.add('dark');
-                    root.style.colorScheme = 'dark';
+                    document.documentElement.classList.add('dark');
+                    document.documentElement.style.colorScheme = 'dark';
                 } else {
-                    root.classList.remove('dark');
-                    root.style.colorScheme = 'light';
+                    document.documentElement.classList.remove('dark');
+                    document.documentElement.style.colorScheme = 'light';
                 }
                 return;
             }
 
-            // Specific layout/design handlers (Dutch & English keys)
+            // Specific Layout Handlers
             if (key === 'content_top_offset') {
-                root.style.setProperty('--content-top-offset', value + 'px');
+                document.documentElement.style.setProperty('--content-top-offset', value + 'px');
                 return;
             }
 
-            if (key === 'header_hoogte' || key === 'header_height') {
-                root.style.setProperty('--header-height', value + 'px');
+            if (key === 'header_height') {
+                document.documentElement.style.setProperty('--header-height', value + 'px');
                 return;
             }
 
-            if (key === 'header_transparantie' || key === 'header_transparent') {
-                const transparency = parseFloat(value);
-                if (!isNaN(transparency) && transparency > 0) {
-                    const opacity = 1 - transparency;
-                    root.style.setProperty('--header-bg', `rgba(var(--color-header-rgb, 255, 255, 255), ${opacity})`);
-                    root.style.setProperty('--header-blur', transparency > 0.5 ? 'none' : 'blur(16px)');
-                    root.style.setProperty('--header-border', 'none');
+            if (key === 'header_transparent') {
+                if (value === true) {
+                    document.documentElement.style.setProperty('--header-bg', 'transparent');
+                    document.documentElement.style.setProperty('--header-blur', 'none');
+                    document.documentElement.style.setProperty('--header-border', 'none');
                 } else {
-                    root.style.removeProperty('--header-bg');
-                    root.style.removeProperty('--header-blur');
-                    root.style.removeProperty('--header-border');
+                    document.documentElement.style.removeProperty('--header-bg');
+                    document.documentElement.style.removeProperty('--header-blur');
+                    document.documentElement.style.removeProperty('--header-border');
                 }
                 return;
             }
 
-            if (key === 'header_zichtbaar' || key === 'header_visible') {
-                const els = document.querySelectorAll('[data-dock-element="header-nav"]');
-                els.forEach(el => el.style.display = value ? 'flex' : 'none');
+            if (key === 'header_visible') {
+                const nav = document.querySelector('nav.fixed.top-0');
+                if (nav) nav.style.display = value ? 'flex' : 'none';
                 return;
             }
 
-            if (key.startsWith('header_show_') || key.startsWith('toon_')) {
+            if (key.startsWith('header_show_')) {
                 const elementMap = {
-                    'header_show_logo': '[data-dock-element="header-logo"]',
-                    'toon_logo': '[data-dock-element="header-logo"]',
-                    'header_show_title': '[data-dock-element="header-title"]',
-                    'toon_titel': '[data-dock-element="header-title"]',
-                    'header_show_tagline': '[data-dock-element="header-tagline"]',
-                    'toon_ondertitel': '[data-dock-element="header-tagline"]',
-                    'header_show_button': '[data-dock-element="header-button"]',
-                    'toon_cta_knop': '[data-dock-element="header-button"]',
-                    'header_show_navbar': '[data-dock-element="header-navbar"]',
-                    'toon_navigatie': '[data-dock-element="header-navbar"]'
+                    'header_show_logo': '.relative.w-12.h-12',
+                    'header_show_title': 'span.text-2xl.font-serif',
+                    'header_show_tagline': 'span.text-[10px]',
+                    'header_show_button': 'button, .bg-primary'
                 };
                 const selector = elementMap[key];
                 if (selector) {
@@ -176,87 +160,78 @@
                 return;
             }
 
-            if (key === 'hero_overlay_transparantie' || key === 'hero_overlay_opacity') {
+            if (key === 'hero_overlay_opacity') {
                 let opacity = parseFloat(value);
                 if (isNaN(opacity)) opacity = 0.8;
-                root.style.setProperty('--hero-overlay-start', `rgba(0, 0, 0, ${opacity})`);
-                root.style.setProperty('--hero-overlay-end', `rgba(0, 0, 0, ${opacity * 0.4})`);
+                document.documentElement.style.setProperty('--hero-overlay-start', `rgba(0, 0, 0, ${opacity})`);
+                document.documentElement.style.setProperty('--hero-overlay-end', `rgba(0, 0, 0, ${opacity * 0.4})`);
                 return;
             }
 
-            // Global numeric/string variables
-            if (globalMappings[key]) {
-                root.style.setProperty(globalMappings[key], value);
-                return;
+            // Global settings mapping
+            let finalValue = value;
+            if (key === 'global_shadow') {
+                if (value === 'soft') finalValue = '0 4px 20px -2px rgba(0, 0, 0, 0.05)';
+                else if (value === 'strong') finalValue = '0 20px 50px -5px rgba(0, 0, 0, 0.15)';
+                else if (value === 'none') finalValue = 'none';
             }
 
-            // Theme-prefixed colors (light_... or dark_...)
             const targetTheme = key.startsWith('dark') ? 'dark' : 'light';
-            const cleanKey = key.replace('light_', '').replace('dark_', '');
-            
-            // Only apply if the change matches the current visible theme
-            if (targetTheme === currentTheme) {
-                const vars = themeMappings[cleanKey];
+            const isGlobal = key.startsWith('global_');
+
+            if (isGlobal || targetTheme === currentTheme) {
+                const vars = themeMappings[currentTheme][key];
                 if (vars) {
-                    vars.forEach(v => root.style.setProperty(v, value));
+                    vars.forEach(v => document.documentElement.style.setProperty(v, finalValue));
                 }
             }
         }
 
-        // Section Padding Update (Live)
-        if (type === 'DOCK_UPDATE_SECTION_PADDING') {
-            const el = document.getElementById(section);
+        // Section Style Update
+        if (type === 'DOCK_UPDATE_SECTION_STYLE') {
+            const el = document.querySelector(`[data-dock-section="${section}"]`);
             if (el) {
-                const px = value * 4;
-                el.style.paddingTop = px + 'px';
-                el.style.paddingBottom = px + 'px';
+                el.style[key] = value;
             }
         }
 
-        // Section Visibility Update (Live)
-        if (type === 'DOCK_UPDATE_SECTION_VISIBILITY') {
-            const el = document.getElementById(section);
-            if (el) {
-                const badge = el.querySelector('.athena-hidden-badge');
-                if (value === false) {
-                    el.classList.add('opacity-40', 'grayscale-[50%]');
-                    if (!badge) {
-                        const b = document.createElement('div');
-                        b.className = 'athena-hidden-badge absolute top-4 right-4 bg-red-500 text-white text-[10px] px-2 py-1 rounded font-bold uppercase z-50';
-                        b.innerText = 'Hidden Section';
-                        el.appendChild(b);
-                    }
-                } else {
-                    el.classList.remove('opacity-40', 'grayscale-[50%]');
-                    if (badge) badge.remove();
-                }
-            }
-        }
-
-        // Style Swap (Requires full reload to apply new CSS imports)
+        // Style Swap
         if (type === 'DOCK_SWAP_STYLE') {
             console.log("🎨 Swapping global style to:", value);
             setTimeout(() => window.location.reload(), 500);
         }
 
-        // Text Update (Live Preview)
+        // Text/Link Update
         if (type === 'DOCK_UPDATE_TEXT') {
             const bindStr = JSON.stringify({ file, index, key });
-            const elements = document.querySelectorAll(`[data-dock-bind='${bindStr}']`);
+            const elements = document.querySelectorAll(`[data-dock-bind]`);
             const baseUrl = import.meta.env.BASE_URL || '/';
 
             elements.forEach(el => {
-                if (el.tagName === 'IMG') {
+                const elBind = parseBinding(el.getAttribute('data-dock-bind'));
+                if (elBind.file !== file || elBind.index !== index || elBind.key !== key) return;
+
+                const dockType = el.getAttribute('data-dock-type') || (el.tagName === 'IMG' || el.tagName === 'VIDEO' ? 'media' : 'text');
+
+                if (dockType === 'media') {
                     const src = (value && !value.startsWith('http') && !value.startsWith('/') && !value.startsWith('data:'))
                         ? `${baseUrl}images/${value}`.replace(/\/+/g, '/')
-                        : value;
-                    el.src = src;
+                        : (value || "");
+
+                    const mediaEl = (el.tagName === 'IMG' || el.tagName === 'VIDEO') ? el : el.querySelector('img, video');
+                    if (mediaEl) {
+                        mediaEl.src = src;
+                    }
+                    if (el.hasAttribute('data-dock-current')) {
+                        el.setAttribute('data-dock-current', value || "");
+                    }
+                } else if (dockType === 'link') {
+                    const { label, url } = (typeof value === 'object' && value !== null) ? value : { label: value, url: "" };
+                    el.innerText = label || "";
+                    el.setAttribute('data-dock-label', label || "");
+                    el.setAttribute('data-dock-url', url || "");
                 } else {
-                    // Robust text extraction for style-objects
-                    const text = (typeof value === 'object' && value !== null) 
-                        ? (value.text || value.title || value.label || value.value || '') 
-                        : value;
-                    el.innerText = text;
+                    el.innerText = value || "";
                 }
             });
         }
@@ -273,20 +248,83 @@
 
     window.athenaScan = notifyDock;
 
-    // --- Click selection ---
+    // --- 7. DRAG & DROP ---
+    const isMediaBind = (bind) => {
+        if (!bind || !bind.key) return false;
+        const k = bind.key.toLowerCase();
+        return k.includes('foto') || k.includes('image') || k.includes('img') || k.includes('afbeelding') || k.includes('hero_image') || k.includes('video');
+    };
+
+    let dragEnterCount = 0;
+    window.addEventListener('dragenter', (e) => {
+        dragEnterCount++;
+        if (dragEnterCount === 1) document.body.classList.add('dock-dragging-active');
+    });
+
+    window.addEventListener('dragleave', (e) => {
+        dragEnterCount--;
+        if (dragEnterCount <= 0) {
+            dragEnterCount = 0;
+            document.body.classList.remove('dock-dragging-active');
+        }
+    });
+
+    window.addEventListener('dragover', (e) => { e.preventDefault(); });
+
+    window.addEventListener('drop', async (e) => {
+        const target = e.target.closest('[data-dock-bind]');
+        dragEnterCount = 0;
+        document.body.classList.remove('dock-dragging-active');
+
+        if (!target) return;
+        const bind = parseBinding(target.getAttribute('data-dock-bind'));
+        if (!isMediaBind(bind)) return;
+
+        e.preventDefault();
+        const file = e.dataTransfer.files[0];
+        if (!file || (!file.type.startsWith('image/') && !file.type.startsWith('video/'))) return;
+
+        try {
+            const uploadRes = await fetch(getApiUrl('__athena/upload'), {
+                method: 'POST',
+                headers: { 'x-filename': file.name },
+                body: file
+            });
+            const uploadData = await uploadRes.json();
+
+            if (uploadData.success) {
+                await fetch(getApiUrl('__athena/update-json'), {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ file: bind.file, index: bind.index, key: bind.key, value: uploadData.filename })
+                });
+                window.parent.postMessage({ type: 'DOCK_TRIGGER_REFRESH' }, '*');
+            }
+        } catch (err) { console.error(err); }
+    }, true);
+
+    // Click selection
     document.addEventListener('click', (e) => {
         const target = e.target.closest('[data-dock-bind]');
         if (target && window.parent !== window) {
-            if (!e.shiftKey) return; // v8: Shift+Click to edit
+            // v8: Shift+Click is nu vereist voor bewerken in de Dock
+            // Zodat normale links/knoppen blijven werken voor navigatie
+            if (!e.shiftKey) return;
 
             e.preventDefault();
             e.stopPropagation();
 
-            const binding = JSON.parse(target.getAttribute('data-dock-bind'));
-            const dockType = target.getAttribute('data-dock-type') || 'text';
+            const binding = parseBinding(target.getAttribute('data-dock-bind'));
+            const dockType = target.getAttribute('data-dock-type') || (
+                (binding.key && (binding.key.toLowerCase().includes('foto') ||
+                    binding.key.toLowerCase().includes('image') ||
+                    binding.key.toLowerCase().includes('img') ||
+                    binding.key.toLowerCase().includes('afbeelding') ||
+                    binding.key.toLowerCase().includes('video'))) ? 'media' : 'text'
+            );
 
             let currentValue = target.getAttribute('data-dock-current') || target.innerText;
-            
+
             if (dockType === 'link') {
                 currentValue = {
                     label: target.getAttribute('data-dock-label') || target.innerText,

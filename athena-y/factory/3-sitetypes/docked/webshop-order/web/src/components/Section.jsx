@@ -1,6 +1,4 @@
 import React, { useState } from 'react';
-import EditableMedia from './EditableMedia';
-import EditableText from './EditableText';
 import RepeaterControls from './RepeaterControls';
 import MetadataConfigModal from './MetadataConfigModal';
 import { useCart } from './CartContext';
@@ -164,25 +162,11 @@ const Section = ({ data }) => {
                     </div>
                 )}
                 <h2 className="text-5xl md:text-6xl font-serif font-bold mb-8 text-[var(--color-heading)] text-center">
-                    <EditableText 
-                        value={sectionTitle} 
-                        cmsBind={metaBind('title')} 
-                        table="section_settings"
-                        field="title"
-                        id={metaIndex}
-                        style={getStyles('section_settings', metaIndex, 'title')}
-                    />
+                    <span data-dock-type="text" data-dock-bind="site_settings.0.titel">...</span>
                 </h2>
                 <div className="h-1.5 w-12 mx-auto mb-8 bg-accent"></div>
                 <div className="text-xl italic font-light opacity-60 text-text text-center">
-                    <EditableText 
-                        value={sectionSubtitle} 
-                        cmsBind={metaBind('subtitle')} 
-                        table="section_settings"
-                        field="subtitle"
-                        id={metaIndex}
-                        style={getStyles('section_settings', metaIndex, 'subtitle')}
-                    />
+                    <span data-dock-type="text" data-dock-bind="site_settings.0.titel">...</span>
                 </div>
               </header>
 
@@ -239,13 +223,7 @@ const Section = ({ data }) => {
                   const renderMetadata = () => (
                     <div className="mt-4 flex flex-wrap gap-x-4 gap-y-2 justify-center md:justify-start">
                         {metaFields.map(mk => (
-                            <EditableText 
-                                key={mk}
-                                value={String(item[mk])} 
-                                cmsBind={{ file: config.table.toLowerCase(), index, key: mk }} 
-                                className="text-sm opacity-70"
-                                style={getStyles(config.table.toLowerCase(), index, mk)}
-                            />
+                            <span className="text-sm opacity-70" data-dock-type="text" data-dock-bind={`config.table.toLowerCase().${0}.${mk}`}>{String(item[mk])}</span>
                         ))}
                     </div>
                   );
@@ -261,7 +239,7 @@ const Section = ({ data }) => {
                         <article key={index} className={itemClass + ' w-full md:w-[calc(45%)] lg:w-[calc(30%)] min-w-[300px] flex flex-col h-full bg-surface p-6 rounded-[2.5rem] shadow-lg border border-slate-100 dark:border-white/5'}>
                             <div className="relative aspect-square rounded-[2rem] overflow-hidden mb-6">
                                 {imgKey ? (
-                                    <EditableMedia src={item[imgKey]} alt={item[titleKey]} className="w-full h-full object-cover" dataItem={item} cmsBind={{ file: config.table.toLowerCase(), index, key: imgKey }} data-dock-bind={bind(imgKey)} />
+                                    <img src={item[imgKey]} className="w-full h-full object-cover" data-dock-type="media" data-dock-bind="config.table.toLowerCase().0.imgKey" />
                                 ) : (
                                     <div className="w-full h-full bg-slate-100 flex items-center justify-center text-slate-300">Geen Beeld</div>
                                 )}
@@ -270,8 +248,8 @@ const Section = ({ data }) => {
                                 </div>
                             </div>
                             <div className="flex-grow">
-                                {titleKey && <EditableText tagName="h3" value={item[titleKey]} className="text-xl font-bold mb-2 block text-[var(--color-heading)]" cmsBind={{ file: config.table.toLowerCase(), index, key: titleKey }} data-dock-bind={bind(titleKey)} style={getStyles(config.table.toLowerCase(), index, titleKey)} />}
-                                {descKey && <EditableText tagName="p" value={item[descKey]} className="text-sm opacity-60 line-clamp-2 mb-4" cmsBind={{ file: config.table.toLowerCase(), index, key: descKey }} data-dock-bind={bind(descKey)} style={getStyles(config.table.toLowerCase(), index, descKey)} />}
+                                {titleKey && <h3 className="text-xl font-bold mb-2 block text-[var(--color-heading)]" data-dock-type="text" data-dock-bind={`config.table.toLowerCase().${0}.${titleKey}`}>{item[titleKey]}</h3>}
+                                {descKey && <p className="text-sm opacity-60 line-clamp-2 mb-4" data-dock-type="text" data-dock-bind={`config.table.toLowerCase().${0}.${descKey}`}>{item[descKey]}</p>}
                             </div>
                             <button 
                                 onClick={() => addToCart({ id: item.id || index, title: item[titleKey], price: priceValue, image: item[imgKey] })}
@@ -288,12 +266,12 @@ const Section = ({ data }) => {
                       <div key={index} className={itemClass + " w-full max-w-2xl mx-auto"}>
                         <div className="flex justify-between items-end">
                           <div className="flex-1">
-                            {titleKey && <EditableText tagName="span" value={item[titleKey]} className="text-lg font-medium block text-text" cmsBind={{ file: config.table.toLowerCase(), index, key: titleKey }} data-dock-bind={bind(titleKey)} style={getStyles(config.table.toLowerCase(), index, titleKey)} />}
-                            {descKey && <EditableText tagName="span" value={item[descKey]} className="text-sm opacity-60 block mt-1 text-text" cmsBind={{ file: config.table.toLowerCase(), index, key: descKey }} data-dock-bind={bind(descKey)} style={getStyles(config.table.toLowerCase(), index, descKey)} />}
+                            {titleKey && <span className="text-lg font-medium block text-text" data-dock-type="text" data-dock-bind={`config.table.toLowerCase().${0}.${titleKey}`}>{item[titleKey]}</span>}
+                            {descKey && <span className="text-sm opacity-60 block mt-1 text-text" data-dock-type="text" data-dock-bind={`config.table.toLowerCase().${0}.${descKey}`}>{item[descKey]}</span>}
                             {renderMetadata()}
                             <div className="border-b border-dotted border-slate-300 dark:border-white/20 flex-1 mx-4 relative top-[-5px]"></div>
                           </div>
-                          <EditableText tagName="span" value={item[priceKey]} className="font-serif font-bold text-lg text-text" cmsBind={{ file: config.table.toLowerCase(), index, key: priceKey }} data-dock-bind={bind(priceKey)} style={getStyles(config.table.toLowerCase(), index, priceKey)} />
+                          <span className="font-serif font-bold text-lg text-text" data-dock-type="text" data-dock-bind={`config.table.toLowerCase().${0}.${priceKey}`}>{item[priceKey]}</span>
                         </div>
                       </div>
                     );
@@ -305,14 +283,14 @@ const Section = ({ data }) => {
                       <article key={index} className={itemClass + ' flex flex-col ' + (isEven ? 'md:flex-row' : 'md:flex-row-reverse') + ' items-center gap-16 md:gap-24'}>
                         <div className="w-full md:w-1/2 aspect-square md:aspect-video rounded-[3rem] overflow-hidden shadow-2xl">
                            {imgKey ? (
-                             <EditableMedia src={item[imgKey]} dataItem={item} cmsBind={{ file: config.table.toLowerCase(), index, key: imgKey }} data-dock-bind={bind(imgKey)} className="w-full h-full object-cover" />
+                             <img src={item[imgKey]} className="w-full h-full object-cover" data-dock-type="media" data-dock-bind="config.table.toLowerCase().0.imgKey" />
                            ) : (
                              <div className="w-full h-full bg-slate-100 flex items-center justify-center text-slate-300">Geen Afbeelding</div>
                            )}
                         </div>
                         <div className="w-full md:w-1/2 text-center md:text-left">
-                           {titleKey && <EditableText tagName="h3" value={item[titleKey]} className="text-4xl font-serif font-bold mb-6 block text-[var(--color-heading)]" cmsBind={{ file: config.table.toLowerCase(), index, key: titleKey }} data-dock-bind={bind(titleKey)} style={getStyles(config.table.toLowerCase(), index, titleKey)} />}
-                           {descKey && <EditableText tagName="p" value={item[descKey]} className="text-xl leading-relaxed font-light block opacity-70 text-text" cmsBind={{ file: config.table.toLowerCase(), index, key: descKey }} data-dock-bind={bind(descKey)} style={getStyles(config.table.toLowerCase(), index, descKey)} />}
+                           {titleKey && <h3 className="text-4xl font-serif font-bold mb-6 block text-[var(--color-heading)]" data-dock-type="text" data-dock-bind={`config.table.toLowerCase().${0}.${titleKey}`}>{item[titleKey]}</h3>}
+                           {descKey && <p className="text-xl leading-relaxed font-light block opacity-70 text-text" data-dock-type="text" data-dock-bind={`config.table.toLowerCase().${0}.${descKey}`}>{item[descKey]}</p>}
                            {renderMetadata()}
                         </div>
                       </article>
@@ -324,14 +302,14 @@ const Section = ({ data }) => {
                       <article key={index} className={itemClass + ' flex flex-col md:flex-row items-start gap-12 border-b border-slate-100 dark:border-white/5 pb-24 last:border-0'}>
                         <div className="w-32 h-32 rounded-full overflow-hidden flex-shrink-0 shadow-lg">
                            {imgKey ? (
-                             <EditableMedia src={item[imgKey]} dataItem={item} cmsBind={{ file: config.table.toLowerCase(), index, key: imgKey }} data-dock-bind={bind(imgKey)} className="w-full h-full object-cover" />
+                             <img src={item[imgKey]} className="w-full h-full object-cover" data-dock-type="media" data-dock-bind="config.table.toLowerCase().0.imgKey" />
                            ) : (
                              <div className="w-full h-full bg-slate-100 flex items-center justify-center text-slate-300 text-xs">Geen Foto</div>
                            )}
                         </div>
                         <div>
-                           {titleKey && <EditableText tagName="h3" value={item[titleKey]} className="text-3xl font-serif font-bold mb-4 block text-[var(--color-heading)]" cmsBind={{ file: config.table.toLowerCase(), index, key: titleKey }} data-dock-bind={bind(titleKey)} style={getStyles(config.table.toLowerCase(), index, titleKey)} />}
-                           {descKey && <EditableText tagName="p" value={item[descKey]} className="text-lg leading-relaxed font-light block opacity-70 text-text" cmsBind={{ file: config.table.toLowerCase(), index, key: descKey }} data-dock-bind={bind(descKey)} style={getStyles(config.table.toLowerCase(), index, descKey)} />}
+                           {titleKey && <h3 className="text-3xl font-serif font-bold mb-4 block text-[var(--color-heading)]" data-dock-type="text" data-dock-bind={`config.table.toLowerCase().${0}.${titleKey}`}>{item[titleKey]}</h3>}
+                           {descKey && <p className="text-lg leading-relaxed font-light block opacity-70 text-text" data-dock-type="text" data-dock-bind={`config.table.toLowerCase().${0}.${descKey}`}>{item[descKey]}</p>}
                            {renderMetadata()}
                         </div>
                       </article>
@@ -342,13 +320,13 @@ const Section = ({ data }) => {
                     <article key={index} className={itemClass + ' ' + (currentLayout === 'focus' && index === 0 ? 'md:col-span-3' : 'w-full md:w-[calc(45%)] lg:w-[calc(30%)] min-w-[300px]')}>
                       <div className={'relative overflow-hidden mb-10 ' + (currentLayout === 'focus' && index === 0 ? 'aspect-video rounded-[4rem]' : 'aspect-square rounded-[3rem]') + ' shadow-2xl'}>
                         {imgKey ? (
-                          <EditableMedia src={item[imgKey]} alt={item[titleKey]} className="w-full h-full object-cover" dataItem={item} cmsBind={{ file: config.table.toLowerCase(), index, key: imgKey }} data-dock-bind={bind(imgKey)} />
+                          <img src={item[imgKey]} className="w-full h-full object-cover" data-dock-type="media" data-dock-bind="config.table.toLowerCase().0.imgKey" />
                         ) : (
                           <div className="w-full h-full bg-slate-100 flex items-center justify-center text-slate-300">Geen Afbeelding</div>
                         )}
                       </div>
-                       {titleKey && <EditableText tagName="h3" value={item[titleKey]} className={(currentLayout === 'focus' && index === 0 ? 'text-4xl' : 'text-2xl') + ' font-serif font-bold mb-4 block text-[var(--color-heading)]'} cmsBind={{ file: config.table.toLowerCase(), index, key: titleKey }} data-dock-bind={bind(titleKey)} style={getStyles(config.table.toLowerCase(), index, titleKey)} />}
-                       {descKey && <EditableText tagName="p" value={item[descKey]} className={'leading-relaxed font-light block opacity-70 text-text ' + (currentLayout === 'focus' && index === 0 ? 'text-xl' : 'line-clamp-4')} cmsBind={{ file: config.table.toLowerCase(), index, key: descKey }} data-dock-bind={bind(descKey)} style={getStyles(config.table.toLowerCase(), index, descKey)} />}
+                       {titleKey && <h3 className="(currentLayout === 'focus' && index === 0 ? 'text-4xl' : 'text-2xl') + ' font-serif font-bold mb-4 block text-[var(--color-heading)]'" data-dock-type="text" data-dock-bind={`config.table.toLowerCase().${0}.${titleKey}`}>{item[titleKey]}</h3>}
+                       {descKey && <p className="'leading-relaxed font-light block opacity-70 text-text ' + (currentLayout === 'focus' && index === 0 ? 'text-xl' : 'line-clamp-4')" data-dock-type="text" data-dock-bind={`config.table.toLowerCase().${0}.${descKey}`}>{item[descKey]}</p>}
                        {renderMetadata()}
                     </article>
                   );
