@@ -1,0 +1,29 @@
+# Node
+node_modules/
+.npm/
+.pnpm-store/
+pnpm-lock.yaml
+
+# Gemini CLI / Maestro
+.gemini/
+.geminiignore
+.maestro/
+conductor/
+state/
+plans/
+hooks/
+
+# Project Specific
+brain/blockers.md
+athena-x/node_modules/
+athena-x/output/
+athena-x/downloaded-images/
+athena-x/athena_publisher_key*
+
+# OS / IDE
+.DS_Store
+.vscode/
+.idea/
+.env
+*.log
+tmp/
