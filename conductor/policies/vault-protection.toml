@@ -1,0 +1,35 @@
+# 🏦 Athena 3.0: Core Isolation & Integrity Policy
+# Location: ~/0-IT/3-DEV/myAgent/conductor/policies/vault-protection.toml
+# Purpose: Enforce absolute "Church & State" separation and local autonomy.
+
+[[rule]]
+name = "factory-local-autonomy-mandate"
+description = "3.0-factory must maintain its own independent task management system (in factory/TASKS/) to ensure full operational autonomy. Agents working within the factory should rely on these local tasks and remain agnostic of the global orchestration layer."
+action = "allow"
+condition = "args.path =~ '3.0-factory/factory/TASKS'"
+
+[[rule]]
+name = "factory-agnosticism-mandate"
+description = "MANDATE: 3.0-factory must remain 100% agnostic of 3.0-vault and the global orchestrator's brain. AI agents are prohibited from creating any links, references, or mentions of the vault within factory files."
+action = "deny"
+condition = """
+(tool in ["write_file", "replace", "replace_all"] && 
+ (args.path =~ "3.0-factory" || args.file_path =~ "3.0-factory") && 
+ (args.content =~ "3.0-vault" || args.new_string =~ "3.0-vault" || args.content =~ "brain/" || args.new_string =~ "brain/"))
+"""
+
+[[rule]]
+name = "deny-direct-vault-mutation"
+description = "Strictly prohibit any direct AI mutation (write/delete) of the 3.0-vault directory."
+action = "deny"
+condition = """
+(tool in ["write_file", "replace", "replace_all", "rename", "delete_file", "run_shell_command"] && 
+ (args.path =~ "3.0-vault" || args.file_path =~ "3.0-vault" || args.command =~ "3.0-vault"))
+"""
+
+[[rule]]
+name = "ask-for-forklift-authorization"
+description = "Always prompt the user for explicit authorization before executing the forklift middleware."
+action = "ask"
+condition = "args.command =~ '3.0-middleware/vault-forklift.js'"
+message = "⚠️ VAULT ACCESS REQUEST: An operation is attempting to move data via the Middleware. This is the ONLY authorized way to modify the Vault. Do you explicitly authorize this transport?"

@@ -564,3 +564,8 @@ Het project is in de best mogelijke technische staat.
 - **Naadloze Opslag:** Menu-wijzigingen worden real-time weggeschreven naar de backend en via de bestaande Vite proxy afgehandeld zonder nood aan extra core-API endpoints.
 
 **WORK_COMPLETE**
+- Mon Mar 23 08:51:13 PM CET 2026: Athena 3.0 Vault Snapshot (v8.1) created and hardened. Forklift utility implemented.
+- Mon Mar 23 09:04:41 PM CET 2026: Vault refactored to Data-Only. All engine code removed. Forklift active in athena-y.
+- Mon Mar 23 09:48:55 PM CET 2026: Forklift v2 implemented with (De)hydration. GitHub Workflow hardened for sparse monorepo. Registry is now Vault-aware.
+- Mon Mar 23 10:14:43 PM CET 2026: Component cleanup complete. Removed 196 files. Symlinked 99 boilerplates. Forklift v4 supports materialization.
+- Mon Mar 23 10:17:58 PM CET 2026: Mass site migration to Vault complete. 51 sites parked. Factory is now lean.

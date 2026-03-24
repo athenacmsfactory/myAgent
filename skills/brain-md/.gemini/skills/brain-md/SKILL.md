@@ -1,6 +1,6 @@
 ---
 name: brain-md
-description: Persistent memory layer using Markdown files in ~/0-IT/3-DEV/myAgent/brain/. Use this skill to read the brain state, update tasks, and log project insights.
+description: Persistent memory layer using Markdown files in ~/myAgent/brain/. Use this skill to read the brain state, update tasks, and log project insights.
 ---
 
 # Brain-MD Skill

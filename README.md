@@ -4,13 +4,13 @@ This project implements a persistent, autonomous "AI Employee" on a Chromebook (
 
 ## 🏛️ Project Structure
 
-### 🧠 The Brain (`~/myAgent/brain/`)
+### 🧠 The Brain (`~/0-IT/3-DEV/myAgent/brain/`)
 The central nervous system of the AI Employee:
 *   `tasks.md`: Current prioritized work queue.
 *   `logs.md`: Historical record of all autonomous actions.
 *   `modular-engine-plan.md`: Roadmap for the factory refactoring.
 
-### 🔱 Athena CMS Factory (`~/myAgent/athena-y/`)
+### 🔱 Athena CMS Factory (`~/0-IT/3-DEV/myAgent/athena-y/`)
 A high-performance website generation engine:
 *   **Modular Engine**: AST-based code generation and phase-driven orchestration.
 *   **MPA Support**: Capable of generating complex sites with hundreds of pages.
@@ -34,7 +34,7 @@ systemctl --user start ai-employee.service
 ### 🔍 Monitoring
 *   **Visual Dashboard:** http://localhost:5001/portfolio-status.html
 *   **Service Logs:** `journalctl --user -u ai-employee.service -f`
-*   **Brain State:** `cat ~/myAgent/brain/tasks.md`
+*   **Brain State:** `cat ~/0-IT/3-DEV/myAgent/brain/tasks.md`
 
 ### 🛠️ Capabilities
 *   **Self-Healing**: Automatically detects and fixes missing `node_modules` or empty JSON files.

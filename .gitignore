@@ -1,30 +1,39 @@
-# Node
+# 🧠 myAgent Core GitIgnore
+# Purpose: Keep the core intelligence repo clean from project data.
+
+# --- Project Data (The Triad) ---
+/3.0-factory/
+/3.0-middleware/
+/3.0-vault/
+
+# --- Backups & Legacy ---
+/PRE-TRIAD-*/
+/athena-y-bUP-*/
+/athena-y-HEEL-BELANGRIJK/
+/athena-3.0-blueprint.md
+/athena-3.0.md
+/ob1.md
+/de belangrijkste sites zijn nu gefixt.txt
+
+# --- System & Tooling ---
 node_modules/
-.npm/
-.pnpm-store/
-pnpm-lock.yaml
-
-# Gemini CLI / Maestro
-.gemini/
-.geminiignore
-.maestro/
-conductor/
-state/
-plans/
-hooks/
-
-# Project Specific
-brain/blockers.md
-athena-x/node_modules/
-athena-x/output/
-athena-x/downloaded-images/
-athena-x/athena_publisher_key*
-
-# OS / IDE
-.DS_Store
-.vscode/
-.idea/
 .env
 *.log
-tmp/
-athena-y/
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# --- Gemini / AI Specific ---
+.gemini/tmp/
+athena_publisher_key*
+
+# --- Project Specific Artifacts ---
+/output/
+/conductor/tracks/
+/conductor/archive/
+/conductor/setup_state.json
+/conductor/execution_log.md

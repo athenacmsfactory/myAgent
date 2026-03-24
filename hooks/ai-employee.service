@@ -1,0 +1,14 @@
+[Unit]
+Description=Gemini CLI Autonomous AI Employee
+After=network.target
+
+[Service]
+Environment=GEMINI_API_KEY=$GEMINI_API_KEY
+Environment="PATH=/home/kareltestspecial/.config/nvm/versions/node/v22.22.0/bin:/home/kareltestspecial/.local/share/pnpm:/usr/local/bin:/usr/bin:/bin"
+WorkingDirectory=/home/kareltestspecial/myAgent
+ExecStart=/home/kareltestspecial/.local/share/pnpm/gemini -y -m gemini-3.1-flash-lite-preview -p "Use the 'brain-md' skill to read the brain state and execute the next priority task from 'tasks.md'. Continue until WORK_COMPLETE or BLOCKER is logged."
+Restart=on-failure
+RestartSec=60s
+
+[Install]
+WantedBy=default.target

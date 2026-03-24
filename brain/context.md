@@ -6,7 +6,7 @@
 - **Styling:** Vanilla CSS (Prefered over Tailwind).
 
 ## 🏛️ Architecture Decisions
-- **Memory:** Markdown files in `~/myAgent/brain/`.
+- **Memory:** Markdown files in `~/0-IT/3-DEV/myAgent/brain/`.
 - **Autonomy:** Gemini CLI Hooks + Systemd User Service.
 Mission accomplished. All systems functional. Portfolio 100% PASS.
 Final state achieved. All systems autonomous and optimized.
