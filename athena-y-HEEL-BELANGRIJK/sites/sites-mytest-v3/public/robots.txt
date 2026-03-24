@@ -1,3 +1,0 @@
-User-agent: *
-Allow: /
-Sitemap: https://sites/mytest-v3.netlify.app/sitemap.xml

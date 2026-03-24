@@ -1,9 +1,0 @@
-{
-  "6041": {
-    "pid": 15083,
-    "id": "athena-hub",
-    "type": "preview",
-    "startTime": "2026-03-21T21:02:53.893Z",
-    "logFile": "/home/kareltestspecial/myAgent/athena-y/factory/output/logs/athena-hub-preview.log"
-  }
-}
